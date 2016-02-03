@@ -3,7 +3,8 @@
 var ReactDOM = require('react-dom')
 var React = require("react");
 var Navigation = require('./Navigation')
-var AddBooks = require('./AddBooks')
+var MainApp = require('./MainApp')
+var Login = require('./Login')
 var Footer = require('./Footer')
 
 var App = React.createClass({
@@ -38,7 +39,8 @@ var App = React.createClass({
             return(
                   <div>
                         <Navigation user={this.state.user}/>
-                        <AddBooks/>
+                        <Login onLogin={this.handleLogin}/>
+                        <MainApp user={this.state.user}/>
                         <Footer/>
                   </div>
                   )

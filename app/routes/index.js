@@ -4,6 +4,7 @@ var path = process.cwd();
 var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
 var ReservationHandler = require(path + '/app/controllers/reservationHandler.server.js');
 var UserHandler = require(path + '/app/controllers/userHandler.server.js');
+var BookHandler = require(path + '/app/controllers/bookHandler.server.js');
 
 module.exports = function (app, passport) {
 
@@ -18,6 +19,7 @@ module.exports = function (app, passport) {
 	var yelpHandler = new YelpHandler();
 	var reservationHandler = new ReservationHandler();
 	var userHandler = new UserHandler();
+	var bookHandler = new BookHandler();
 	
 
 	app.route('/')
@@ -45,6 +47,12 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, function (req, res) {
 			res.json(req.user);
 		});
+		
+		
+
+	app.route('/api/searchExternal/:searchTerm')
+		.get(bookHandler.searchExternal);
+		
 		
 
 	app.route('/auth/github')

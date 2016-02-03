@@ -23,6 +23,7 @@ app.use(flash());
 app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/common', express.static(process.cwd() + '/app/common'));
+app.use('/test', express.static(process.cwd() + '/public/test'));
 
 app.use(session({
 	secret: 'secretPoll',
