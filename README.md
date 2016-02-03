@@ -1,8 +1,12 @@
-# Voting application
+# Book Exchange Application
 
 ## Overview
 
-This is my implementation of the voting application, which is the 1st basejump on freecodecamp
+This is my implementation of the book exchange application, which is project for freecodecamp
+
+You may view a running version of this app at
+[http://zotswap.heroku.com](http://zotswap.heroku.com)
+
 
 # Quick Start Guide
 
@@ -17,17 +21,13 @@ In order to use the voting application, you must have the following installed:
 
 ### Installation & Startup
 
-To install the voting app, simply enter the below in the terminal window:
+To install the app, simply enter the below in the terminal window:
 
 ```bash
-$ git clone https://github.com/paycoguy/voting-app.git your-project
+$ git clone https://github.com/paycoguy/book-exchange.git your-project
 ```
 
-This will install the voting app components into the `your-project` directory.
-
-### Setup GitHub Authentication
-
-Please follow [this guide](http://www.clementinejs.com/tutorials/tutorial-passport.html#GitHubAppSetup) to register the application with GitHub and get API keys / secrets.
+This will install the  app components into the `your-project` directory.
 
 ### Local Environment Variables
 
@@ -36,10 +36,15 @@ Create a file named `.env` in the root directory. This file should contain:
 ```
 GITHUB_KEY=your-client-id-here
 GITHUB_SECRET=your-client-secret-here
-MONGO_URI=mongodb://localhost:27017/clementinejs
+FACEBOOK_APP_ID=your-client-id-here
+FACEBOOK_APP_SECRET=your-client-secret-here
+GOOGLE_KEY=your-client-id-here
+GOOGLE_SECRET=your-client-secret-here
+MONGO_URI=mongodb://localhost:27017/bookexchange
 PORT=8080
 APP_URL=http://localhost:8080/
 ```
+
 
 ### Starting the App
 
@@ -62,7 +67,8 @@ Next, open your browser and enter `http://localhost:8080/`. Congrats, you're up 
 | React  
 | Node.js         
 | Passport         
-| Mongoose         
+| Mongoose  
+| Flux
 | Webpack             
 
 ## License
