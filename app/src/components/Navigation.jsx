@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 'use strict'
 var React = require("react");
+var Link = require('react-router').Link;
 module.exports = React.createClass({
         handlePageChange:function(e){
            e.preventDefault();
@@ -16,13 +17,13 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
-                </button><a href="#" className="navbar-brand" onClick={this.handlePageChange} id="AllBooks">ZOTSWAP <span className="zs-subhead">online book exchange</span> </a></div>
+                </button><Link to={"/"} className="navbar-brand" id="AllBooks">ZOTSWAP <span className="zs-subhead">online book exchange</span> </Link></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul className="nav navbar-nav navbar-right">
-                    <li ><a href="#" id="MyRequests" onClick={this.handlePageChange}><div  className="zs-nav-button" >My Requests</div></a></li>
-                    <li ><a href="#" id="MyBooks" onClick={this.handlePageChange}><div  className="zs-nav-button" >My Books</div></a></li>
-                    <li ><a href="#" id="MyBooks" onClick={this.handlePageChange}><div  className="zs-nav-button" >Add a Book</div></a></li>
+                    <li ><Link to={"MyRequests"}><div  className="zs-nav-button" >My Requests</div></Link></li>
+                    <li ><Link to={"MyBooks"}><div  className="zs-nav-button" >My Books</div></Link></li>
+                    <li ><Link to={"AddBooks"}><div  className="zs-nav-button" >Add a Book</div></Link></li>
                     <li ><a href="#" data-toggle="modal" data-target="#myModal"><div  className="zs-nav-button" >Login</div></a></li>
                 </ul>
             </div>

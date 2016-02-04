@@ -20,7 +20,7 @@ var BookList = React.createClass({
                  rowEnd = <div className="clearfix"></div>
              }
             return(
-            <div key = {book.id}>
+            <div key = {book._id || book.id }>
             <Book book = {book}  onClick={this.handleOnClick} clickText={this.props.bookClickText}/>
             {rowEnd}
             </div>

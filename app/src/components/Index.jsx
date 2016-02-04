@@ -8,44 +8,27 @@ var AllBooks = require('./AllBooks')
 var AddBooks = require('./AddBooks')
 var Footer = require('./Footer')
 var BookActions = require('../../actions/BookActions');
-var BookStore = require('../../stores/BookStore');
-require("../css/main.scss")
+require("../css/main.scss");
 var assign = require('object-assign');
+var Router = require('react-router').Router;
+var Route = require('react-router').Route;
+var IndexRoute = require('react-router').IndexRoute;
+var browserHistory = require('react-router').browserHistory;
 
-
-/**
- * Retrieve the current Books data from the BookStore
- */
-function getBooksState() {
-    return {
-        books: BookStore.getAll()
-    };
-}
 
 var App = React.createClass({
-    handlePageChange: function(page) {
-        this.setState({
-            showPage: page
-        });
-    },
+
     handleLogin: function() {
         location.reload();
     },
     getInitialState: function() {
-        var initialState = assign({}, getBooksState(), {
-            showPage: "AllBooks",
+        return {
             user: null
-        });
-        return initialState;
+        };
     },
     componentDidMount: function() {
-
-        BookStore.addChangeListener(this._onChange);
         BookActions.loadAll();
         this.loadLoggedInUser();
-    },
-    componentWillUnmount: function() {
-        BookStore.removeChangeListener(this._onChange);
     },
     loadLoggedInUser: function() {
         var userApiUrl = "/api/user";
@@ -70,31 +53,27 @@ var App = React.createClass({
         });
     },
     render: function() {
+        console.log(this.props);
         return (
             <div>
                 <Navigation user={this.state.user} onPageChange={ this.handlePageChange}/>
             
                 <div className="container text-center">
                     <p></p>
-                    {this.state.showPage=="My Books"?
-                    <MyBooks books = {this.state.books}/>: 
-                    this.state.showPage=="Add a Book"?
-                    <AddBooks/>:
-                    <AllBooks books={this.state.books}/> }
+                    {this.props.children}
                 </div>
             </div>
         )
-    },
-    /**
-     * Event handler for 'change' events coming from the BookStore
-     */
-    _onChange: function() {
-        this.setState(getBooksState());
     }
 });
 
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById('app')
-);
+ReactDOM.render((
+  <Router history={browserHistory}>
+    <Route path="/" component={App}>
+      <Route path="addBooks" component={AddBooks}/>
+      <Route path="myBooks" component={MyBooks}/>
+      <IndexRoute component={AllBooks}/>
+    </Route>
+  </Router>
+), document.getElementById('app'));
