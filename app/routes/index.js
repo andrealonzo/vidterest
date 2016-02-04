@@ -43,18 +43,22 @@ module.exports = function (app, passport) {
 			res.sendFile(path + '/public/profile.html');
 		});
 
-	app.route('/api/:id')
-		.get(isLoggedIn, function (req, res) {
-			res.json(req.user);
-		});
-		
 		
 
 	app.route('/api/searchExternal/:searchTerm')
 		.get(bookHandler.searchExternal);
 		
+	app.route('/api/books/')
+		.post(bookHandler.add)
+		.delete(bookHandler.remove)
+		.get(bookHandler.getAll);
 		
 
+	app.route('/api/:id')
+		.get(isLoggedIn, function (req, res) {
+			res.json(req.user);
+		});
+		
 	app.route('/auth/github')
 		.get(passport.authenticate('github'));
 

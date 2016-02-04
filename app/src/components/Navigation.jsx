@@ -2,7 +2,10 @@
 'use strict'
 var React = require("react");
 module.exports = React.createClass({
-   
+        handlePageChange:function(e){
+           e.preventDefault();
+           this.props.onPageChange(e.target.innerText);
+        },
 		  render:function(){
 		    return(
 		       <nav className="navbar navbar-default zs-nav">
@@ -13,10 +16,13 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
-                </button><div className="navbar-brand" >ZOTSWAP <span className="zs-subhead">online book exchange</span> </div></div>
+                </button><a href="#" className="navbar-brand" onClick={this.handlePageChange} id="AllBooks">ZOTSWAP <span className="zs-subhead">online book exchange</span> </a></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul className="nav navbar-nav navbar-right">
+                    <li ><a href="#" id="MyRequests" onClick={this.handlePageChange}><div  className="zs-nav-button" >My Requests</div></a></li>
+                    <li ><a href="#" id="MyBooks" onClick={this.handlePageChange}><div  className="zs-nav-button" >My Books</div></a></li>
+                    <li ><a href="#" id="MyBooks" onClick={this.handlePageChange}><div  className="zs-nav-button" >Add a Book</div></a></li>
                     <li ><a href="#" data-toggle="modal" data-target="#myModal"><div  className="zs-nav-button" >Login</div></a></li>
                 </ul>
             </div>
