@@ -30,18 +30,58 @@ module.exports = function() {
 
   this.request = function(req, res) {
 
-    //add reservation to business
     Book.findOneAndUpdate({
-          '_id': mongoose.Types.ObjectId(req.body._id)
-        },
-        {
-          $addToSet: {
-            'user_requests': mongoose.Types.ObjectId(req.user._id)
-          }
-        }, {
-          'new': true,
-          'upsert': true
-        })
+        '_id': mongoose.Types.ObjectId(req.body._id)
+      }, {
+        $addToSet: {
+          'user_requests': mongoose.Types.ObjectId(req.user._id)
+        }
+      }, {
+        'new': true,
+        'upsert': true
+      })
+      .exec(function(err, result) {
+        if (err) {
+          console.log("An error occurred", err);
+          res.json({
+            error: "An error occurred"
+          });
+        }
+        res.json(result);
+      });
+
+  }
+
+  this.getRequests = function(req, res) {
+    var userId = mongoose.Types.ObjectId(req.user._id)
+    Book.find({
+      user_requests: userId
+    }, function(err, books) {
+      if (err) {
+        console.log("An error occurred", err);
+        return res.status(400).json({
+          error: "An error occurred"
+        });
+      }
+      return res.json(books);
+
+    });
+
+
+  }
+
+
+
+  this.removeRequest = function(req, res) {
+    Book.findOneAndUpdate({
+        '_id': mongoose.Types.ObjectId(req.body._id)
+      }, {
+        $pull: {
+          'user_requests': mongoose.Types.ObjectId(req.user._id)
+        }
+      }, {
+        'new': true
+      })
       .exec(function(err, result) {
         if (err) {
           console.log("An error occurred", err);
@@ -101,33 +141,44 @@ module.exports = function() {
       });
     }
     Book.find({
-      addedBy: mongoose.Types.ObjectId(req.user._id)
-    }, function(err, books) {
-      if (err) {
-        console.log("An error occurred", err);
-        return res.status(400).json({
-          error: "An error occurred"
-        });
-      }
-      return res.json(books);
+        addedBy: mongoose.Types.ObjectId(req.user._id)
+      }).populate('addedBy user_requests')
+      .exec(function(err, books) {
+        if (err) {
+          console.log("An error occurred", err);
+          return res.status(400).json({
+            error: "An error occurred"
+          });
+        }
+        return res.json(books);
 
-    });
+      });
 
 
   }
 
   this.getAll = function(req, res) {
+    Book.find({})
+      .populate('addedBy user_requests')
+      .exec(function(err, books) {
+        if (err) {
+          console.log("An error occurred", err);
+          return res.status(400).json({
+            error: "An error occurred"
+          });
+        }
+        return res.json(books);
+      });
+    // Book.find({}, function(err, books) {
+    //   if (err) {
+    //     console.log("An error occurred", err);
+    //     return res.status(400).json({
+    //       error: "An error occurred"
+    //     });
+    //   }
+    //   return res.json(books);
 
-    Book.find({}, function(err, books) {
-      if (err) {
-        console.log("An error occurred", err);
-        return res.status(400).json({
-          error: "An error occurred"
-        });
-      }
-      return res.json(books);
-
-    });
+    // });
 
 
   }

@@ -45,13 +45,16 @@ var BookStore = assign({}, EventEmitter.prototype, {
   },
   
 
-  getUserBookRequests: function(done) {
+  getUserRequests: function(done) {
+    
+        console.log('geting User Requests');
     var url = "/api/books/request/";
     $.ajax({
       type: "GET",
       url: url,
       contentType: "application/json",
       success: function(data) {
+        console.log('got user requests');
         done(data);
       },
       error: function(data) {

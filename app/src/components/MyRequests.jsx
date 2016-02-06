@@ -8,7 +8,7 @@ var BookStore = require('../../stores/BookStore');
 
 module.exports = React.createClass({
     setBooksState: function() {
-        BookStore.getUserBookRequests(function(books) {
+        BookStore.getUserRequests(function(books) {
             this.setState({
                 books:books
             });
@@ -26,7 +26,7 @@ module.exports = React.createClass({
     componentWillUnmount: function() {
         BookStore.removeChangeListener(this._onChange);
     },
-    handleRemoveBook:function(book){
+    handleRemoveRequest:function(book){
         BookActions.removeRequest(book);
     },
     render: function() {

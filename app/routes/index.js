@@ -49,8 +49,10 @@ module.exports = function (app, passport) {
 	app.route('/api/user/books/')
 		.get(bookHandler.getBooksFromUser);
 			
-	app.route('/api/books/request')
+	app.route('/api/books/request/')
 		.post(bookHandler.request)
+		.get(bookHandler.getRequests)
+		.delete(bookHandler.removeRequest)
 		
 	app.route('/api/books/')
 		.post(bookHandler.add)
@@ -74,7 +76,7 @@ module.exports = function (app, passport) {
 	app.route('/auth/github/callback')
 		.get(passport.authenticate('github', {
 			successRedirect: '/',
-			failureRedirect: '/login'
+			failureRedirect: '/Login'
 		}));
 
 	app.route('/auth/facebook')

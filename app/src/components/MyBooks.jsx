@@ -30,6 +30,7 @@ module.exports = React.createClass({
         BookActions.removeBook(book);
     },
     render: function() {
+        console.log(this.state.books);
         return (
              <div >
         <h1>My Books</h1>

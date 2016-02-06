@@ -52,6 +52,7 @@
 	var MyBooks = __webpack_require__(72)
 	var AllBooks = __webpack_require__(77)
 	var AddBooks = __webpack_require__(79)
+	var MyRequests = __webpack_require__(91)
 	var Login = __webpack_require__(81)
 	var Footer = __webpack_require__(86)
 	var AuthStore = __webpack_require__(62);
@@ -117,9 +118,10 @@
 	ReactDOM.render((
 	    React.createElement(Router, {history: browserHistory}, 
 	    React.createElement(Route, {path: "/", component: App}, 
-	      React.createElement(Route, {path: "addBooks", component: AddBooks}), 
-	      React.createElement(Route, {path: "myBooks", component: MyBooks}), 
-	      React.createElement(Route, {path: "login", component: Login}), 
+	      React.createElement(Route, {path: "AddBooks", component: AddBooks}), 
+	      React.createElement(Route, {path: "MyBooks", component: MyBooks}), 
+	      React.createElement(Route, {path: "MyRequests", component: MyRequests}), 
+	      React.createElement(Route, {path: "Login", component: Login}), 
 	      React.createElement(IndexRoute, {component: AllBooks})
 	    )
 	  )
@@ -6205,6 +6207,7 @@
 	        BookActions.removeBook(book);
 	    },
 	    render: function() {
+	        console.log(this.state.books);
 	        return (
 	             React.createElement("div", null, 
 	        React.createElement("h1", null, "My Books"), 
@@ -6286,6 +6289,7 @@
 	            ), 
 	            React.createElement("div", null, React.createElement("a", {href: "#"}, this.props.book.title)), 
 	            React.createElement("div", null, this.props.book.authors?this.props.book.authors[0]:null), 
+	            React.createElement("div", null, this.props.book.user_requests.length?"Requested By " + this.props.book.user_requests[0].email:null), 
 	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText)
 	              )
 	            )
@@ -6357,6 +6361,24 @@
 	            },
 	            dataType: 'json'
 	        });
+	    },
+	    removeRequest:function(book){
+	        var url = "/api/books/request";
+	        $.ajax({
+	            type: "DELETE",
+	            url: url,
+	            data: JSON.stringify(book),
+	            contentType: "application/json",
+	            success: function(data) {
+	                AppDispatcher.dispatch({
+	                    actionType: BookConstants.BOOKS_UPDATE
+	                });
+	            }.bind(this),
+	            error: function(data) {
+	               console.log("error requesting data", data);
+	            },
+	            dataType: 'json'
+	        }); 
 	    },
 	    searchExternal: function(searchTerm) {
 	        if (!searchTerm) {
@@ -6504,13 +6526,16 @@
 	  },
 	  
 
-	  getUserBookRequests: function(done) {
+	  getUserRequests: function(done) {
+	    
+	        console.log('geting User Requests');
 	    var url = "/api/books/request/";
 	    $.ajax({
 	      type: "GET",
 	      url: url,
 	      contentType: "application/json",
 	      success: function(data) {
+	        console.log('got user requests');
 	        done(data);
 	      },
 	      error: function(data) {
@@ -7476,6 +7501,57 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var BookList = __webpack_require__(73);
+	var BookActions = __webpack_require__(75);
+	var BookStore = __webpack_require__(78);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	    setBooksState: function() {
+	        BookStore.getUserRequests(function(books) {
+	            this.setState({
+	                books:books
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return{
+	            books:[]
+	        }
+	    },
+	    componentDidMount: function() {
+	        this.setBooksState();
+	        BookStore.addChangeListener(this._onChange);
+	    },
+	    componentWillUnmount: function() {
+	        BookStore.removeChangeListener(this._onChange);
+	    },
+	    handleRemoveRequest:function(book){
+	        BookActions.removeRequest(book);
+	    },
+	    render: function() {
+	        return (
+	             React.createElement("div", null, 
+	        React.createElement("h1", null, "My Requests"), 
+	        React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRemoveRequest, bookClickText: "Remove Request"})
+	    )
+	        )
+	    },
+	        /**
+	     * Event handler for 'change' events coming from the BookStore
+	     */
+	    _onChange: function() {
+	        this.setBooksState();
+	    }
+	});
 
 /***/ }
 /******/ ]);

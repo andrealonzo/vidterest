@@ -6,6 +6,7 @@ var Navigation = require('./Navigation')
 var MyBooks = require('./MyBooks')
 var AllBooks = require('./AllBooks')
 var AddBooks = require('./AddBooks')
+var MyRequests = require('./MyRequests')
 var Login = require('./Login')
 var Footer = require('./Footer')
 var AuthStore = require('../../stores/AuthStore');
@@ -71,9 +72,10 @@ var App = React.createClass({
 ReactDOM.render((
     <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <Route path="addBooks" component={AddBooks}/>
-      <Route path="myBooks" component={MyBooks}/>
-      <Route path="login" component={Login}/>
+      <Route path="AddBooks" component={AddBooks}/>
+      <Route path="MyBooks" component={MyBooks}/>
+      <Route path="MyRequests" component={MyRequests}/>
+      <Route path="Login" component={Login}/>
       <IndexRoute component={AllBooks}/>
     </Route>
   </Router>
