@@ -3,29 +3,6 @@ var BookConstants = require('../constants/BookConstants');
 
 var BookActions = {
 
-    loadAll: function() {
-        var url = "/api/books/";
-        $.ajax({
-            type: "GET",
-            url: url,
-            contentType: "application/json",
-            success: function(data) {
-                AppDispatcher.dispatch({
-                    actionType: BookConstants.BOOKS_LOAD,
-                    data: data
-                });
-            },
-            error: function(data) {
-                console.log("error receiving data", data);
-                AppDispatcher.dispatch({
-                    actionType: BookConstants.BOOKS_LOAD,
-                    data: []
-                });
-            },
-            dataType: 'json'
-        });
-
-    },
     addBook:function(book){
         var url = "/api/books/";
         $.ajax({
@@ -34,8 +11,9 @@ var BookActions = {
             data: JSON.stringify(book),
             contentType: "application/json",
             success: function(data) {
-                //once book is added, load all the books again
-                this.loadAll();
+                AppDispatcher.dispatch({
+                    actionType: BookConstants.BOOKS_UPDATE
+                });
             }.bind(this),
             error: function(data) {
                console.log("error adding data", data);
@@ -52,11 +30,30 @@ var BookActions = {
             data: JSON.stringify(book),
             contentType: "application/json",
             success: function(data) {
-                //once book is remove, load all the books again
-                this.loadAll();
+                AppDispatcher.dispatch({
+                    actionType: BookConstants.BOOKS_UPDATE
+                });
             }.bind(this),
             error: function(data) {
                console.log("error remove data", data);
+            },
+            dataType: 'json'
+        });
+    },
+    requestBook:function(book){
+        var url = "/api/books/request";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(book),
+            contentType: "application/json",
+            success: function(data) {
+                AppDispatcher.dispatch({
+                    actionType: BookConstants.BOOKS_UPDATE
+                });
+            }.bind(this),
+            error: function(data) {
+               console.log("error requesting data", data);
             },
             dataType: 'json'
         });

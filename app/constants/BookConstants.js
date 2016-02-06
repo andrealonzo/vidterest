@@ -12,6 +12,9 @@
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  BOOKS_LOAD: null,
-  SEARCH_EXTERNAL_RESULTS:null
+  UPDATE_BOOKS: null,
+  USER_BOOKS_LOAD: null,
+  SEARCH_EXTERNAL_RESULTS:null,
+  UPDATE_LOGIN:null,
+  LOGIN:null
 });

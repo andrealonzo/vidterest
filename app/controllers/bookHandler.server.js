@@ -2,6 +2,7 @@
 
 var books = require('google-books-search');
 var Book = require('../models/books.js');
+var mongoose = require('mongoose');
 
 module.exports = function() {
 
@@ -26,8 +27,37 @@ module.exports = function() {
     });
   }
 
+
+  this.request = function(req, res) {
+
+    //add reservation to business
+    Book.findOneAndUpdate({
+          '_id': mongoose.Types.ObjectId(req.body._id)
+        },
+        {
+          $addToSet: {
+            'user_requests': mongoose.Types.ObjectId(req.user._id)
+          }
+        }, {
+          'new': true,
+          'upsert': true
+        })
+      .exec(function(err, result) {
+        if (err) {
+          console.log("An error occurred", err);
+          res.json({
+            error: "An error occurred"
+          });
+        }
+        res.json(result);
+      });
+
+  }
+
   this.add = function(req, res) {
     var newBook = new Book(req.body);
+    newBook.addedBy = mongoose.Types.ObjectId(req.user._id);
+    //get current user
 
     newBook.save(function(err) {
       if (err) {
@@ -55,6 +85,37 @@ module.exports = function() {
       return res.json(req.body);
     });
   }
+
+
+  /**
+   * 
+   * Get all the books from the logged in user
+   * 
+   **/
+
+  this.getBooksFromUser = function(req, res) {
+    if (!req.user) {
+      console.log("An error occurred");
+      return res.status(400).json({
+        error: "An error occurred"
+      });
+    }
+    Book.find({
+      addedBy: mongoose.Types.ObjectId(req.user._id)
+    }, function(err, books) {
+      if (err) {
+        console.log("An error occurred", err);
+        return res.status(400).json({
+          error: "An error occurred"
+        });
+      }
+      return res.json(books);
+
+    });
+
+
+  }
+
   this.getAll = function(req, res) {
 
     Book.find({}, function(err, books) {

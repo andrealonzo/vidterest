@@ -5,25 +5,61 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _books = [];
 
-/**
- * Create a TODO item.
- * @param  {string} text The content of the TODO
- */
-function load(books) {
-  _books = books;
-}
 
 var BookStore = assign({}, EventEmitter.prototype, {
 
+  getAll: function(done) {
+    var url = "/api/books/";
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      success: function(data) {
+        done(data);
+      },
+      error: function(data) {
+        console.log("error receiving data", data);
+        done([]);
+      },
+      dataType: 'json'
+    });
 
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
-  getAll: function() {
-    return _books;
+  },
+
+  getAllFromUser: function(done) {
+    var url = "/api/user/books/";
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      success: function(data) {
+        done(data);
+      },
+      error: function(data) {
+        console.log("error receiving data", data);
+        done([]);
+      },
+      dataType: 'json'
+    });
+  },
+  
+
+  getUserBookRequests: function(done) {
+    var url = "/api/books/request/";
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      success: function(data) {
+        done(data);
+      },
+      error: function(data) {
+        console.log("error receiving data", data);
+        done([]);
+      },
+      dataType: 'json'
+    });
   },
 
   emitChange: function() {
@@ -47,14 +83,9 @@ var BookStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  var text;
-
   switch (action.actionType) {
 
-
-    case BookConstants.BOOKS_LOAD:
-      var books = action.data;
-      load(books);
+    case BookConstants.BOOKS_UPDATE:
       BookStore.emitChange();
       break;
 

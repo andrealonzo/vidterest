@@ -8,7 +8,7 @@ var BookStore = require('../../stores/BookStore');
 
 module.exports = React.createClass({
     setBooksState: function() {
-        BookStore.getAllFromUser(function(books) {
+        BookStore.getUserBookRequests(function(books) {
             this.setState({
                 books:books
             });
@@ -27,13 +27,13 @@ module.exports = React.createClass({
         BookStore.removeChangeListener(this._onChange);
     },
     handleRemoveBook:function(book){
-        BookActions.removeBook(book);
+        BookActions.removeRequest(book);
     },
     render: function() {
         return (
              <div >
-        <h1>My Books</h1>
-        <BookList books = {this.state.books} bookClickAction = {this.handleRemoveBook} bookClickText = {"Remove Book"} />
+        <h1>My Requests</h1>
+        <BookList books = {this.state.books} bookClickAction = {this.handleRemoveRequest} bookClickText = {"Remove Request"} />
     </div>
         )
     },

@@ -6,8 +6,9 @@ var Navigation = require('./Navigation')
 var MyBooks = require('./MyBooks')
 var AllBooks = require('./AllBooks')
 var AddBooks = require('./AddBooks')
+var Login = require('./Login')
 var Footer = require('./Footer')
-var BookActions = require('../../actions/BookActions');
+var AuthStore = require('../../stores/AuthStore');
 require("../css/main.scss");
 var assign = require('object-assign');
 var Router = require('react-router').Router;
@@ -18,49 +19,48 @@ var browserHistory = require('react-router').browserHistory;
 
 var App = React.createClass({
 
+    getInitialState: function() {
+      return{
+          user:null
+      }  
+    },
     handleLogin: function() {
         location.reload();
     },
-    getInitialState: function() {
-        return {
-            user: null
-        };
-    },
     componentDidMount: function() {
-        BookActions.loadAll();
         this.loadLoggedInUser();
+        
+    },
+    componentWillReceiveProps: function(nextProps) {
+        this.previousChildren = this.props.children
+        
     },
     loadLoggedInUser: function() {
-        var userApiUrl = "/api/user";
-        $.ajax({
-            type: "GET",
-            url: userApiUrl,
-            contentType: "application/json",
-            success: function(data) {
-                console.log("user successfully retrieved", data);
-                this.setState({
-                    user: data
-                });
-            }.bind(this),
-            error: function(data) {
+        AuthStore.getLoggedInUser(function(err, user){
+            if(err){
                 //user not logged in
-                console.log("error receiving user", data);
+                console.log("user not logged in");
                 this.setState({
                     user: null
                 })
-            }.bind(this),
-            dataType: 'json'
-        });
+            }else{
+                console.log("user successfully retrieved", user);
+                this.setState({
+                    user: user
+                });
+            }
+        }.bind(this));
     },
     render: function() {
-        console.log(this.props);
         return (
             <div>
                 <Navigation user={this.state.user} onPageChange={ this.handlePageChange}/>
-            
                 <div className="container text-center">
                     <p></p>
+                    {this.props.location.state && this.props.location.state.modal?
+                        this.previousChildren:null}
                     {this.props.children}
+                   
                 </div>
             </div>
         )
@@ -69,10 +69,11 @@ var App = React.createClass({
 
 
 ReactDOM.render((
-  <Router history={browserHistory}>
+    <Router history={browserHistory}>
     <Route path="/" component={App}>
       <Route path="addBooks" component={AddBooks}/>
       <Route path="myBooks" component={MyBooks}/>
+      <Route path="login" component={Login}/>
       <IndexRoute component={AllBooks}/>
     </Route>
   </Router>

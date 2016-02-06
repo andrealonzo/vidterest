@@ -4,27 +4,30 @@ var React = require("react");
 var BookList = require("./BookList");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
-/**
- * Retrieve the current Books data from the BookStore
- */
-function getBooksState() {
-    return {
-        books: BookStore.getAll()
-    };
-}
+
+
 var AllBooks = React.createClass({
-getInitialState: function() {
-        return getBooksState();
+    setBooksState: function() {
+        BookStore.getAll(function(books) {
+            this.setState({
+                books:books
+            });
+        }.bind(this));
+    },
+    getInitialState: function() {
+        return {
+            books: []
+        };
     },
     componentDidMount: function() {
-
+        this.setBooksState();
         BookStore.addChangeListener(this._onChange);
     },
     componentWillUnmount: function() {
         BookStore.removeChangeListener(this._onChange);
     },
-    handleRemoveBook:function(book){
-        BookActions.removeBook(book);
+    handleRequestBook: function(book) {
+        BookActions.requestBook(book);
     },
 
     render: function() {
@@ -37,12 +40,12 @@ getInitialState: function() {
 
         )
     },
-        /**
+    /**
      * Event handler for 'change' events coming from the BookStore
      */
     _onChange: function() {
-        this.setState(getBooksState());
-    } 
+        this.setBooksState();
+    }
 
 
 });

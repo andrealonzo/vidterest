@@ -22,20 +22,17 @@ module.exports = function (app, passport) {
 	var bookHandler = new BookHandler();
 	
 
-	app.route('/')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/index.html');
-		});
+
 		
-	app.route('/login')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/login.html');
-		});
+	// app.route('/login')
+	// 	.get(function (req, res) {
+	// 		res.sendFile(path + '/public/login.html');
+	// 	});
 
 	app.route('/logout')
 		.get(function (req, res) {
 			req.logout();
-			res.redirect('/');
+			res.json({msg:"sucessful logout"});
 		});
 
 	app.route('/profile')
@@ -48,7 +45,19 @@ module.exports = function (app, passport) {
 	app.route('/api/searchExternal/:searchTerm')
 		.get(bookHandler.searchExternal);
 		
+		
+	app.route('/api/user/books/')
+		.get(bookHandler.getBooksFromUser);
+			
+	app.route('/api/books/request')
+		.post(bookHandler.request)
+		
 	app.route('/api/books/')
+		.post(bookHandler.add)
+		.delete(bookHandler.remove)
+		.get(bookHandler.getAll);
+		
+	app.route('/api/books/getAll')
 		.post(bookHandler.add)
 		.delete(bookHandler.remove)
 		.get(bookHandler.getAll);
@@ -87,19 +96,24 @@ module.exports = function (app, passport) {
 			failureRedirect: '/login'
 		}));
 		
-	app.route('/api/reservations')
-		.post(isLoggedIn, reservationHandler.addReservation)
-		.delete(isLoggedIn, reservationHandler.removeReservation);
+	// app.route('/api/reservations')
+	// 	.post(isLoggedIn, reservationHandler.addReservation)
+	// 	.delete(isLoggedIn, reservationHandler.removeReservation);
 		
-	app.route('/openapi/reservations')
-		.get(reservationHandler.getReservations);
+	// app.route('/openapi/reservations')
+	// 	.get(reservationHandler.getReservations);
 	
-	app.route('/openapi/yelp')
-		.get(yelpHandler.getResults);
+	// app.route('/openapi/yelp')
+	// 	.get(yelpHandler.getResults);
 		
 	app.route('/signup')
 		.post(userHandler.signup);
 	app.route('/login')
 		.post(userHandler.login);
+		
+	app.route('/*')
+		.get(function (req, res) {
+			res.sendFile(path + '/public/index.html');
+		});
 		
 };
