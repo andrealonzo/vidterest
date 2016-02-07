@@ -13,7 +13,6 @@ function ReservationHandler () {
 	
 	
 	this.getReservations = function (req, res) {
-	    console.log("received get reservation request for",req.query);
 	    var businessId = req.query.id;
 	    Businesses.findOne({ 'id': businessId }, function (err, business) {
 	        

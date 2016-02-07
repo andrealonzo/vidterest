@@ -24,7 +24,10 @@ module.exports = function (passport) {
 		callbackURL: configAuth.googleAuth.callbackURL
 	},
 	function (token, refreshToken, profile, done) {
+		
+		console.log(profile);
 		process.nextTick(function () {
+			
 			User.findOne({ 'google.id': profile.id }, function (err, user) {
 				if (err) {
 					return done(err);
@@ -52,7 +55,8 @@ module.exports = function (passport) {
 	passport.use(new FacebookStrategy({
 		clientID: configAuth.facebookAuth.clientID,
 		clientSecret: configAuth.facebookAuth.clientSecret,
-		callbackURL: configAuth.facebookAuth.callbackURL
+		callbackURL: configAuth.facebookAuth.callbackURL,
+        profileFields: ['emails']
 	},
 	function (token, refreshToken, profile, done) {
 		process.nextTick(function () {
@@ -87,6 +91,8 @@ module.exports = function (passport) {
 		callbackURL: configAuth.githubAuth.callbackURL
 	},
 	function (token, refreshToken, profile, done) {
+		
+		console.log("github profile ", profile);
 		process.nextTick(function () {
 			User.findOne({ 'github.id': profile.id }, function (err, user) {
 				if (err) {

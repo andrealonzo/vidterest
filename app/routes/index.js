@@ -80,7 +80,7 @@ module.exports = function (app, passport) {
 		}));
 
 	app.route('/auth/facebook')
-		.get(passport.authenticate('facebook'));
+		.get(passport.authenticate('facebook', { scope: 'email'}));
 
 	app.route('/auth/facebook/callback')
 		.get(passport.authenticate('facebook', {
@@ -90,7 +90,7 @@ module.exports = function (app, passport) {
 
 	app.route('/auth/google')
 		.get(passport.authenticate('google', 
-			{ scope: 'https://www.googleapis.com/auth/plus.login' }));
+			{ scope: 'profile email' }));
 
 	app.route('/auth/google/callback')
 		.get(passport.authenticate('google', {

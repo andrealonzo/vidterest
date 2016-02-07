@@ -18,7 +18,7 @@ module.exports = React.createClass({
             </img>
             <div><a href="#">{this.props.book.title}</a></div>
             <div>{this.props.book.authors?this.props.book.authors[0]:null}</div>
-            <div>{this.props.book.user_requests.length?"Requested By " + this.props.book.user_requests[0].email:null}</div>
+            <div>{this.props.book.user_requests?"Requested By " + this.props.book.user_requests[0].email:null}</div>
               <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>
               </div>
             </div>

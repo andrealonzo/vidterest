@@ -6289,7 +6289,7 @@
 	            ), 
 	            React.createElement("div", null, React.createElement("a", {href: "#"}, this.props.book.title)), 
 	            React.createElement("div", null, this.props.book.authors?this.props.book.authors[0]:null), 
-	            React.createElement("div", null, this.props.book.user_requests.length?"Requested By " + this.props.book.user_requests[0].email:null), 
+	            React.createElement("div", null, this.props.book.user_requests?"Requested By " + this.props.book.user_requests[0].email:null), 
 	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText)
 	              )
 	            )
