@@ -25,3 +25,14 @@ body{
 .zs-subhead{
     color:white;
 }
+
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+
+    background-color: inherit;
+}
+.navbar-nav>li>a.zs-profile-dropdown{
+    
+    padding-top:0px;
+    padding-bottom:0px;
+}

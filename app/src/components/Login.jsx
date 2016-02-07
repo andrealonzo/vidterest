@@ -56,37 +56,6 @@ module.exports = React.createClass({
             }
           }
         }.bind(this));
-        // var apiUrl = "/login";
-        // $.ajax({
-        //   url: apiUrl,
-        //   dataType: 'json',
-        //   type: 'POST',
-        //   data: loginData,
-        //   success: function(data) {
-            
-        //     // this.setState({
-        //     //   showPage:"LocalLogin",
-        //     //   message:{
-        //     //     msg: "Login successful!",
-        //     //     type:"success"
-        //     // }});
-            
-        //     //try to place this in a callback
-        //     AuthActions.updateLogin(true);
-        //     if (location.state && location.state.nextPathname) {
-        //       this.context.router.replace(location.state.nextPathname)
-        //     } else {
-        //       this.context.router.replace('/')
-        //     }
-        //     //end callback
-        //   }.bind(this),
-        //   error: function(err) {
-        //     this.setState({message:{
-        //       msg: err.responseJSON.msg,
-        //       type:"error"
-        //     }});
-        //   }.bind(this)
-        // });
       },
       handleBackClickOnLocalLogin:function(){
         this.setState({showPage:"ExternalLoginOptions",message:{}});

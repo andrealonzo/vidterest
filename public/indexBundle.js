@@ -51,8 +51,9 @@
 	var Navigation = __webpack_require__(3)
 	var MyBooks = __webpack_require__(72)
 	var AllBooks = __webpack_require__(77)
-	var AddBooks = __webpack_require__(79)
-	var MyRequests = __webpack_require__(91)
+	var AddBooks = __webpack_require__(78)
+	var MyRequests = __webpack_require__(80)
+	var RequestsForYou = __webpack_require__(91)
 	var Login = __webpack_require__(81)
 	var Footer = __webpack_require__(86)
 	var AuthStore = __webpack_require__(62);
@@ -121,6 +122,7 @@
 	      React.createElement(Route, {path: "AddBooks", component: AddBooks}), 
 	      React.createElement(Route, {path: "MyBooks", component: MyBooks}), 
 	      React.createElement(Route, {path: "MyRequests", component: MyRequests}), 
+	      React.createElement(Route, {path: "RequestsForYou", component: RequestsForYou}), 
 	      React.createElement(Route, {path: "Login", component: Login}), 
 	      React.createElement(IndexRoute, {component: AllBooks})
 	    )
@@ -202,12 +204,27 @@
 	            React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
 
 	                React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	                    React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, React.createElement("div", {className: "zs-nav-button"}, "My Requests"))), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, React.createElement("div", {className: "zs-nav-button"}, "My Books"))), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, React.createElement("div", {className: "zs-nav-button"}, "Add a Book"))), 
 	                    this.state.loggedInUser?
-	                    React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
-	                      React.createElement("div", {className: "zs-nav-button"}, this.state.loggedInUser.email, " Logout")))
+	                     React.createElement("li", {className: "dropdown"}, 
+	                     this.state.loggedInUser.imageUrl?
+	                      React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, 
+	                      React.createElement("img", {className: "zs-profile-pic img-responsive", src: this.state.loggedInUser.imageUrl})
+	                    ):
+	                    React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, 
+	                      React.createElement("div", {className: "zs-nav-button"}, "Welcome ", this.state.loggedInUser.displayName, "! ")
+	                    ), 
+	                     
+	                      React.createElement("ul", {className: "dropdown-menu"}, 
+	                      
+	                        React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Requests")), 
+	                    React.createElement("li", null, React.createElement(Link, {to: "RequestsForYou"}, "Request For You")), 
+	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "My Books")), 
+	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, "Add a Book")), 
+	                        React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
+	                        "Logout"
+	                      ))
+	                      )
+	                    )
 	                      :
 	                    React.createElement("li", null, React.createElement(Link, {to: {
 	                        pathname: "Login",
@@ -6180,7 +6197,7 @@
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
 	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(78);
+	var BookStore = __webpack_require__(76);
 
 
 	module.exports = React.createClass({displayName: "module.exports",
@@ -6288,8 +6305,18 @@
 	            React.createElement("img", {className: "img-responsive", src: this.props.book.thumbnail}
 	            ), 
 	            React.createElement("div", null, React.createElement("a", {href: "#"}, this.props.book.title)), 
-	            React.createElement("div", null, this.props.book.authors?this.props.book.authors[0]:null), 
-	            React.createElement("div", null, this.props.book.user_requests?"Requested By " + this.props.book.user_requests[0].email:null), 
+	            
+	            this.props.book.authors?this.props.book.authors.map(function(author){
+	                return(
+	                React.createElement("div", null, 
+	                author
+	                ));
+	            }):null, 
+	            this.props.book.user_request?
+	                React.createElement("div", null, 
+	                "Requested By ", this.props.book.user_request.user.displayName
+	                ):null, 
+	            
 	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText)
 	              )
 	            )
@@ -6417,66 +6444,7 @@
 
 
 /***/ },
-/* 76 */,
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(78);
-
-
-	var AllBooks = React.createClass({displayName: "AllBooks",
-	    setBooksState: function() {
-	        BookStore.getAll(function(books) {
-	            this.setState({
-	                books:books
-	            });
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return {
-	            books: []
-	        };
-	    },
-	    componentDidMount: function() {
-	        this.setBooksState();
-	        BookStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        BookStore.removeChangeListener(this._onChange);
-	    },
-	    handleRequestBook: function(book) {
-	        BookActions.requestBook(book);
-	    },
-
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	            React.createElement("h1", null, "All Books"), 
-	            React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRequestBook, bookClickText: "Request Book"})
-
-	        )
-
-	        )
-	    },
-	    /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setBooksState();
-	    }
-
-
-	});
-
-	module.exports = AllBooks;
-
-/***/ },
-/* 78 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
@@ -6582,7 +6550,7 @@
 
 
 /***/ },
-/* 79 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -6590,7 +6558,65 @@
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
 	var BookActions = __webpack_require__(75);
-	var ExternalSearchStore = __webpack_require__(80);
+	var BookStore = __webpack_require__(76);
+
+
+	var AllBooks = React.createClass({displayName: "AllBooks",
+	    setBooksState: function() {
+	        BookStore.getAll(function(books) {
+	            this.setState({
+	                books:books
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return {
+	            books: []
+	        };
+	    },
+	    componentDidMount: function() {
+	        this.setBooksState();
+	        BookStore.addChangeListener(this._onChange);
+	    },
+	    componentWillUnmount: function() {
+	        BookStore.removeChangeListener(this._onChange);
+	    },
+	    handleRequestBook: function(book) {
+	        BookActions.requestBook(book);
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	            React.createElement("h1", null, "All Books"), 
+	            React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRequestBook, bookClickText: "Request Book"})
+
+	        )
+
+	        )
+	    },
+	    /**
+	     * Event handler for 'change' events coming from the BookStore
+	     */
+	    _onChange: function() {
+	        this.setBooksState();
+	    }
+
+
+	});
+
+	module.exports = AllBooks;
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var BookList = __webpack_require__(73);
+	var BookActions = __webpack_require__(75);
+	var ExternalSearchStore = __webpack_require__(79);
 	var assign = __webpack_require__(70);
 
 	function getExternalSearchState() {
@@ -6660,7 +6686,7 @@
 	});
 
 /***/ },
-/* 80 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
@@ -6732,6 +6758,60 @@
 
 
 /***/ },
+/* 80 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var BookList = __webpack_require__(73);
+	var BookActions = __webpack_require__(75);
+	var BookStore = __webpack_require__(76);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	    setBooksState: function() {
+	        BookStore.getUserRequests(function(books) {
+	            this.setState({
+	                outstandingRequests:books
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return{
+	            outstandingRequests:[]
+	        }
+	    },
+	    componentDidMount: function() {
+	        this.setBooksState();
+	        BookStore.addChangeListener(this._onChange);
+	    },
+	    componentWillUnmount: function() {
+	        BookStore.removeChangeListener(this._onChange);
+	    },
+	    handleRemoveRequest:function(book){
+	        BookActions.removeRequest(book);
+	    },
+	    render: function() {
+	        return (
+	             React.createElement("div", null, 
+	        React.createElement("h1", null, "My Outstanding Requests"), 
+	        React.createElement(BookList, {books: this.state.outstandingRequests, bookClickAction: this.handleRemoveRequest, bookClickText: "Remove Request"}), 
+	    
+	        React.createElement("h1", null, "My Approved Requests")
+	        
+	    )
+	        )
+	    },
+	        /**
+	     * Event handler for 'change' events coming from the BookStore
+	     */
+	    _onChange: function() {
+	        this.setBooksState();
+	    }
+	});
+
+/***/ },
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6793,37 +6873,6 @@
 	            }
 	          }
 	        }.bind(this));
-	        // var apiUrl = "/login";
-	        // $.ajax({
-	        //   url: apiUrl,
-	        //   dataType: 'json',
-	        //   type: 'POST',
-	        //   data: loginData,
-	        //   success: function(data) {
-	            
-	        //     // this.setState({
-	        //     //   showPage:"LocalLogin",
-	        //     //   message:{
-	        //     //     msg: "Login successful!",
-	        //     //     type:"success"
-	        //     // }});
-	            
-	        //     //try to place this in a callback
-	        //     AuthActions.updateLogin(true);
-	        //     if (location.state && location.state.nextPathname) {
-	        //       this.context.router.replace(location.state.nextPathname)
-	        //     } else {
-	        //       this.context.router.replace('/')
-	        //     }
-	        //     //end callback
-	        //   }.bind(this),
-	        //   error: function(err) {
-	        //     this.setState({message:{
-	        //       msg: err.responseJSON.msg,
-	        //       type:"error"
-	        //     }});
-	        //   }.bind(this)
-	        // });
 	      },
 	      handleBackClickOnLocalLogin:function(){
 	        this.setState({showPage:"ExternalLoginOptions",message:{}});
@@ -6981,6 +7030,9 @@
 	        e.preventDefault();
 	        this.props.onSubmit(this.state);
 	      },
+	      handleDisplayNameChange:function(e){
+	        this.setState({displayName:e.target.value});
+	      },
 	      handleEmailChange:function(e){
 	        this.setState({email:e.target.value});
 	      },
@@ -6992,6 +7044,7 @@
 	      },
 	      getInitialState:function(){
 	        return{
+	          displayName:'',
 	          email:'',
 	          password:'',
 	          confirmPassword:''
@@ -7007,6 +7060,11 @@
 	      React.createElement("div", {className: "modal-body text-left"}, 
 	          React.createElement(Message, {message: this.props.message}), 
 	            React.createElement("form", {onSubmit: this.handleSubmit}, 
+	            
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Full Name"), 
+	            React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", value: this.state.displayName, onChange: this.handleDisplayNameChange})
+	          ), 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Email address"), 
 	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
@@ -7028,12 +7086,6 @@
 	          )
 	          )
 	        )
-	      
-	    
-			
-	        
-
-			
 	      ), 
 	      React.createElement("div", {className: "modal-footer"}
 	      )
@@ -7187,7 +7239,7 @@
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n", ""]);
 
 	// exports
 
@@ -7511,20 +7563,28 @@
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
 	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(78);
+	var BookStore = __webpack_require__(76);
 
 
 	module.exports = React.createClass({displayName: "module.exports",
 	    setBooksState: function() {
-	        BookStore.getUserRequests(function(books) {
+	        BookStore.getAllFromUser(function(books) {
+	            var requestsFromOtherUsers = books.filter(function(book){
+	                return (book.user_request && !book.user_request.approved);
+	            });
+	            var approvedRequests = books.filter(function(book){
+	                return (book.user_request && book.user_request.approved);
+	            });
 	            this.setState({
-	                books:books
+	                requestsFromOtherUsers:requestsFromOtherUsers,
+	                approvedRequests:approvedRequests
 	            });
 	        }.bind(this));
 	    },
 	    getInitialState: function() {
 	        return{
-	            books:[]
+	            requestsFromOtherUsers:[],
+	            approvedRequests:[],
 	        }
 	    },
 	    componentDidMount: function() {
@@ -7534,14 +7594,18 @@
 	    componentWillUnmount: function() {
 	        BookStore.removeChangeListener(this._onChange);
 	    },
-	    handleRemoveRequest:function(book){
-	        BookActions.removeRequest(book);
+	    handleApproveRequest:function(book){
+	        BookActions.removeBook(book);
 	    },
 	    render: function() {
+	        console.log(this.state.books);
 	        return (
 	             React.createElement("div", null, 
-	        React.createElement("h1", null, "My Requests"), 
-	        React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRemoveRequest, bookClickText: "Remove Request"})
+	        React.createElement("h1", null, "Requests From Other Users"), 
+	        React.createElement(BookList, {books: this.state.requestsFromOtherUsers, bookClickAction: this.handleApproveRequest, bookClickText: "Approve Request"}), 
+	        
+	        React.createElement("h1", null, "Requests You've Approved"), 
+	        React.createElement(BookList, {books: this.state.approvedRequests})
 	    )
 	        )
 	    },

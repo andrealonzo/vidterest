@@ -5,6 +5,7 @@ var passport = require('passport');
 
 function UserHandler(){
     this.signup = function(req,res,next){
+        req.assert('displayName', 'Name must not be empty').notEmpty();
         req.assert('email', 'Email is not valid').isEmail();
         req.assert('password', 'Password must be at least 4 characters long').len(4);
         req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -14,11 +15,9 @@ function UserHandler(){
             return res.status(400).json(errors[0]);
         }
          
-      var user = new User();
-      user.email = req.body.email;
-      user.password=req.body.password;
+      var user = new User(req.body);
 
-      User.findOne({ email: req.body.email }, function(err, existingUser) {
+      User.findOne({ email: user.email }, function(err, existingUser) {
         if (existingUser) {
           return res.status(400).json({msg: 'Account with that email address already exists.' });
         }

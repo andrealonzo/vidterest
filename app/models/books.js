@@ -13,11 +13,14 @@ var Book = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },    
-  user_requests: [{
+  user_request: {
+    user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         unique: true
-    }]
+    },
+    approved:Boolean
+  }
 });
 
 module.exports = mongoose.model('Book', Book);

@@ -17,8 +17,18 @@ module.exports = React.createClass({
             <img className="img-responsive" src={this.props.book.thumbnail}>
             </img>
             <div><a href="#">{this.props.book.title}</a></div>
-            <div>{this.props.book.authors?this.props.book.authors[0]:null}</div>
-            <div>{this.props.book.user_requests?"Requested By " + this.props.book.user_requests[0].email:null}</div>
+            
+            {this.props.book.authors?this.props.book.authors.map(function(author){
+                return(
+                <div>
+                {author}
+                </div>);
+            }):null}
+            {this.props.book.user_request?
+                <div>
+                Requested By {this.props.book.user_request.user.displayName}
+                </div>:null
+            }
               <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>
               </div>
             </div>

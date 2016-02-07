@@ -10,13 +10,13 @@ module.exports = React.createClass({
     setBooksState: function() {
         BookStore.getUserRequests(function(books) {
             this.setState({
-                books:books
+                outstandingRequests:books
             });
         }.bind(this));
     },
     getInitialState: function() {
         return{
-            books:[]
+            outstandingRequests:[]
         }
     },
     componentDidMount: function() {
@@ -32,8 +32,11 @@ module.exports = React.createClass({
     render: function() {
         return (
              <div >
-        <h1>My Requests</h1>
-        <BookList books = {this.state.books} bookClickAction = {this.handleRemoveRequest} bookClickText = {"Remove Request"} />
+        <h1>My Outstanding Requests</h1>
+        <BookList books = {this.state.outstandingRequests} bookClickAction = {this.handleRemoveRequest} bookClickText = {"Remove Request"} />
+    
+        <h1>My Approved Requests</h1>
+        
     </div>
         )
     },

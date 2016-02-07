@@ -7,6 +7,9 @@ module.exports = React.createClass({
         e.preventDefault();
         this.props.onSubmit(this.state);
       },
+      handleDisplayNameChange:function(e){
+        this.setState({displayName:e.target.value});
+      },
       handleEmailChange:function(e){
         this.setState({email:e.target.value});
       },
@@ -18,6 +21,7 @@ module.exports = React.createClass({
       },
       getInitialState:function(){
         return{
+          displayName:'',
           email:'',
           password:'',
           confirmPassword:''
@@ -33,6 +37,11 @@ module.exports = React.createClass({
       <div className="modal-body text-left">
           <Message message={this.props.message}></Message>
             <form onSubmit = {this.handleSubmit}>
+            
+          <div className="form-group">
+            <label >Full Name</label>
+            <input type="text" className="form-control" id="exampleInputEmail1" value={this.state.displayName} onChange={this.handleDisplayNameChange}></input>
+          </div>
           <div className="form-group">
             <label >Email address</label>
             <input type="email" className="form-control" id="exampleInputEmail1" value={this.state.email} onChange={this.handleEmailChange}></input>
@@ -54,12 +63,6 @@ module.exports = React.createClass({
           </div>
           </div>
         </form>
-      
-    
-		
-        
-
-		
       </div>
       <div className="modal-footer">
       </div>

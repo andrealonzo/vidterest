@@ -56,12 +56,27 @@ module.exports = React.createClass({
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul className="nav navbar-nav navbar-right">
-                    <li ><Link to={"MyRequests"}><div  className="zs-nav-button" >My Requests</div></Link></li>
-                    <li ><Link to={"MyBooks"}><div  className="zs-nav-button" >My Books</div></Link></li>
-                    <li ><Link to={"AddBooks"}><div  className="zs-nav-button" >Add a Book</div></Link></li>
                     {this.state.loggedInUser?
-                    <li ><a href="#" onClick={this.handleLogoutClick}>
-                      <div className="zs-nav-button" >{this.state.loggedInUser.email} Logout</div></a></li>
+                     <li className="dropdown">
+                     {this.state.loggedInUser.imageUrl?
+                      <a href="#" className="dropdown-toggle zs-profile-dropdown " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      <img className="zs-profile-pic img-responsive" src={this.state.loggedInUser.imageUrl}/> 
+                    </a>:
+                    <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      <div className="zs-nav-button" >Welcome {this.state.loggedInUser.displayName}! </div>
+                    </a>
+                     }
+                      <ul className="dropdown-menu">
+                      
+                        <li ><Link to={"MyRequests"}>My Requests</Link></li>
+                    <li ><Link to={"RequestsForYou"}>Request For You</Link></li>
+                    <li ><Link to={"MyBooks"}>My Books</Link></li>
+                    <li ><Link to={"AddBooks"}>Add a Book</Link></li>
+                        <li><a href="#" onClick={this.handleLogoutClick}>
+                        Logout
+                      </a></li>
+                      </ul>
+                    </li>
                       :
                     <li ><Link to={{
                         pathname: "Login",
