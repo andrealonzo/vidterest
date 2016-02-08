@@ -26,6 +26,24 @@ var BookStore = assign({}, EventEmitter.prototype, {
     });
 
   },
+  
+    getAvailable: function(done) {
+    var url = "/api/books/available/";
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      success: function(data) {
+        done(data);
+      },
+      error: function(data) {
+        console.log("error receiving data", data);
+        done([]);
+      },
+      dataType: 'json'
+    });
+
+  },
 
   getAllFromUser: function(done) {
     var url = "/api/user/books/";

@@ -21,7 +21,11 @@ var BookList = React.createClass({
              }
             return(
             <div key = {book._id || book.id }>
-            <Book book = {book}  onClick={this.handleOnClick} clickText={this.props.bookClickText}/>
+            {
+                React.Children.map(this.props.children, function(child) {
+                    return React.cloneElement(child, { book: book });
+                }.bind(book))
+            }
             {rowEnd}
             </div>
             )

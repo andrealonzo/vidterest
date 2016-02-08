@@ -2,6 +2,7 @@
 'use strict'
 var React = require("react");
 var BookList = require("./BookList");
+var Book = require("./Book");
 var BookActions = require('../../actions/BookActions');
 var ExternalSearchStore = require('../../stores/ExternalSearchStore');
 var assign = require('object-assign');
@@ -57,7 +58,9 @@ module.exports = React.createClass({
             </div>
 
         {this.state.searching?<img src="/public/img/ajax-loader.gif"></img>:null}
-        <BookList books = {this.state.books} bookClickAction = {this.handleAddBook} bookClickText = {"Add Book"} />
+        <BookList books = {this.state.books}>
+                <Book onClick={this.handleAddBook} clickText = {"Add Book"}  />
+        </BookList>
 
     </div>
         )

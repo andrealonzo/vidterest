@@ -2,6 +2,7 @@
 'use strict'
 var React = require("react");
 var BookList = require("./BookList");
+var Book = require("./Book");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
 
@@ -35,17 +36,21 @@ module.exports = React.createClass({
         BookStore.removeChangeListener(this._onChange);
     },
     handleApproveRequest:function(book){
-        BookActions.removeBook(book);
+        BookActions.approveRequest(book);
     },
     render: function() {
         console.log(this.state.books);
         return (
              <div >
         <h1>Requests From Other Users</h1>
-        <BookList books = {this.state.requestsFromOtherUsers} bookClickAction = {this.handleApproveRequest} bookClickText = {"Approve Request"} />
+        <BookList books = {this.state.requestsFromOtherUsers}>
+           <Book onClick={this.handleApproveRequest} clickText = {"Approve Request"}  />
+        </BookList > 
         
         <h1>Requests You've Approved</h1>
-        <BookList books = {this.state.approvedRequests}/>
+        <BookList books = {this.state.approvedRequests}>          
+            <Book />
+        </BookList > 
     </div>
         )
     },

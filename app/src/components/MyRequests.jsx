@@ -2,6 +2,7 @@
 'use strict'
 var React = require("react");
 var BookList = require("./BookList");
+var Book = require("./Book");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
 
@@ -9,14 +10,22 @@ var BookStore = require('../../stores/BookStore');
 module.exports = React.createClass({
     setBooksState: function() {
         BookStore.getUserRequests(function(books) {
+            var outstandingRequests = books.filter(function(book){
+                return (!book.user_request.approved);
+            });
+            var approvedRequests = books.filter(function(book){
+                return (book.user_request.approved);
+            });
             this.setState({
-                outstandingRequests:books
+                outstandingRequests:outstandingRequests,
+                approvedRequests:approvedRequests
             });
         }.bind(this));
     },
     getInitialState: function() {
         return{
-            outstandingRequests:[]
+            outstandingRequests:[],
+            approvedRequests:[]
         }
     },
     componentDidMount: function() {
@@ -33,10 +42,15 @@ module.exports = React.createClass({
         return (
              <div >
         <h1>My Outstanding Requests</h1>
-        <BookList books = {this.state.outstandingRequests} bookClickAction = {this.handleRemoveRequest} bookClickText = {"Remove Request"} />
+        <BookList books = {this.state.outstandingRequests}>
+            <Book onClick={this.handleRemoveRequest} clickText = {"Remove Request"}  />
+        </BookList >
     
         <h1>My Approved Requests</h1>
-        
+        <BookList books = {this.state.approvedRequests}>
+            <Book onClick={this.handleRemoveRequest} clickText = {"Remove Request"}  />
+        </BookList >
+         
     </div>
         )
     },

@@ -53,6 +53,30 @@ module.exports = function() {
       });
 
   }
+  
+   this.approveRequest = function(req, res) {
+    Book.findOne({
+      '_id': mongoose.Types.ObjectId(req.body._id)
+    }, function(err, book) {
+      if (err) {
+        console.log("An error occurred", err);
+        return res.json({
+          error: "An error occurred"
+        });
+      }
+      book.user_request.approved = true;
+      book.save(function(err, savedBook) {
+        if (err) {
+          console.log("An error occurred", err);
+          return res.json({
+            error: "An error occurred"
+          });
+        }
+        
+        return res.json(book);
+      });
+    });
+   }
 
   this.getRequests = function(req, res) {
     if (!req.user) {
@@ -211,6 +235,22 @@ module.exports = function() {
 
   this.getAll = function(req, res) {
     Book.find({})
+      .populate('addedBy user_request.user')
+      .exec(function(err, books) {
+        if (err) {
+          console.log("An error occurred", err);
+          return res.status(400).json({
+            error: "An error occurred"
+          });
+        }
+        return res.json(books);
+      });
+
+
+  }
+
+  this.getAvailable = function(req, res) {
+    Book.find({user_request: { $exists: false } })
       .populate('addedBy user_request.user')
       .exec(function(err, books) {
         if (err) {

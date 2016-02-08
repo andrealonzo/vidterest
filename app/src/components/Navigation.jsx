@@ -52,7 +52,7 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
-                </button><Link to={"/"} className="navbar-brand" id="AllBooks"><span className="zs-brand">ZOTSWAP</span> <span className="zs-subhead">online book exchange</span> </Link></div>
+                </button><Link to={"/"} className="navbar-brand" id="AllBooks"><img src="/public/img/BCeater-right.png" className="pull-left" height="20px"></img><span className="zs-brand">ZOTSWAP</span> <span className="zs-subhead">online book exchange</span> </Link></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul className="nav navbar-nav navbar-right">
@@ -69,7 +69,6 @@ module.exports = React.createClass({
                       <ul className="dropdown-menu">
                       
                         <li ><Link to={"MyRequests"}>My Requests</Link></li>
-                    <li ><Link to={"RequestsForYou"}>Request For You</Link></li>
                     <li ><Link to={"MyBooks"}>My Books</Link></li>
                     <li ><Link to={"AddBooks"}>Add a Book</Link></li>
                         <li><a href="#" onClick={this.handleLogoutClick}>

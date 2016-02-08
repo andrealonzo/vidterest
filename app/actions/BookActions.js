@@ -76,6 +76,25 @@ var BookActions = {
             dataType: 'json'
         }); 
     },
+    
+    approveRequest:function(book){
+        var url = "/api/books/request/approve/";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(book),
+            contentType: "application/json",
+            success: function(data) {
+                AppDispatcher.dispatch({
+                    actionType: BookConstants.BOOKS_UPDATE
+                });
+            }.bind(this),
+            error: function(data) {
+               console.log("error requesting data", data);
+            },
+            dataType: 'json'
+        }); 
+    },
     searchExternal: function(searchTerm) {
         if (!searchTerm) {
             AppDispatcher.dispatch({

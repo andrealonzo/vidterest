@@ -2,13 +2,14 @@
 'use strict'
 var React = require("react");
 var BookList = require("./BookList");
+var Book = require("./Book");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
 
 
 var AllBooks = React.createClass({
     setBooksState: function() {
-        BookStore.getAll(function(books) {
+        BookStore.getAvailable(function(books) {
             this.setState({
                 books:books
             });
@@ -33,8 +34,10 @@ var AllBooks = React.createClass({
     render: function() {
         return (
             <div>
-            <h1>All Books</h1>
-            <BookList books = {this.state.books} bookClickAction = {this.handleRequestBook} bookClickText = {"Request Book"} />
+            <h1>Available Books To Request</h1>
+            <BookList books = {this.state.books}>
+                <Book onClick={this.handleRequestBook} clickText = {"Request Book"}  />
+            </BookList>
 
         </div>
 

@@ -53,11 +53,11 @@
 	var AllBooks = __webpack_require__(77)
 	var AddBooks = __webpack_require__(78)
 	var MyRequests = __webpack_require__(80)
-	var RequestsForYou = __webpack_require__(91)
-	var Login = __webpack_require__(81)
-	var Footer = __webpack_require__(86)
+	var RequestsForYou = __webpack_require__(81)
+	var Login = __webpack_require__(82)
+	var Footer = __webpack_require__(87)
 	var AuthStore = __webpack_require__(62);
-	__webpack_require__(87);
+	__webpack_require__(88);
 	var assign = __webpack_require__(70);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
@@ -200,7 +200,7 @@
 	                    React.createElement("span", {className: "icon-bar"}), 
 	                    React.createElement("span", {className: "icon-bar"}), 
 	                    React.createElement("span", {className: "icon-bar"})
-	                ), React.createElement(Link, {to: "/", className: "navbar-brand", id: "AllBooks"}, React.createElement("span", {className: "zs-brand"}, "ZOTSWAP"), " ", React.createElement("span", {className: "zs-subhead"}, "online book exchange"), " ")), 
+	                ), React.createElement(Link, {to: "/", className: "navbar-brand", id: "AllBooks"}, React.createElement("img", {src: "/public/img/BCeater-right.png", className: "pull-left", height: "20px"}), React.createElement("span", {className: "zs-brand"}, "ZOTSWAP"), " ", React.createElement("span", {className: "zs-subhead"}, "online book exchange"), " ")), 
 	            React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
 
 	                React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
@@ -217,7 +217,6 @@
 	                      React.createElement("ul", {className: "dropdown-menu"}, 
 	                      
 	                        React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Requests")), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "RequestsForYou"}, "Request For You")), 
 	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "My Books")), 
 	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, "Add a Book")), 
 	                        React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
@@ -6196,6 +6195,7 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
+	var Book = __webpack_require__(74);
 	var BookActions = __webpack_require__(75);
 	var BookStore = __webpack_require__(76);
 
@@ -6203,14 +6203,36 @@
 	module.exports = React.createClass({displayName: "module.exports",
 	    setBooksState: function() {
 	        BookStore.getAllFromUser(function(books) {
+
+	            //sort books based on pending, and approved requests
+	            books.sort(function(book1, book2) {
+	                if (!book1.user_request && !book2.user_request)
+
+	                {
+	                    return 0;
+	                }
+	                if (!book1.user_request && book2.user_request.approved) {
+	                    return -1;
+	                }
+	                if (!book1.user_request && !book2.user_request.approved) {
+	                    return 1;
+	                }
+	                if (!book2.user_request && book1.user_request.approved) {
+	                    return 1;
+	                }
+	                if (!book2.user_request && !book1.user_request.approved) {
+	                    return -1;
+	                }
+	                return book1.user_request.approved - book2.user_request.approved;
+	            })
 	            this.setState({
-	                books:books
+	                books: books
 	            });
 	        }.bind(this));
 	    },
 	    getInitialState: function() {
-	        return{
-	            books:[]
+	        return {
+	            books: []
 	        }
 	    },
 	    componentDidMount: function() {
@@ -6220,19 +6242,26 @@
 	    componentWillUnmount: function() {
 	        BookStore.removeChangeListener(this._onChange);
 	    },
-	    handleRemoveBook:function(book){
+	    handleRemoveBook: function(book) {
 	        BookActions.removeBook(book);
 	    },
+	    handleDenyRequest: function(book) {
+	        BookActions.removeRequest(book);
+	    },
+	    handleApproveRequest: function(book) {
+	        BookActions.approveRequest(book);
+	    },
 	    render: function() {
-	        console.log(this.state.books);
 	        return (
-	             React.createElement("div", null, 
+	            React.createElement("div", null, 
 	        React.createElement("h1", null, "My Books"), 
-	        React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRemoveBook, bookClickText: "Remove Book"})
+	        React.createElement(BookList, {books: this.state.books}, 
+	            React.createElement(Book, {onClick: this.handleRemoveBook, clickText: "Remove Book", displayRequestActions: true, onApproveRequest: this.handleApproveRequest, onDenyRequest: this.handleDenyRequest})
+	        )
 	    )
 	        )
 	    },
-	        /**
+	    /**
 	     * Event handler for 'change' events coming from the BookStore
 	     */
 	    _onChange: function() {
@@ -6267,7 +6296,11 @@
 	             }
 	            return(
 	            React.createElement("div", {key: book._id || book.id}, 
-	            React.createElement(Book, {book: book, onClick: this.handleOnClick, clickText: this.props.bookClickText}), 
+	            
+	                React.Children.map(this.props.children, function(child) {
+	                    return React.cloneElement(child, { book: book });
+	                }.bind(book)), 
+	            
 	            rowEnd
 	            )
 	            )
@@ -6295,6 +6328,12 @@
 
 	    handleOnClick:function(){
 	      this.props.onClick(this.props.book);  
+	    },    
+	    handleApproveRequest:function(){
+	      this.props.onApproveRequest(this.props.book);  
+	    },    
+	    handleDenyRequest:function(){
+	      this.props.onDenyRequest(this.props.book);  
 	    },
 	    render: function() {
 	        return(
@@ -6304,6 +6343,10 @@
 	                  
 	            React.createElement("img", {className: "img-responsive", src: this.props.book.thumbnail}
 	            ), 
+	            this.props.book.addedBy?
+	            React.createElement("div", null, "Added by ", this.props.book.addedBy.displayName):null, 
+	            
+	            
 	            React.createElement("div", null, React.createElement("a", {href: "#"}, this.props.book.title)), 
 	            
 	            this.props.book.authors?this.props.book.authors.map(function(author){
@@ -6312,12 +6355,28 @@
 	                author
 	                ));
 	            }):null, 
-	            this.props.book.user_request?
+	           this.props.clickText?
+	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText):null, 
+	           
+	             this.props.displayRequestActions && this.props.book.user_request?
+	            React.createElement("div", null, 
+	              React.createElement("hr", null), 
+
+	                "Requested By ", this.props.book.user_request.user.displayName, 
+	                
+	                this.props.book.user_request.approved?
 	                React.createElement("div", null, 
-	                "Requested By ", this.props.book.user_request.user.displayName
-	                ):null, 
-	            
-	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText)
+	                "Approved!"
+	                )
+	                :
+	                React.createElement("div", null, 
+	                React.createElement("button", {className: "btn btn-success", onClick: this.handleApproveRequest}, React.createElement("span", {className: "glyphicon glyphicon-ok", "aria-hidden": "true"})), 
+	                React.createElement("button", {className: "btn btn-danger", onClick: this.handleDenyRequest}, React.createElement("span", {className: "glyphicon glyphicon-remove", "aria-hidden": "true"}))
+	                )
+	                
+	                )
+	                :null
+	                
 	              )
 	            )
 	        )
@@ -6407,6 +6466,25 @@
 	            dataType: 'json'
 	        }); 
 	    },
+	    
+	    approveRequest:function(book){
+	        var url = "/api/books/request/approve/";
+	        $.ajax({
+	            type: "POST",
+	            url: url,
+	            data: JSON.stringify(book),
+	            contentType: "application/json",
+	            success: function(data) {
+	                AppDispatcher.dispatch({
+	                    actionType: BookConstants.BOOKS_UPDATE
+	                });
+	            }.bind(this),
+	            error: function(data) {
+	               console.log("error requesting data", data);
+	            },
+	            dataType: 'json'
+	        }); 
+	    },
 	    searchExternal: function(searchTerm) {
 	        if (!searchTerm) {
 	            AppDispatcher.dispatch({
@@ -6460,6 +6538,24 @@
 
 	  getAll: function(done) {
 	    var url = "/api/books/";
+	    $.ajax({
+	      type: "GET",
+	      url: url,
+	      contentType: "application/json",
+	      success: function(data) {
+	        done(data);
+	      },
+	      error: function(data) {
+	        console.log("error receiving data", data);
+	        done([]);
+	      },
+	      dataType: 'json'
+	    });
+
+	  },
+	  
+	    getAvailable: function(done) {
+	    var url = "/api/books/available/";
 	    $.ajax({
 	      type: "GET",
 	      url: url,
@@ -6557,13 +6653,14 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
+	var Book = __webpack_require__(74);
 	var BookActions = __webpack_require__(75);
 	var BookStore = __webpack_require__(76);
 
 
 	var AllBooks = React.createClass({displayName: "AllBooks",
 	    setBooksState: function() {
-	        BookStore.getAll(function(books) {
+	        BookStore.getAvailable(function(books) {
 	            this.setState({
 	                books:books
 	            });
@@ -6588,8 +6685,10 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
-	            React.createElement("h1", null, "All Books"), 
-	            React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleRequestBook, bookClickText: "Request Book"})
+	            React.createElement("h1", null, "Available Books To Request"), 
+	            React.createElement(BookList, {books: this.state.books}, 
+	                React.createElement(Book, {onClick: this.handleRequestBook, clickText: "Request Book"})
+	            )
 
 	        )
 
@@ -6615,6 +6714,7 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
+	var Book = __webpack_require__(74);
 	var BookActions = __webpack_require__(75);
 	var ExternalSearchStore = __webpack_require__(79);
 	var assign = __webpack_require__(70);
@@ -6670,7 +6770,9 @@
 	            ), 
 
 	        this.state.searching?React.createElement("img", {src: "/public/img/ajax-loader.gif"}):null, 
-	        React.createElement(BookList, {books: this.state.books, bookClickAction: this.handleAddBook, bookClickText: "Add Book"})
+	        React.createElement(BookList, {books: this.state.books}, 
+	                React.createElement(Book, {onClick: this.handleAddBook, clickText: "Add Book"})
+	        )
 
 	    )
 	        )
@@ -6765,6 +6867,7 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
+	var Book = __webpack_require__(74);
 	var BookActions = __webpack_require__(75);
 	var BookStore = __webpack_require__(76);
 
@@ -6772,14 +6875,22 @@
 	module.exports = React.createClass({displayName: "module.exports",
 	    setBooksState: function() {
 	        BookStore.getUserRequests(function(books) {
+	            var outstandingRequests = books.filter(function(book){
+	                return (!book.user_request.approved);
+	            });
+	            var approvedRequests = books.filter(function(book){
+	                return (book.user_request.approved);
+	            });
 	            this.setState({
-	                outstandingRequests:books
+	                outstandingRequests:outstandingRequests,
+	                approvedRequests:approvedRequests
 	            });
 	        }.bind(this));
 	    },
 	    getInitialState: function() {
 	        return{
-	            outstandingRequests:[]
+	            outstandingRequests:[],
+	            approvedRequests:[]
 	        }
 	    },
 	    componentDidMount: function() {
@@ -6796,10 +6907,15 @@
 	        return (
 	             React.createElement("div", null, 
 	        React.createElement("h1", null, "My Outstanding Requests"), 
-	        React.createElement(BookList, {books: this.state.outstandingRequests, bookClickAction: this.handleRemoveRequest, bookClickText: "Remove Request"}), 
+	        React.createElement(BookList, {books: this.state.outstandingRequests}, 
+	            React.createElement(Book, {onClick: this.handleRemoveRequest, clickText: "Remove Request"})
+	        ), 
 	    
-	        React.createElement("h1", null, "My Approved Requests")
-	        
+	        React.createElement("h1", null, "My Approved Requests"), 
+	        React.createElement(BookList, {books: this.state.approvedRequests}, 
+	            React.createElement(Book, {onClick: this.handleRemoveRequest, clickText: "Remove Request"})
+	        )
+	         
 	    )
 	        )
 	    },
@@ -6818,9 +6934,77 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var ExternalLoginOptions = __webpack_require__(82);
-	var Signup = __webpack_require__(83);
-	var LocalLogin = __webpack_require__(85);
+	var BookList = __webpack_require__(73);
+	var Book = __webpack_require__(74);
+	var BookActions = __webpack_require__(75);
+	var BookStore = __webpack_require__(76);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	    setBooksState: function() {
+	        BookStore.getAllFromUser(function(books) {
+	            var requestsFromOtherUsers = books.filter(function(book){
+	                return (book.user_request && !book.user_request.approved);
+	            });
+	            var approvedRequests = books.filter(function(book){
+	                return (book.user_request && book.user_request.approved);
+	            });
+	            this.setState({
+	                requestsFromOtherUsers:requestsFromOtherUsers,
+	                approvedRequests:approvedRequests
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return{
+	            requestsFromOtherUsers:[],
+	            approvedRequests:[],
+	        }
+	    },
+	    componentDidMount: function() {
+	        this.setBooksState();
+	        BookStore.addChangeListener(this._onChange);
+	    },
+	    componentWillUnmount: function() {
+	        BookStore.removeChangeListener(this._onChange);
+	    },
+	    handleApproveRequest:function(book){
+	        BookActions.approveRequest(book);
+	    },
+	    render: function() {
+	        console.log(this.state.books);
+	        return (
+	             React.createElement("div", null, 
+	        React.createElement("h1", null, "Requests From Other Users"), 
+	        React.createElement(BookList, {books: this.state.requestsFromOtherUsers}, 
+	           React.createElement(Book, {onClick: this.handleApproveRequest, clickText: "Approve Request"})
+	        ), 
+	        
+	        React.createElement("h1", null, "Requests You've Approved"), 
+	        React.createElement(BookList, {books: this.state.approvedRequests}, 
+	            React.createElement(Book, null)
+	        )
+	    )
+	        )
+	    },
+	        /**
+	     * Event handler for 'change' events coming from the BookStore
+	     */
+	    _onChange: function() {
+	        this.setBooksState();
+	    }
+	});
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var ExternalLoginOptions = __webpack_require__(83);
+	var Signup = __webpack_require__(84);
+	var LocalLogin = __webpack_require__(86);
 	var AuthActions = __webpack_require__(71);
 
 
@@ -6932,7 +7116,7 @@
 			
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -7018,13 +7202,13 @@
 			
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(84);
+	var Message = __webpack_require__(85);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -7097,7 +7281,7 @@
 			
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -7120,13 +7304,13 @@
 			
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(84);
+	var Message = __webpack_require__(85);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -7183,7 +7367,7 @@
 			
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -7205,16 +7389,16 @@
 			
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(88);
+	var content = __webpack_require__(89);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
+	var update = __webpack_require__(91)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -7231,10 +7415,10 @@
 	}
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(89)();
+	exports = module.exports = __webpack_require__(90)();
 	// imports
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 
@@ -7245,7 +7429,7 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports) {
 
 	/*
@@ -7301,7 +7485,7 @@
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -7553,69 +7737,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(76);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	    setBooksState: function() {
-	        BookStore.getAllFromUser(function(books) {
-	            var requestsFromOtherUsers = books.filter(function(book){
-	                return (book.user_request && !book.user_request.approved);
-	            });
-	            var approvedRequests = books.filter(function(book){
-	                return (book.user_request && book.user_request.approved);
-	            });
-	            this.setState({
-	                requestsFromOtherUsers:requestsFromOtherUsers,
-	                approvedRequests:approvedRequests
-	            });
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return{
-	            requestsFromOtherUsers:[],
-	            approvedRequests:[],
-	        }
-	    },
-	    componentDidMount: function() {
-	        this.setBooksState();
-	        BookStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        BookStore.removeChangeListener(this._onChange);
-	    },
-	    handleApproveRequest:function(book){
-	        BookActions.removeBook(book);
-	    },
-	    render: function() {
-	        console.log(this.state.books);
-	        return (
-	             React.createElement("div", null, 
-	        React.createElement("h1", null, "Requests From Other Users"), 
-	        React.createElement(BookList, {books: this.state.requestsFromOtherUsers, bookClickAction: this.handleApproveRequest, bookClickText: "Approve Request"}), 
-	        
-	        React.createElement("h1", null, "Requests You've Approved"), 
-	        React.createElement(BookList, {books: this.state.approvedRequests})
-	    )
-	        )
-	    },
-	        /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setBooksState();
-	    }
-	});
 
 /***/ }
 /******/ ]);

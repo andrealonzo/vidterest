@@ -7,6 +7,12 @@ module.exports = React.createClass({
 
     handleOnClick:function(){
       this.props.onClick(this.props.book);  
+    },    
+    handleApproveRequest:function(){
+      this.props.onApproveRequest(this.props.book);  
+    },    
+    handleDenyRequest:function(){
+      this.props.onDenyRequest(this.props.book);  
     },
     render: function() {
         return(
@@ -16,6 +22,10 @@ module.exports = React.createClass({
                   
             <img className="img-responsive" src={this.props.book.thumbnail}>
             </img>
+            {this.props.book.addedBy?
+            <div>Added by {this.props.book.addedBy.displayName}</div>:null
+            }
+            
             <div><a href="#">{this.props.book.title}</a></div>
             
             {this.props.book.authors?this.props.book.authors.map(function(author){
@@ -24,12 +34,28 @@ module.exports = React.createClass({
                 {author}
                 </div>);
             }):null}
-            {this.props.book.user_request?
-                <div>
+           {this.props.clickText?
+              <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>:null
+           }
+             {this.props.displayRequestActions && this.props.book.user_request?
+            <div>
+              <hr/>
+
                 Requested By {this.props.book.user_request.user.displayName}
-                </div>:null
-            }
-              <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>
+                
+                {this.props.book.user_request.approved?
+                <div>
+                Approved!
+                </div>
+                :
+                <div>
+                <button className="btn btn-success" onClick={this.handleApproveRequest}><span className="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                <button className="btn btn-danger" onClick={this.handleDenyRequest}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                </div>
+                }
+                </div>
+                :null
+                }
               </div>
             </div>
         </div>

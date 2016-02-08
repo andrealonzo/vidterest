@@ -49,20 +49,22 @@ module.exports = function (app, passport) {
 	app.route('/api/user/books/')
 		.get(bookHandler.getBooksFromUser);
 			
+	app.route('/api/books/request/approve/')
+		.post(bookHandler.approveRequest);
+			
 	app.route('/api/books/request/')
 		.post(bookHandler.request)
 		.get(bookHandler.getRequests)
 		.delete(bookHandler.removeRequest)
+		
+	app.route('/api/books/available/')
+		.get(bookHandler.getAvailable);
 		
 	app.route('/api/books/')
 		.post(bookHandler.add)
 		.delete(bookHandler.remove)
 		.get(bookHandler.getAll);
 		
-	app.route('/api/books/getAll')
-		.post(bookHandler.add)
-		.delete(bookHandler.remove)
-		.get(bookHandler.getAll);
 		
 
 	app.route('/api/:id')
