@@ -1,99 +1,77 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var BookConstants = require('../constants/BookConstants');
+var AjaxFunctions = require('../common/AjaxFunctions');
 
 var BookActions = {
 
     addBook:function(book){
         var url = "/api/books/";
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(book),
-            contentType: "application/json",
-            success: function(data) {
+        AjaxFunctions.post(url, book, function(err, data){
+            if(err){
+               console.log("error adding data", err);
+            }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
-            }.bind(this),
-            error: function(data) {
-               console.log("error adding data", data);
-
-            },
-            dataType: 'json'
+            }
+            
         });
     },
     removeBook:function(book){
+        
         var url = "/api/books/";
-        $.ajax({
-            type: "DELETE",
-            url: url,
-            data: JSON.stringify(book),
-            contentType: "application/json",
-            success: function(data) {
+        
+        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
+            if(err){
+               console.log("error deleting book", err);
+            }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
-            }.bind(this),
-            error: function(data) {
-               console.log("error remove data", data);
-            },
-            dataType: 'json'
+            }
+            
         });
+       
     },
     requestBook:function(book){
         var url = "/api/books/request";
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(book),
-            contentType: "application/json",
-            success: function(data) {
+        AjaxFunctions.post(url, book, function(err, data){
+            if(err){
+               console.log("error requesting book", err);
+            }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
-            }.bind(this),
-            error: function(data) {
-               console.log("error requesting data", data);
-            },
-            dataType: 'json'
+            }
+            
         });
     },
     removeRequest:function(book){
         var url = "/api/books/request";
-        $.ajax({
-            type: "DELETE",
-            url: url,
-            data: JSON.stringify(book),
-            contentType: "application/json",
-            success: function(data) {
+        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
+            if(err){
+               console.log("error removing request", err);
+            }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
-            }.bind(this),
-            error: function(data) {
-               console.log("error requesting data", data);
-            },
-            dataType: 'json'
-        }); 
+            }
+            
+        });
     },
     
     approveRequest:function(book){
         var url = "/api/books/request/approve/";
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(book),
-            contentType: "application/json",
-            success: function(data) {
+        AjaxFunctions.post(url, JSON.stringify(book), function(err, data){
+            if(err){
+               console.log("error approving request", err);
+            }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
-            }.bind(this),
-            error: function(data) {
-               console.log("error requesting data", data);
-            },
-            dataType: 'json'
-        }); 
+            }
+            
+        });
     },
     searchExternal: function(searchTerm) {
         if (!searchTerm) {
@@ -104,25 +82,22 @@ var BookActions = {
             return;
         }
         var url = "/api/searchExternal/" + searchTerm;
-        $.ajax({
-            type: "GET",
-            url: url,
-            contentType: "application/json",
-            success: function(data) {
-                AppDispatcher.dispatch({
-                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-                    data: data
-                });
-            }.bind(this),
-            error: function(data) {
-                 console.log("error receiving data", data);
+        AjaxFunctions.get(url, function(err, data){
+            if(err){
+                console.log("error receiving data", data);
                  AppDispatcher.dispatch({
                     actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
                     data: []
                 });
-            }.bind(this),
-            dataType: 'json'
+            }else{
+                AppDispatcher.dispatch({
+                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
+                    data: data
+                });
+            }
+            
         });
+      
     },
 
 

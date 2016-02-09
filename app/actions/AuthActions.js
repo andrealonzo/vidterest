@@ -1,55 +1,52 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var BookConstants = require('../constants/BookConstants');
+var AjaxFunctions = require('../common/AjaxFunctions');
 
 var AuthActions = {
 
-    updateLogin: function(loginStatus) {
-        console.log("updating login");
-        AppDispatcher.dispatch({
-                    actionType: BookConstants.UPDATE_LOGIN,
-                    data: loginStatus
-                });
-    },
+  updateLogin: function(loginStatus) {
+    AppDispatcher.dispatch({
+      actionType: BookConstants.UPDATE_LOGIN,
+      data: loginStatus
+    });
+  },
 
-    
-    login: function(loginData, done) {
-         var apiUrl = "/login";
-        $.ajax({
-          url: apiUrl,
-          dataType: 'json',
-          type: 'POST',
-          data: loginData,
-          success: function(data) {
-            this.updateLogin(true);
-            done();
-          }.bind(this),
-          error: function(err) {
-            this.updateLogin(false);
-            done(err);
-          }.bind(this)
-        });
-        
-    },
-    
-    
-    logout: function() {
-         var apiUrl = "/logout";
-        $.ajax({
-          url: apiUrl,
-          dataType: 'json',
-          type: 'GET',
-          success: function(data) {
-              
-              console.log("user logged out")
-            this.updateLogin(false);
-            
-          }.bind(this),
-          error: function(err) {
-              console.log("error logging out")
-          }.bind(this)
-        });
-        
-    }
+  signup: function(signupData, done) {
+
+    var apiUrl = "/signup";
+    AjaxFunctions.post(apiUrl, signupData, done);
+  },
+
+
+  login: function(loginData, done) {
+
+    var apiUrl = "/login";
+    AjaxFunctions.post(apiUrl, loginData, function(err, data){
+      if(!err){
+        this.updateLogin(true);
+      }
+      done(err, data);
+    }.bind(this));
+
+  },
+
+
+  logout: function() {
+    var apiUrl = "/logout";
+
+    AjaxFunctions.get(apiUrl, function(err) {
+      if (err) {
+        console.log("error logging out", err);
+      }
+      else {
+
+        console.log("user logged out")
+        this.updateLogin(false);
+      }
+    }.bind(this));
+
+
+  }
 };
 
 module.exports = AuthActions;

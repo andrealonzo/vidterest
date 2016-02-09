@@ -57,6 +57,10 @@ module.exports = React.createClass({
 
                 <ul className="nav navbar-nav navbar-right">
                     {this.state.loggedInUser?
+                    <div>
+                    <li ><Link to={"MyRequests"}>My Requests</Link></li>
+                    <li ><Link to={"MyBooks"}>My Books</Link></li>
+                    <li ><Link to={"AddBooks"}>Add a Book</Link></li>
                      <li className="dropdown">
                      {this.state.loggedInUser.imageUrl?
                       <a href="#" className="dropdown-toggle zs-profile-dropdown " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -68,14 +72,13 @@ module.exports = React.createClass({
                      }
                       <ul className="dropdown-menu">
                       
-                        <li ><Link to={"MyRequests"}>My Requests</Link></li>
-                    <li ><Link to={"MyBooks"}>My Books</Link></li>
-                    <li ><Link to={"AddBooks"}>Add a Book</Link></li>
+
                         <li><a href="#" onClick={this.handleLogoutClick}>
                         Logout
                       </a></li>
                       </ul>
                     </li>
+                    </div>
                       :
                     <li ><Link to={{
                         pathname: "Login",

@@ -205,6 +205,10 @@
 
 	                React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
 	                    this.state.loggedInUser?
+	                    React.createElement("div", null, 
+	                    React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Requests")), 
+	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "My Books")), 
+	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, "Add a Book")), 
 	                     React.createElement("li", {className: "dropdown"}, 
 	                     this.state.loggedInUser.imageUrl?
 	                      React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, 
@@ -216,13 +220,12 @@
 	                     
 	                      React.createElement("ul", {className: "dropdown-menu"}, 
 	                      
-	                        React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Requests")), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "My Books")), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, "Add a Book")), 
+
 	                        React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
 	                        "Logout"
 	                      ))
 	                      )
+	                    )
 	                    )
 	                      :
 	                    React.createElement("li", null, React.createElement(Link, {to: {
@@ -6132,56 +6135,53 @@
 
 	var AppDispatcher = __webpack_require__(63);
 	var BookConstants = __webpack_require__(68);
+	var AjaxFunctions = __webpack_require__(92);
 
 	var AuthActions = {
 
-	    updateLogin: function(loginStatus) {
-	        console.log("updating login");
-	        AppDispatcher.dispatch({
-	                    actionType: BookConstants.UPDATE_LOGIN,
-	                    data: loginStatus
-	                });
-	    },
+	  updateLogin: function(loginStatus) {
+	    AppDispatcher.dispatch({
+	      actionType: BookConstants.UPDATE_LOGIN,
+	      data: loginStatus
+	    });
+	  },
 
-	    
-	    login: function(loginData, done) {
-	         var apiUrl = "/login";
-	        $.ajax({
-	          url: apiUrl,
-	          dataType: 'json',
-	          type: 'POST',
-	          data: loginData,
-	          success: function(data) {
-	            this.updateLogin(true);
-	            done();
-	          }.bind(this),
-	          error: function(err) {
-	            this.updateLogin(false);
-	            done(err);
-	          }.bind(this)
-	        });
-	        
-	    },
-	    
-	    
-	    logout: function() {
-	         var apiUrl = "/logout";
-	        $.ajax({
-	          url: apiUrl,
-	          dataType: 'json',
-	          type: 'GET',
-	          success: function(data) {
-	              
-	              console.log("user logged out")
-	            this.updateLogin(false);
-	            
-	          }.bind(this),
-	          error: function(err) {
-	              console.log("error logging out")
-	          }.bind(this)
-	        });
-	        
-	    }
+	  signup: function(signupData, done) {
+
+	    var apiUrl = "/signup";
+	    AjaxFunctions.post(apiUrl, signupData, done);
+	  },
+
+
+	  login: function(loginData, done) {
+
+	    var apiUrl = "/login";
+	    AjaxFunctions.post(apiUrl, loginData, function(err, data){
+	      if(!err){
+	        this.updateLogin(true);
+	      }
+	      done(err, data);
+	    }.bind(this));
+
+	  },
+
+
+	  logout: function() {
+	    var apiUrl = "/logout";
+
+	    AjaxFunctions.get(apiUrl, function(err) {
+	      if (err) {
+	        console.log("error logging out", err);
+	      }
+	      else {
+
+	        console.log("user logged out")
+	        this.updateLogin(false);
+	      }
+	    }.bind(this));
+
+
+	  }
 	};
 
 	module.exports = AuthActions;
@@ -6390,100 +6390,78 @@
 
 	var AppDispatcher = __webpack_require__(63);
 	var BookConstants = __webpack_require__(68);
+	var AjaxFunctions = __webpack_require__(92);
 
 	var BookActions = {
 
 	    addBook:function(book){
 	        var url = "/api/books/";
-	        $.ajax({
-	            type: "POST",
-	            url: url,
-	            data: JSON.stringify(book),
-	            contentType: "application/json",
-	            success: function(data) {
+	        AjaxFunctions.post(url, book, function(err, data){
+	            if(err){
+	               console.log("error adding data", err);
+	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
-	            }.bind(this),
-	            error: function(data) {
-	               console.log("error adding data", data);
-
-	            },
-	            dataType: 'json'
+	            }
+	            
 	        });
 	    },
 	    removeBook:function(book){
+	        
 	        var url = "/api/books/";
-	        $.ajax({
-	            type: "DELETE",
-	            url: url,
-	            data: JSON.stringify(book),
-	            contentType: "application/json",
-	            success: function(data) {
+	        
+	        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
+	            if(err){
+	               console.log("error deleting book", err);
+	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
-	            }.bind(this),
-	            error: function(data) {
-	               console.log("error remove data", data);
-	            },
-	            dataType: 'json'
+	            }
+	            
 	        });
+	       
 	    },
 	    requestBook:function(book){
 	        var url = "/api/books/request";
-	        $.ajax({
-	            type: "POST",
-	            url: url,
-	            data: JSON.stringify(book),
-	            contentType: "application/json",
-	            success: function(data) {
+	        AjaxFunctions.post(url, book, function(err, data){
+	            if(err){
+	               console.log("error requesting book", err);
+	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
-	            }.bind(this),
-	            error: function(data) {
-	               console.log("error requesting data", data);
-	            },
-	            dataType: 'json'
+	            }
+	            
 	        });
 	    },
 	    removeRequest:function(book){
 	        var url = "/api/books/request";
-	        $.ajax({
-	            type: "DELETE",
-	            url: url,
-	            data: JSON.stringify(book),
-	            contentType: "application/json",
-	            success: function(data) {
+	        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
+	            if(err){
+	               console.log("error removing request", err);
+	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
-	            }.bind(this),
-	            error: function(data) {
-	               console.log("error requesting data", data);
-	            },
-	            dataType: 'json'
-	        }); 
+	            }
+	            
+	        });
 	    },
 	    
 	    approveRequest:function(book){
 	        var url = "/api/books/request/approve/";
-	        $.ajax({
-	            type: "POST",
-	            url: url,
-	            data: JSON.stringify(book),
-	            contentType: "application/json",
-	            success: function(data) {
+	        AjaxFunctions.post(url, JSON.stringify(book), function(err, data){
+	            if(err){
+	               console.log("error approving request", err);
+	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
-	            }.bind(this),
-	            error: function(data) {
-	               console.log("error requesting data", data);
-	            },
-	            dataType: 'json'
-	        }); 
+	            }
+	            
+	        });
 	    },
 	    searchExternal: function(searchTerm) {
 	        if (!searchTerm) {
@@ -6494,25 +6472,22 @@
 	            return;
 	        }
 	        var url = "/api/searchExternal/" + searchTerm;
-	        $.ajax({
-	            type: "GET",
-	            url: url,
-	            contentType: "application/json",
-	            success: function(data) {
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-	                    data: data
-	                });
-	            }.bind(this),
-	            error: function(data) {
-	                 console.log("error receiving data", data);
+	        AjaxFunctions.get(url, function(err, data){
+	            if(err){
+	                console.log("error receiving data", data);
 	                 AppDispatcher.dispatch({
 	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
 	                    data: []
 	                });
-	            }.bind(this),
-	            dataType: 'json'
+	            }else{
+	                AppDispatcher.dispatch({
+	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
+	                    data: data
+	                });
+	            }
+	            
 	        });
+	      
 	    },
 
 
@@ -7010,81 +6985,120 @@
 
 
 	module.exports = React.createClass({displayName: "module.exports",
-	    contextTypes: {
-	      router: React.PropTypes.object.isRequired
-	    },
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
 
-	      handleDisplayErrors:function(){
-	        this.setState({errors:[]})
-	      },
-	      
-	      handleSignupSubmit:function(signupData){
-	        var apiUrl = "/signup";
-	        $.ajax({
-	          url: apiUrl,
-	          dataType: 'json',
-	          type: 'POST',
-	          data: signupData,
-	          success: function(data) {
-	            this.setState({
-	              showPage:"LocalLogin",
-	              message:{
-	                msg: "Registration successful! Please log in.",
-	                type:"success"
-	            }});
-	          }.bind(this),
-	          error: function(err) {
-	            this.setState({message:{
-	              msg: err.responseJSON.msg,
-	              type:"error"
-	            }});
-	          }.bind(this)
-	        });
-	      },
-	      handleLoginSubmit:function(loginData){
-	        AuthActions.login(loginData,function(err){
-	          if(err){
-	            this.setState({message:{
-	              msg: err.responseJSON.msg,
-	              type:"error"
-	            }});
-	          }else{
-	            AuthActions.updateLogin(true);
-	            if (location.state && location.state.nextPathname) {
-	              this.context.router.replace(location.state.nextPathname)
-	            } else {
-	              this.context.router.replace('/')
-	            }
+	  handleDisplayErrors: function() {
+	    this.setState({
+	      errors: []
+	    })
+	  },
+
+	  handleSignupSubmit: function(signupData) {
+	    AuthActions.signup(signupData, function(err) {
+	      if (err) {
+	        this.setState({
+	          message: {
+	            msg: err.responseJSON.msg,
+	            type: "error"
 	          }
-	        }.bind(this));
-	      },
-	      handleBackClickOnLocalLogin:function(){
-	        this.setState({showPage:"ExternalLoginOptions",message:{}});
-	      },
-	      handleBackClickOnSignup:function(){
-	        this.setState({showPage:"ExternalLoginOptions",message:{}});
-	      },
-	      handleLoginClick:function(){
-	        this.setState({showPage:"LocalLogin",message:{}});
-	      },
-	      handleSignupClick:function(){
-	        this.setState({showPage:"Signup",message:{}});
-	      },
-	      componentDidMount:function(){
-	        $('#myModal').modal('show');
-	      },
-	      componentWillUnmount:function(){
-	        $('#myModal').modal('hide');
-	      },
-	      getInitialState:function(){
-	        return({
-	          showPage:"ExternalLoginOptions",
-	          messages:{}
 	        });
-	      },
-			  render:function(){
-			    return(
-	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
+	        return;
+	      }
+	      else {
+	        this.setState({
+	          showPage: "LocalLogin",
+	          message: {
+	            msg: "Registration successful! Please log in.",
+	            type: "success"
+	          }
+	        });
+	      }
+	    }.bind(this));
+
+	    // });
+	    // var apiUrl = "/signup";
+	    // $.ajax({
+	    //   url: apiUrl,
+	    //   dataType: 'json',
+	    //   type: 'POST',
+	    //   data: signupData,
+	    //   success: function(data) {
+	    //     this.setState({
+	    //       showPage:"LocalLogin",
+	    //       message:{
+	    //         msg: "Registration successful! Please log in.",
+	    //         type:"success"
+	    //     }});
+	    //   }.bind(this),
+	    //   error: function(err) {
+	    //     this.setState({message:{
+	    //       msg: err.responseJSON.msg,
+	    //       type:"error"
+	    //     }});
+	    //   }.bind(this)
+	    // });
+	  },
+	  handleLoginSubmit: function(loginData) {
+	    AuthActions.login(loginData, function(err) {
+	      if (err) {
+	        this.setState({
+	          message: {
+	            msg: err.responseJSON.msg,
+	            type: "error"
+	          }
+	        });
+	      }
+	      else {
+	        if (location.state && location.state.nextPathname) {
+	          this.context.router.replace(location.state.nextPathname)
+	        }
+	        else {
+	          this.context.router.replace('/')
+	        }
+	      }
+	    }.bind(this));
+	  },
+	  handleBackClickOnLocalLogin: function() {
+	    this.setState({
+	      showPage: "ExternalLoginOptions",
+	      message: {}
+	    });
+	  },
+	  handleBackClickOnSignup: function() {
+	    this.setState({
+	      showPage: "ExternalLoginOptions",
+	      message: {}
+	    });
+	  },
+	  handleLoginClick: function() {
+	    this.setState({
+	      showPage: "LocalLogin",
+	      message: {}
+	    });
+	  },
+	  handleSignupClick: function() {
+	    this.setState({
+	      showPage: "Signup",
+	      message: {}
+	    });
+	  },
+	  componentDidMount: function() {
+	    $('#myModal').modal('show');
+	  },
+	  componentWillUnmount: function() {
+	    $('#myModal').modal('hide');
+	  },
+	  getInitialState: function() {
+	    return ({
+	      showPage: "ExternalLoginOptions",
+	      messages: {}
+	    });
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
 	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
 	        this.state.showPage==='LocalLogin'?
 	          React.createElement(LocalLogin, {
@@ -7110,10 +7124,9 @@
 	  )
 	)
 
-	)
-			  }
-			});
-			
+	    )
+	  }
+	});
 
 /***/ },
 /* 83 */
@@ -7737,6 +7750,61 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 92 */
+/***/ function(module, exports) {
+
+	var AjaxFunctions = {
+
+	    post: function(url, data, done) {
+	        $.ajax({
+	            url: url,
+	            dataType: 'json',
+	            type: 'POST',
+	            data: data,
+	            success: function(data) {
+	                done(null, data);
+	            },
+	            error: function(err) {
+	                done(err);
+	            }
+	        });
+	    },
+	    get: function(url, done) {
+	        $.ajax({
+	            url: url,
+	            dataType: 'json',
+	            type: 'GET',
+	            success: function(data) {
+	                done(null, data);
+	            },
+	            error: function(err) {
+	                done(err);
+	            }
+	        });
+	    },
+	    delete: function(url, data,  done){
+	      
+	        $.ajax({
+	            type: "DELETE",
+	            url: url,
+	            data: data,
+	            contentType: "application/json",
+	            success: function(data) {
+	                done(null, data);
+	            }.bind(this),
+	            error: function(err) {
+	                done(err)
+	            },
+	            dataType: 'json'
+	        });  
+	    }
+
+
+	}
+
+	module.exports = AjaxFunctions;
 
 /***/ }
 /******/ ]);
