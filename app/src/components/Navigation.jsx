@@ -54,39 +54,32 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                 </button><Link to={"/"} className="navbar-brand" id="AllBooks"><img src="/public/img/BCeater-right.png" className="pull-left" height="20px"></img><span className="zs-brand">ZOTSWAP</span> <span className="zs-subhead">online book exchange</span> </Link></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                <ul className="nav navbar-nav navbar-right">
-                    {this.state.loggedInUser?
-                    <div>
-                    <li ><Link to={"MyRequests"}>My Requests</Link></li>
-                    <li ><Link to={"MyBooks"}>My Books</Link></li>
-                    <li ><Link to={"AddBooks"}>Add a Book</Link></li>
-                     <li className="dropdown">
-                     {this.state.loggedInUser.imageUrl?
-                      <a href="#" className="dropdown-toggle zs-profile-dropdown " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                      <img className="zs-profile-pic img-responsive" src={this.state.loggedInUser.imageUrl}/> 
-                    </a>:
-                    <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                      <div className="zs-nav-button" >Welcome {this.state.loggedInUser.displayName}! </div>
-                    </a>
-                     }
-                      <ul className="dropdown-menu">
-                      
-
-                        <li><a href="#" onClick={this.handleLogoutClick}>
-                        Logout
-                      </a></li>
-                      </ul>
-                    </li>
-                    </div>
-                      :
-                    <li ><Link to={{
+        {this.state.loggedInUser?
+        <ul className="nav navbar-nav navbar-right">
+        <li ><Link to={"MyRequests"} ><div  className="zs-nav-button">My Requests</div></Link></li>
+        <li ><Link to={"MyBooks"} ><div  className="zs-nav-button">My Books</div></Link></li>
+        <li ><Link to={"AddBooks"} ><div  className="zs-nav-button">Add a Book</div></Link></li>
+        <li className="dropdown">
+          <a href="#" className="dropdown-toggle zs-profile-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img className="zs-profile-pic" src={this.state.loggedInUser?this.state.loggedInUser.imageUrl:null}/> </a>
+          <ul className="dropdown-menu">
+            <li><a href="#" onClick={this.handleLogoutClick}>
+            Logout
+          </a></li>
+          </ul>
+        </li>
+      </ul>
+      :
+         <ul className="nav navbar-nav navbar-right">
+         <li ><Link to={{
                         pathname: "Login",
                         state: { modal: true }
                       }}>
                       <div className="zs-nav-button" >Login</div></Link></li>
-                    }
-                </ul>
+                    
+        </ul>   
+            
+        }
+               
             </div>
         </div>
     </nav>

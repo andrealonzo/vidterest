@@ -62,7 +62,7 @@ var BookActions = {
     
     approveRequest:function(book){
         var url = "/api/books/request/approve/";
-        AjaxFunctions.post(url, JSON.stringify(book), function(err, data){
+        AjaxFunctions.post(url, book, function(err, data){
             if(err){
                console.log("error approving request", err);
             }else{

@@ -202,39 +202,32 @@
 	                    React.createElement("span", {className: "icon-bar"})
 	                ), React.createElement(Link, {to: "/", className: "navbar-brand", id: "AllBooks"}, React.createElement("img", {src: "/public/img/BCeater-right.png", className: "pull-left", height: "20px"}), React.createElement("span", {className: "zs-brand"}, "ZOTSWAP"), " ", React.createElement("span", {className: "zs-subhead"}, "online book exchange"), " ")), 
 	            React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
-
-	                React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	                    this.state.loggedInUser?
-	                    React.createElement("div", null, 
-	                    React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Requests")), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "My Books")), 
-	                    React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, "Add a Book")), 
-	                     React.createElement("li", {className: "dropdown"}, 
-	                     this.state.loggedInUser.imageUrl?
-	                      React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, 
-	                      React.createElement("img", {className: "zs-profile-pic img-responsive", src: this.state.loggedInUser.imageUrl})
-	                    ):
-	                    React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, 
-	                      React.createElement("div", {className: "zs-nav-button"}, "Welcome ", this.state.loggedInUser.displayName, "! ")
-	                    ), 
-	                     
-	                      React.createElement("ul", {className: "dropdown-menu"}, 
-	                      
-
-	                        React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
-	                        "Logout"
-	                      ))
-	                      )
-	                    )
-	                    )
-	                      :
-	                    React.createElement("li", null, React.createElement(Link, {to: {
+	        this.state.loggedInUser?
+	        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
+	        React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, React.createElement("div", {className: "zs-nav-button"}, "My Requests"))), 
+	        React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, React.createElement("div", {className: "zs-nav-button"}, "My Books"))), 
+	        React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, React.createElement("div", {className: "zs-nav-button"}, "Add a Book"))), 
+	        React.createElement("li", {className: "dropdown"}, 
+	          React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {className: "zs-profile-pic", src: this.state.loggedInUser?this.state.loggedInUser.imageUrl:null}), " "), 
+	          React.createElement("ul", {className: "dropdown-menu"}, 
+	            React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
+	            "Logout"
+	          ))
+	          )
+	        )
+	      )
+	      :
+	         React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
+	         React.createElement("li", null, React.createElement(Link, {to: {
 	                        pathname: "Login",
 	                        state: { modal: true }
 	                      }}, 
 	                      React.createElement("div", {className: "zs-nav-button"}, "Login")))
 	                    
-	                )
+	        )
+	            
+	        
+	               
 	            )
 	        )
 	    )
@@ -6452,7 +6445,7 @@
 	    
 	    approveRequest:function(book){
 	        var url = "/api/books/request/approve/";
-	        AjaxFunctions.post(url, JSON.stringify(book), function(err, data){
+	        AjaxFunctions.post(url, book, function(err, data){
 	            if(err){
 	               console.log("error approving request", err);
 	            }else{
