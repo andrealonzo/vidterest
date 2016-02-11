@@ -38,7 +38,7 @@ var AllBooks = React.createClass({
             <h1>All Books</h1>
             <BookList books = {this.state.books}>
                 <Book>
-                    <AllBooksButtons onClick={this.handleRequestBook}/>
+                    <AllBooksButtons onClick={this.handleRequestBook} user = {this.props.user}/>
                 </Book>
             </BookList>
 

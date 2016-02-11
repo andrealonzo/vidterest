@@ -77,14 +77,18 @@
 	        location.reload();
 	    },
 	    componentDidMount: function() {
-	        this.loadLoggedInUser();
+	        this.setAuthState();
+	        AuthStore.addChangeListener(this._onChange);
 	        
+	    },
+	    componentWillUnmount: function() {
+	        AuthStore.removeChangeListener(this._onChange);
 	    },
 	    componentWillReceiveProps: function(nextProps) {
 	        this.previousChildren = this.props.children
 	        
 	    },
-	    loadLoggedInUser: function() {
+	    setAuthState: function() {
 	        AuthStore.getLoggedInUser(function(err, user){
 	            if(err){
 	                //user not logged in
@@ -100,6 +104,9 @@
 	            }
 	        }.bind(this));
 	    },
+	     _onChange: function() {
+	        this.setAuthState();
+	    },
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
@@ -108,7 +115,15 @@
 	                    React.createElement("p", null), 
 	                    this.props.location.state && this.props.location.state.modal?
 	                        this.previousChildren:null, 
-	                    this.props.children
+	                        
+	                        
+	                    
+	                        //add the user property to each of the children
+	                        React.Children.map(this.props.children, function(child) {
+	                            return React.cloneElement(child, { user: this.state.user });
+	                        }.bind(this))
+	                        
+	                    
 	                   
 	                )
 	            )
@@ -6653,7 +6668,7 @@
 	            React.createElement("h1", null, "All Books"), 
 	            React.createElement(BookList, {books: this.state.books}, 
 	                React.createElement(Book, null, 
-	                    React.createElement(AllBooksButtons, {onClick: this.handleRequestBook})
+	                    React.createElement(AllBooksButtons, {onClick: this.handleRequestBook, user: this.props.user})
 	                )
 	            )
 
@@ -7946,18 +7961,25 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-
+	var Link = __webpack_require__(4).Link;
 
 	module.exports = React.createClass({displayName: "module.exports",
+
 	  handleOnClick: function() {
 	    this.props.onClick(this.props.book);
 	  },
 	  render: function() {
 	    return (
-	      this.props.book.user_request && this.props.book.user_request.approved?
-	      React.createElement("div", null, "Swap Approved"):
+	      //check if user is logged in
+	      !this.props.user?
+	      React.createElement(Link, {className: "btn btn-default", to: {pathname: "Login", state: { modal: true }}}, "Login"):
+	      //check if book has an approved request
+	      this.props.book.user_request && this.props.book.user_request.approved ?
+	      React.createElement("div", null, "Swap Approved") :
+	      //check if book has an unapproved request
 	      this.props.book.user_request ?
 	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
+	      //if none of the above, book can be requested
 	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book")
 	    );
 	  }

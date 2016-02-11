@@ -31,14 +31,18 @@ var App = React.createClass({
         location.reload();
     },
     componentDidMount: function() {
-        this.loadLoggedInUser();
+        this.setAuthState();
+        AuthStore.addChangeListener(this._onChange);
         
+    },
+    componentWillUnmount: function() {
+        AuthStore.removeChangeListener(this._onChange);
     },
     componentWillReceiveProps: function(nextProps) {
         this.previousChildren = this.props.children
         
     },
-    loadLoggedInUser: function() {
+    setAuthState: function() {
         AuthStore.getLoggedInUser(function(err, user){
             if(err){
                 //user not logged in
@@ -54,6 +58,9 @@ var App = React.createClass({
             }
         }.bind(this));
     },
+     _onChange: function() {
+        this.setAuthState();
+    },
     render: function() {
         return (
             <div>
@@ -62,7 +69,15 @@ var App = React.createClass({
                     <p></p>
                     {this.props.location.state && this.props.location.state.modal?
                         this.previousChildren:null}
-                    {this.props.children}
+                        
+                        
+                    {
+                        //add the user property to each of the children
+                        React.Children.map(this.props.children, function(child) {
+                            return React.cloneElement(child, { user: this.state.user });
+                        }.bind(this))
+                        
+                    }
                    
                 </div>
             </div>
