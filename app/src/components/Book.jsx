@@ -4,19 +4,23 @@ var React = require("react");
 
 
 module.exports = React.createClass({
-
-    handleOnClick:function(){
-      this.props.onClick(this.props.book);  
-    },    
-    handleApproveRequest:function(){
-      this.props.onApproveRequest(this.props.book);  
-    },    
-    handleDenyRequest:function(){
-      this.props.onDenyRequest(this.props.book);  
-    },
-    render: function() {
-        return(
-        <div key = {this.props.book.id} className="col-sm-3">
+  getInitialState: function() {
+    return {
+      added: false
+    }
+  },
+  handleOnClick: function() {
+    this.props.onClick(this.props.book);
+  },
+  handleApproveRequest: function() {
+    this.props.onApproveRequest(this.props.book);
+  },
+  handleDenyRequest: function() {
+    this.props.onDenyRequest(this.props.book);
+  },
+  render: function() {
+    return (
+      <div key = {this.props.book.id} className="col-sm-3">
             <div className="panel panel-default">
               <div className="panel-body">
                   
@@ -34,6 +38,13 @@ module.exports = React.createClass({
                 {author}
                 </div>);
             }):null}
+           {this.props.children?
+           //putting the book property in each child
+
+              React.Children.map(this.props.children, function(child) {
+                    return React.cloneElement(child, { book: this.props.book });
+                }.bind(this))
+           :null}
            {this.props.clickText?
               <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>:null
            }
@@ -59,6 +70,6 @@ module.exports = React.createClass({
               </div>
             </div>
         </div>
-        );
-    }
+    );
+  }
 });

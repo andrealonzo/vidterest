@@ -6290,6 +6290,7 @@
 	            return(
 	            React.createElement("div", {key: book._id || book.id}, 
 	            
+	            //putting the book property in each Child
 	                React.Children.map(this.props.children, function(child) {
 	                    return React.cloneElement(child, { book: book });
 	                }.bind(book)), 
@@ -6318,19 +6319,23 @@
 
 
 	module.exports = React.createClass({displayName: "module.exports",
-
-	    handleOnClick:function(){
-	      this.props.onClick(this.props.book);  
-	    },    
-	    handleApproveRequest:function(){
-	      this.props.onApproveRequest(this.props.book);  
-	    },    
-	    handleDenyRequest:function(){
-	      this.props.onDenyRequest(this.props.book);  
-	    },
-	    render: function() {
-	        return(
-	        React.createElement("div", {key: this.props.book.id, className: "col-sm-3"}, 
+	  getInitialState: function() {
+	    return {
+	      added: false
+	    }
+	  },
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book);
+	  },
+	  handleApproveRequest: function() {
+	    this.props.onApproveRequest(this.props.book);
+	  },
+	  handleDenyRequest: function() {
+	    this.props.onDenyRequest(this.props.book);
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", {key: this.props.book.id, className: "col-sm-3"}, 
 	            React.createElement("div", {className: "panel panel-default"}, 
 	              React.createElement("div", {className: "panel-body"}, 
 	                  
@@ -6348,6 +6353,13 @@
 	                author
 	                ));
 	            }):null, 
+	           this.props.children?
+	           //putting the book property in each child
+
+	              React.Children.map(this.props.children, function(child) {
+	                    return React.cloneElement(child, { book: this.props.book });
+	                }.bind(this))
+	           :null, 
 	           this.props.clickText?
 	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText):null, 
 	           
@@ -6373,8 +6385,8 @@
 	              )
 	            )
 	        )
-	        );
-	    }
+	    );
+	  }
 	});
 
 /***/ },
@@ -6387,15 +6399,17 @@
 
 	var BookActions = {
 
-	    addBook:function(book){
+	    addBook:function(book, done){
 	        var url = "/api/books/";
 	        AjaxFunctions.post(url, book, function(err, data){
 	            if(err){
 	               console.log("error adding data", err);
+	               done(err);
 	            }else{
 	                AppDispatcher.dispatch({
 	                    actionType: BookConstants.BOOKS_UPDATE
 	                });
+	                done();
 	            }
 	            
 	        });
@@ -6658,6 +6672,7 @@
 	var BookList = __webpack_require__(73);
 	var Book = __webpack_require__(74);
 	var BookActions = __webpack_require__(75);
+	var AddBookButtons = __webpack_require__(93);
 	var ExternalSearchStore = __webpack_require__(79);
 	var assign = __webpack_require__(70);
 
@@ -6694,8 +6709,8 @@
 
 
 	    },
-	    handleAddBook: function(book) {
-	        BookActions.addBook(book);
+	    handleAddBook: function(book, done) {
+	        BookActions.addBook(book, done);
 	    },
 	    render: function() {
 
@@ -6710,7 +6725,9 @@
 
 	        this.state.searching?React.createElement("img", {src: "/public/img/ajax-loader.gif"}):null, 
 	        React.createElement(BookList, {books: this.state.books}, 
-	                React.createElement(Book, {onClick: this.handleAddBook, clickText: "Add Book"})
+	                React.createElement(Book, {onClick: this.handleAddBook, clickText: "Add Book"}, 
+	                    React.createElement(AddBookButtons, {onClick: this.handleAddBook, clickText: "Add Book"})
+	                )
 	        )
 
 	    )
@@ -7776,6 +7793,39 @@
 	}
 
 	module.exports = AjaxFunctions;
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  getInitialState: function() {
+	    return {
+	      added: false
+	    }
+	  },
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book, function(err) {
+	      if (!err) {
+	        this.setState({
+	          added: true
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  render: function() {
+	    return (
+	      this.state.added ?
+	        React.createElement("div", {className: "alert alert-success", role: "alert"}, "Added!") :
+	        React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Book")
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);

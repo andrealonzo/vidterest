@@ -4,6 +4,7 @@ var React = require("react");
 var BookList = require("./BookList");
 var Book = require("./Book");
 var BookActions = require('../../actions/BookActions');
+var AddBookButtons = require('./AddBookButtons');
 var ExternalSearchStore = require('../../stores/ExternalSearchStore');
 var assign = require('object-assign');
 
@@ -40,8 +41,8 @@ module.exports = React.createClass({
 
 
     },
-    handleAddBook: function(book) {
-        BookActions.addBook(book);
+    handleAddBook: function(book, done) {
+        BookActions.addBook(book, done);
     },
     render: function() {
 
@@ -56,7 +57,9 @@ module.exports = React.createClass({
 
         {this.state.searching?<img src="/public/img/ajax-loader.gif"></img>:null}
         <BookList books = {this.state.books}>
-                <Book onClick={this.handleAddBook} clickText = {"Add Book"}  />
+                <Book onClick={this.handleAddBook} clickText = {"Add Book"}>
+                    <AddBookButtons onClick={this.handleAddBook} clickText = {"Add Book"}/>
+                </Book>
         </BookList>
 
     </div>

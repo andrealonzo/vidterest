@@ -22,6 +22,7 @@ var BookList = React.createClass({
             return(
             <div key = {book._id || book.id }>
             {
+            //putting the book property in each Child
                 React.Children.map(this.props.children, function(child) {
                     return React.cloneElement(child, { book: book });
                 }.bind(book))

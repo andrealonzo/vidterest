@@ -4,15 +4,17 @@ var AjaxFunctions = require('../common/AjaxFunctions');
 
 var BookActions = {
 
-    addBook:function(book){
+    addBook:function(book, done){
         var url = "/api/books/";
         AjaxFunctions.post(url, book, function(err, data){
             if(err){
                console.log("error adding data", err);
+               done(err);
             }else{
                 AppDispatcher.dispatch({
                     actionType: BookConstants.BOOKS_UPDATE
                 });
+                done();
             }
             
         });
