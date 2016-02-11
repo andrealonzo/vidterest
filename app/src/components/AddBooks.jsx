@@ -7,27 +7,17 @@ var BookActions = require('../../actions/BookActions');
 var ExternalSearchStore = require('../../stores/ExternalSearchStore');
 var assign = require('object-assign');
 
-function getExternalSearchState() {
-    return {
-        books: ExternalSearchStore.getAll()
-    };
-}
+
 
 module.exports = React.createClass({
 
     typingTimer: null, //timer identifier
     doneTypingInterval: 1000, //time in ms, 5 second for example
     getInitialState: function() {
-        var initialState = assign({}, getExternalSearchState(), {
+        return {
+            books:[],
             searching: false
-        });
-        return initialState;
-    },
-    componentDidMount: function() {
-        ExternalSearchStore.addChangeListener(this._onChange);
-    },
-    componentWillUnmount: function() {
-        ExternalSearchStore.removeChangeListener(this._onChange);
+        };
     },
     handleOnChange: function(e) {
         this.setState({
@@ -38,7 +28,13 @@ module.exports = React.createClass({
 
         clearTimeout(this.typingTimer);
         this.typingTimer = setTimeout(function() {
-            BookActions.searchExternal(e.target.value);
+            ExternalSearchStore.getAll(e.target.value, function(books){
+                this.setState({
+                    books:books,
+                    searching:false
+                    })
+            }.bind(this))
+           // BookActions.searchExternal(e.target.value);
         }.bind(this, e), this.doneTypingInterval);
 
 
@@ -64,13 +60,5 @@ module.exports = React.createClass({
 
     </div>
         )
-    },
-    /**
-     * Event handler for 'change' events coming from the BookStore
-     */
-    _onChange: function() {
-        this.setState(assign({}, getExternalSearchState(), {
-            searching: false
-        }));
     }
 });

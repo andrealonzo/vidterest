@@ -72,33 +72,7 @@ var BookActions = {
             }
             
         });
-    },
-    searchExternal: function(searchTerm) {
-        if (!searchTerm) {
-            AppDispatcher.dispatch({
-                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-                    data: []
-                });
-            return;
-        }
-        var url = "/api/searchExternal/" + searchTerm;
-        AjaxFunctions.get(url, function(err, data){
-            if(err){
-                console.log("error receiving data", data);
-                 AppDispatcher.dispatch({
-                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-                    data: []
-                });
-            }else{
-                AppDispatcher.dispatch({
-                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-                    data: data
-                });
-            }
-            
-        });
-      
-    },
+    }
 
 
 };

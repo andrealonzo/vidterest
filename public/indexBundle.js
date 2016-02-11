@@ -6455,33 +6455,7 @@
 	            }
 	            
 	        });
-	    },
-	    searchExternal: function(searchTerm) {
-	        if (!searchTerm) {
-	            AppDispatcher.dispatch({
-	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-	                    data: []
-	                });
-	            return;
-	        }
-	        var url = "/api/searchExternal/" + searchTerm;
-	        AjaxFunctions.get(url, function(err, data){
-	            if(err){
-	                console.log("error receiving data", data);
-	                 AppDispatcher.dispatch({
-	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-	                    data: []
-	                });
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.SEARCH_EXTERNAL_RESULTS,
-	                    data: data
-	                });
-	            }
-	            
-	        });
-	      
-	    },
+	    }
 
 
 	};
@@ -6687,27 +6661,17 @@
 	var ExternalSearchStore = __webpack_require__(79);
 	var assign = __webpack_require__(70);
 
-	function getExternalSearchState() {
-	    return {
-	        books: ExternalSearchStore.getAll()
-	    };
-	}
+
 
 	module.exports = React.createClass({displayName: "module.exports",
 
 	    typingTimer: null, //timer identifier
 	    doneTypingInterval: 1000, //time in ms, 5 second for example
 	    getInitialState: function() {
-	        var initialState = assign({}, getExternalSearchState(), {
+	        return {
+	            books:[],
 	            searching: false
-	        });
-	        return initialState;
-	    },
-	    componentDidMount: function() {
-	        ExternalSearchStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        ExternalSearchStore.removeChangeListener(this._onChange);
+	        };
 	    },
 	    handleOnChange: function(e) {
 	        this.setState({
@@ -6718,7 +6682,13 @@
 
 	        clearTimeout(this.typingTimer);
 	        this.typingTimer = setTimeout(function() {
-	            BookActions.searchExternal(e.target.value);
+	            ExternalSearchStore.getAll(e.target.value, function(books){
+	                this.setState({
+	                    books:books,
+	                    searching:false
+	                    })
+	            }.bind(this))
+	           // BookActions.searchExternal(e.target.value);
 	        }.bind(this, e), this.doneTypingInterval);
 
 
@@ -6744,14 +6714,6 @@
 
 	    )
 	        )
-	    },
-	    /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setState(assign({}, getExternalSearchState(), {
-	            searching: false
-	        }));
 	    }
 	});
 
@@ -6763,6 +6725,8 @@
 	var EventEmitter = __webpack_require__(67).EventEmitter;
 	var BookConstants = __webpack_require__(68);
 	var assign = __webpack_require__(70);
+	var AjaxFunctions = __webpack_require__(92);
+
 
 	var CHANGE_EVENT = 'change';
 
@@ -6783,8 +6747,21 @@
 	   * Get the entire collection of TODOs.
 	   * @return {object}
 	   */
-	  getAll: function() {
-	    return _books;
+	  getAll: function(searchTerm, done) {
+	    if (!searchTerm) {
+	      return done([]);
+	    }
+	    var url = "/api/searchExternal/" + searchTerm;
+	    AjaxFunctions.get(url, function(err, books) {
+	      if (err) {
+	        console.log("error receiving books", err);
+	        done([]);
+	      }
+	      else {
+	        done(books);
+	      }
+
+	    });
 	  },
 
 	  emitChange: function() {
@@ -6810,15 +6787,15 @@
 	AppDispatcher.register(function(action) {
 	  var text;
 
-	  switch(action.actionType) {
-	    
-	    
+	  switch (action.actionType) {
+
+
 	    case BookConstants.SEARCH_EXTERNAL_RESULTS:
 	      var books = action.data;
 	      load(books);
 	      ExternalSearchStore.emitChange();
 	      break;
-	      
+
 	    default:
 	      // no op
 	  }
