@@ -8,6 +8,7 @@ var AllBooks = require('./AllBooks')
 var AddBooks = require('./AddBooks')
 var MyRequests = require('./MyRequests')
 var RequestsForYou = require('./RequestsForYou')
+var EditProfile = require('./EditProfile')
 var Login = require('./Login')
 var Footer = require('./Footer')
 var AuthStore = require('../../stores/AuthStore');
@@ -78,6 +79,7 @@ ReactDOM.render((
       <Route path="MyRequests" component={MyRequests}/>
       <Route path="RequestsForYou" component={RequestsForYou}/>
       <Route path="Login" component={Login}/>
+      <Route path="EditProfile" component={EditProfile}/>
       <IndexRoute component={AllBooks}/>
     </Route>
   </Router>

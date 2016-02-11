@@ -62,6 +62,7 @@ module.exports = React.createClass({
         <li className="dropdown">
           <a href="#" className="dropdown-toggle zs-profile-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img className="zs-profile-pic" src={this.state.loggedInUser?this.state.loggedInUser.imageUrl:null}/> </a>
           <ul className="dropdown-menu">
+            <li><Link to={"EditProfile"} >Edit Profile</Link></li>
             <li><a href="#" onClick={this.handleLogoutClick}>
             Logout
           </a></li>

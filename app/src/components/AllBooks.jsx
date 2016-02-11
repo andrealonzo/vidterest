@@ -3,13 +3,14 @@
 var React = require("react");
 var BookList = require("./BookList");
 var Book = require("./Book");
+var AllBooksButtons = require("./AllBooksButtons");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
 
 
 var AllBooks = React.createClass({
     setBooksState: function() {
-        BookStore.getAvailable(function(books) {
+        BookStore.getAll(function(books) {
             this.setState({
                 books:books
             });
@@ -34,9 +35,11 @@ var AllBooks = React.createClass({
     render: function() {
         return (
             <div>
-            <h1>Available Books To Request</h1>
+            <h1>All Books</h1>
             <BookList books = {this.state.books}>
-                <Book onClick={this.handleRequestBook} clickText = {"Request Book"}  />
+                <Book>
+                    <AllBooksButtons onClick={this.handleRequestBook}/>
+                </Book>
             </BookList>
 
         </div>

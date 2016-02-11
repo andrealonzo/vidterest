@@ -8,7 +8,9 @@ var User = new Schema({
 	email: { type: String, lowercase: true },
   password: String,
   imageUrl: String,
-  displayName:String
+  displayName:String,
+  city:String,
+  state:String
 });
 
 /**

@@ -99,17 +99,10 @@ module.exports = function (app, passport) {
 			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
-		
-	// app.route('/api/reservations')
-	// 	.post(isLoggedIn, reservationHandler.addReservation)
-	// 	.delete(isLoggedIn, reservationHandler.removeReservation);
-		
-	// app.route('/openapi/reservations')
-	// 	.get(reservationHandler.getReservations);
 	
-	// app.route('/openapi/yelp')
-	// 	.get(yelpHandler.getResults);
 		
+	app.route('/updateUser')
+		.post(userHandler.updateUser);
 	app.route('/signup')
 		.post(userHandler.signup);
 	app.route('/login')

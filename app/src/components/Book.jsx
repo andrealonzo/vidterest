@@ -44,10 +44,10 @@ module.exports = React.createClass({
               React.Children.map(this.props.children, function(child) {
                     return React.cloneElement(child, { book: this.props.book });
                 }.bind(this))
-           :null}
-           {this.props.clickText?
+           :this.props.clickText?
               <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>:null
            }
+           
              {this.props.displayRequestActions && this.props.book.user_request?
             <div>
               <hr/>
@@ -70,6 +70,7 @@ module.exports = React.createClass({
               </div>
             </div>
         </div>
+             
     );
   }
 });

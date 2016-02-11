@@ -54,6 +54,7 @@
 	var AddBooks = __webpack_require__(78)
 	var MyRequests = __webpack_require__(80)
 	var RequestsForYou = __webpack_require__(81)
+	var EditProfile = __webpack_require__(94)
 	var Login = __webpack_require__(82)
 	var Footer = __webpack_require__(87)
 	var AuthStore = __webpack_require__(62);
@@ -124,6 +125,7 @@
 	      React.createElement(Route, {path: "MyRequests", component: MyRequests}), 
 	      React.createElement(Route, {path: "RequestsForYou", component: RequestsForYou}), 
 	      React.createElement(Route, {path: "Login", component: Login}), 
+	      React.createElement(Route, {path: "EditProfile", component: EditProfile}), 
 	      React.createElement(IndexRoute, {component: AllBooks})
 	    )
 	  )
@@ -210,6 +212,7 @@
 	        React.createElement("li", {className: "dropdown"}, 
 	          React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {className: "zs-profile-pic", src: this.state.loggedInUser?this.state.loggedInUser.imageUrl:null}), " "), 
 	          React.createElement("ul", {className: "dropdown-menu"}, 
+	            React.createElement("li", null, React.createElement(Link, {to: "EditProfile"}, "Edit Profile")), 
 	            React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
 	            "Logout"
 	          ))
@@ -6132,6 +6135,12 @@
 
 	var AuthActions = {
 
+	  updateUser: function(updatedUser, done) {
+	    var apiUrl = "/updateUser";
+	    AjaxFunctions.post(apiUrl, updatedUser, function(err) {
+	      done(err);
+	    }.bind(this));
+	  },
 	  updateLogin: function(loginStatus) {
 	    AppDispatcher.dispatch({
 	      actionType: BookConstants.UPDATE_LOGIN,
@@ -6149,8 +6158,8 @@
 	  login: function(loginData, done) {
 
 	    var apiUrl = "/login";
-	    AjaxFunctions.post(apiUrl, loginData, function(err, data){
-	      if(!err){
+	    AjaxFunctions.post(apiUrl, loginData, function(err, data) {
+	      if (!err) {
 	        this.updateLogin(true);
 	      }
 	      done(err, data);
@@ -6172,8 +6181,6 @@
 	        this.updateLogin(false);
 	      }
 	    }.bind(this));
-
-
 	  }
 	};
 
@@ -6359,9 +6366,9 @@
 	              React.Children.map(this.props.children, function(child) {
 	                    return React.cloneElement(child, { book: this.props.book });
 	                }.bind(this))
-	           :null, 
-	           this.props.clickText?
+	           :this.props.clickText?
 	              React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, this.props.clickText):null, 
+	           
 	           
 	             this.props.displayRequestActions && this.props.book.user_request?
 	            React.createElement("div", null, 
@@ -6385,6 +6392,7 @@
 	              )
 	            )
 	        )
+	             
 	    );
 	  }
 	});
@@ -6610,13 +6618,14 @@
 	var React = __webpack_require__(2);
 	var BookList = __webpack_require__(73);
 	var Book = __webpack_require__(74);
+	var AllBooksButtons = __webpack_require__(95);
 	var BookActions = __webpack_require__(75);
 	var BookStore = __webpack_require__(76);
 
 
 	var AllBooks = React.createClass({displayName: "AllBooks",
 	    setBooksState: function() {
-	        BookStore.getAvailable(function(books) {
+	        BookStore.getAll(function(books) {
 	            this.setState({
 	                books:books
 	            });
@@ -6641,9 +6650,11 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
-	            React.createElement("h1", null, "Available Books To Request"), 
+	            React.createElement("h1", null, "All Books"), 
 	            React.createElement(BookList, {books: this.state.books}, 
-	                React.createElement(Book, {onClick: this.handleRequestBook, clickText: "Request Book"})
+	                React.createElement(Book, null, 
+	                    React.createElement(AllBooksButtons, {onClick: this.handleRequestBook})
+	                )
 	            )
 
 	        )
@@ -7823,6 +7834,131 @@
 	      this.state.added ?
 	        React.createElement("div", {className: "alert alert-success", role: "alert"}, "Added!") :
 	        React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Book")
+	    );
+	  }
+	});
+
+/***/ },
+/* 94 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var AuthStore = __webpack_require__(62);
+	var AuthActions = __webpack_require__(71);
+	var assign = __webpack_require__(70);
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  getInitialState: function() {
+	    return {
+	      user: {},
+	      alert: {}
+	    }
+	  },
+	  componentDidMount: function() {
+	    AuthStore.getLoggedInUser(function(err, user) {
+	      if (!err) {
+	        this.setState({
+	          user: user
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleSubmit: function(e) {
+	    e.preventDefault();
+	    var updatedUser = assign({}, this.state.user);
+	    AuthActions.updateUser(updatedUser, function(err) {
+	      if (err) {
+	        this.setState({
+	          alert: {
+	            type: "danger",
+	            msg: "There was an error updating profile"
+	          }
+	        });
+	      }
+	      else {
+	        this.setState({
+	          alert: {
+	            type: "success",
+	            msg: "Profile was successfully updated"
+	          }
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleDisplayNameChange:function(e){
+	    var user = assign({},this.state.user, {displayName: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleImageUrlChange:function(e){
+	    var user = assign({},this.state.user, {imageUrl: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleCityChange:function(e){
+	    var user = assign({},this.state.user, {city:e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleStateChange:function(e){
+	    var user = assign({},this.state.user, {state:e.target.value});
+	    this.setState({user:user});
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", null, 
+	      React.createElement("h1", null, "Edit Profile"), 
+	      this.state.alert?
+	        
+	      React.createElement("div", {className: "alert alert-" + this.state.alert.type, role: "alert"}, this.state.alert.msg):null, 
+	        
+	      
+	      React.createElement("form", {onSubmit: this.handleSubmit}, 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Display Name"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Display Name", value: this.state.user.displayName, onChange: this.handleDisplayNameChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Profile Image Url"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Image Url", value: this.state.user.imageUrl, onChange: this.handleImageUrlChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "City"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "City", value: this.state.user.city, onChange: this.handleCityChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputPassword1"}, "State"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputPassword1", placeholder: "State", value: this.state.user.state, onChange: this.handleStateChange})
+	        ), 
+	       
+	        React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
+	      )
+	    )
+
+
+	    );
+	  }
+	});
+
+/***/ },
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book);
+	  },
+	  render: function() {
+	    return (
+	      this.props.book.user_request && this.props.book.user_request.approved?
+	      React.createElement("div", null, "Swap Approved"):
+	      this.props.book.user_request ?
+	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
+	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book")
 	    );
 	  }
 	});

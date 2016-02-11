@@ -4,6 +4,12 @@ var AjaxFunctions = require('../common/AjaxFunctions');
 
 var AuthActions = {
 
+  updateUser: function(updatedUser, done) {
+    var apiUrl = "/updateUser";
+    AjaxFunctions.post(apiUrl, updatedUser, function(err) {
+      done(err);
+    }.bind(this));
+  },
   updateLogin: function(loginStatus) {
     AppDispatcher.dispatch({
       actionType: BookConstants.UPDATE_LOGIN,
@@ -21,8 +27,8 @@ var AuthActions = {
   login: function(loginData, done) {
 
     var apiUrl = "/login";
-    AjaxFunctions.post(apiUrl, loginData, function(err, data){
-      if(!err){
+    AjaxFunctions.post(apiUrl, loginData, function(err, data) {
+      if (!err) {
         this.updateLogin(true);
       }
       done(err, data);
@@ -44,8 +50,6 @@ var AuthActions = {
         this.updateLogin(false);
       }
     }.bind(this));
-
-
   }
 };
 
