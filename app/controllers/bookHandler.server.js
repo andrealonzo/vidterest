@@ -172,6 +172,7 @@ module.exports = function() {
 
   this.add = function(req, res) {
     var newBook = new Book(req.body);
+    newBook.google_books_id = req.body.id;
     newBook.addedBy = mongoose.Types.ObjectId(req.user._id);
     //get current user
 

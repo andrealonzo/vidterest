@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Book = new Schema({
+  google_books_id: String,
   title: String,
   authors: [{
     type: String

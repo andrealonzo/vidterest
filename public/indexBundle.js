@@ -6683,6 +6683,7 @@
 	        clearTimeout(this.typingTimer);
 	        this.typingTimer = setTimeout(function() {
 	            ExternalSearchStore.getAll(e.target.value, function(books){
+	                console.log(books);
 	                this.setState({
 	                    books:books,
 	                    searching:false
