@@ -7979,8 +7979,10 @@
 	      //check if book has an unapproved request
 	      this.props.book.user_request ?
 	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
-	      //if none of the above, book can be requested
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book")
+	      //if the current user added the book, they can't request it
+	      this.props.user._id != this.props.book.addedBy._id?
+	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book"):
+	      null
 	    );
 	  }
 	});

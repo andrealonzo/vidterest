@@ -19,8 +19,10 @@ module.exports = React.createClass({
       //check if book has an unapproved request
       this.props.book.user_request ?
       <div>Requested By {this.props.book.user_request.user.displayName}</div> :
-      //if none of the above, book can be requested
-      <button className="btn btn-default" onClick={this.handleOnClick}>Request Book</button>
+      //if the current user added the book, they can't request it
+      this.props.user._id != this.props.book.addedBy._id?
+      <button className="btn btn-default" onClick={this.handleOnClick}>Request Book</button>:
+      null
     );
   }
 });
