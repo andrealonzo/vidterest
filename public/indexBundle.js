@@ -225,7 +225,13 @@
 	        React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, React.createElement("div", {className: "zs-nav-button"}, "My Books"))), 
 	        React.createElement("li", null, React.createElement(Link, {to: "AddBooks"}, React.createElement("div", {className: "zs-nav-button"}, "Add a Book"))), 
 	        React.createElement("li", {className: "dropdown"}, 
-	          React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {className: "zs-profile-pic", src: this.state.loggedInUser?this.state.loggedInUser.imageUrl:null}), " "), 
+	        this.state.loggedInUser.imageUrl?
+	          React.createElement("a", {href: "#", className: "dropdown-toggle zs-profile-dropdown", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {className: "zs-profile-pic", src: this.state.loggedInUser.imageUrl}), " ")
+	         
+	            :
+	        React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("div", {className: "zs-nav-button"}, "Welcome ", this.state.loggedInUser.displayName)), 
+	         
+	        
 	          React.createElement("ul", {className: "dropdown-menu"}, 
 	            React.createElement("li", null, React.createElement(Link, {to: "EditProfile"}, "Edit Profile")), 
 	            React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
@@ -7486,7 +7492,7 @@
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
 
 	// exports
 

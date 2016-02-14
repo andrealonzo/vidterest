@@ -36,3 +36,15 @@ body{
     padding-top:0px;
     padding-bottom:0px;
 }
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: white;
+}
+
+.dropdown-menu{
+    
+    background-color:#0064a4;
+}
+.dropdown-menu li > a:hover{
+    background-color:#007ecc;
+}
