@@ -1,8 +1,6 @@
 'use strict';
 
 var path = process.cwd();
-var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
-var ReservationHandler = require(path + '/app/controllers/reservationHandler.server.js');
 var UserHandler = require(path + '/app/controllers/userHandler.server.js');
 var BookHandler = require(path + '/app/controllers/bookHandler.server.js');
 
@@ -16,28 +14,14 @@ module.exports = function (app, passport) {
 		}
 	}
 
-	var yelpHandler = new YelpHandler();
-	var reservationHandler = new ReservationHandler();
 	var userHandler = new UserHandler();
 	var bookHandler = new BookHandler();
 	
-
-
-		
-	// app.route('/login')
-	// 	.get(function (req, res) {
-	// 		res.sendFile(path + '/public/login.html');
-	// 	});
 
 	app.route('/logout')
 		.get(function (req, res) {
 			req.logout();
 			res.json({msg:"sucessful logout"});
-		});
-
-	app.route('/profile')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/profile.html');
 		});
 
 		
