@@ -6983,28 +6983,6 @@
 	      }
 	    }.bind(this));
 
-	    // });
-	    // var apiUrl = "/signup";
-	    // $.ajax({
-	    //   url: apiUrl,
-	    //   dataType: 'json',
-	    //   type: 'POST',
-	    //   data: signupData,
-	    //   success: function(data) {
-	    //     this.setState({
-	    //       showPage:"LocalLogin",
-	    //       message:{
-	    //         msg: "Registration successful! Please log in.",
-	    //         type:"success"
-	    //     }});
-	    //   }.bind(this),
-	    //   error: function(err) {
-	    //     this.setState({message:{
-	    //       msg: err.responseJSON.msg,
-	    //       type:"error"
-	    //     }});
-	    //   }.bind(this)
-	    // });
 	  },
 	  handleLoginSubmit: function(loginData) {
 	    AuthActions.login(loginData, function(err) {
@@ -7114,12 +7092,12 @@
 	        React.createElement("div", null, 
 	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
 	            React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-							React.createElement("i", {className: "fa fa-facebook fa-lg modal-icons"})
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+							React.createElement("i", {className: "fa fa-facebook fa-md modal-icons"})
 							), 
 							
-	              React.createElement("div", {className: "col-xs-2"}, 
-							"LOGIN WITH FACEBOOK"
+	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
+							 "LOGIN WITH FACEBOOK"
 							)
 							
 							)
@@ -7131,11 +7109,11 @@
 	        React.createElement("div", null, 
 	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
 	           React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-	  						React.createElement("i", {className: "fa fa-google-plus fa-lg modal-icons"})
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+	  						React.createElement("i", {className: "fa fa-google-plus fa-md modal-icons"})
 	  						), 
 	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
-	  						"LOGIN WITH GOOGLE"
+	  						 "LOGIN WITH GOOGLE"
 	  						)
 							)
 							)
@@ -7144,11 +7122,11 @@
 	        React.createElement("div", null, 
 	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
 	         React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-								React.createElement("i", {className: "fa fa-github fa-lg modal-icons"})
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+								React.createElement("i", {className: "fa fa-github fa-md modal-icons"})
 								), 
 								React.createElement("div", {className: "col-xs-10 text-left"}, 
-							"LOGIN WITH GITHUB"
+							 "LOGIN WITH GITHUB"
 							)
 							)
 							)

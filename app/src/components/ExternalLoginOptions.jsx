@@ -14,12 +14,12 @@ module.exports = React.createClass({
         <div>
         <a className="btn btn-primary btn-lg btn-block login-button" href="/auth/facebook" role="button">
             <div className="row ">
-              <div className="col-xs-2">
-						<i className="fa fa-facebook fa-lg modal-icons"></i> 
+              <div className="col-xs-1 text-left">
+						<i className="fa fa-facebook fa-md modal-icons"></i> 
 						</div>
 						
-              <div className="col-xs-2">
-						LOGIN WITH FACEBOOK
+  						<div className="col-xs-10 text-left">
+						 LOGIN WITH FACEBOOK
 						</div>
 						
 						</div>
@@ -31,11 +31,11 @@ module.exports = React.createClass({
         <div>
         <a className="btn btn-danger btn-lg btn-block login-button" href="/auth/google" role="button">
            <div className="row ">
-              <div className="col-xs-2">
-  						<i className="fa fa-google-plus fa-lg modal-icons"></i> 
+              <div className="col-xs-1 text-left">
+  						<i className="fa fa-google-plus fa-md modal-icons"></i> 
   						</div>
   						<div className="col-xs-10 text-left">
-  						LOGIN WITH GOOGLE
+  						 LOGIN WITH GOOGLE
   						</div>
 						</div>
 						</a>
@@ -44,11 +44,11 @@ module.exports = React.createClass({
         <div>
         <a className="btn btn-warning btn-lg btn-block login-button" href="/auth/github" role="button">
          <div className="row ">
-              <div className="col-xs-2">
-							<i className="fa fa-github fa-lg modal-icons"></i> 
+              <div className="col-xs-1 text-left">
+							<i className="fa fa-github fa-md modal-icons"></i> 
 							</div>
 							<div className="col-xs-10 text-left">
-						LOGIN WITH GITHUB
+						 LOGIN WITH GITHUB
 						</div>
 						</div>
 						</a>

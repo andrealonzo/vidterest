@@ -41,28 +41,6 @@ module.exports = React.createClass({
       }
     }.bind(this));
 
-    // });
-    // var apiUrl = "/signup";
-    // $.ajax({
-    //   url: apiUrl,
-    //   dataType: 'json',
-    //   type: 'POST',
-    //   data: signupData,
-    //   success: function(data) {
-    //     this.setState({
-    //       showPage:"LocalLogin",
-    //       message:{
-    //         msg: "Registration successful! Please log in.",
-    //         type:"success"
-    //     }});
-    //   }.bind(this),
-    //   error: function(err) {
-    //     this.setState({message:{
-    //       msg: err.responseJSON.msg,
-    //       type:"error"
-    //     }});
-    //   }.bind(this)
-    // });
   },
   handleLoginSubmit: function(loginData) {
     AuthActions.login(loginData, function(err) {
