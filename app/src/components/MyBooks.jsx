@@ -3,6 +3,7 @@
 var React = require("react");
 var BookList = require("./BookList");
 var Book = require("./Book");
+var MyBooksButton = require("./MyBooksButton");
 var BookActions = require('../../actions/BookActions');
 var BookStore = require('../../stores/BookStore');
 
@@ -63,7 +64,9 @@ module.exports = React.createClass({
             <div >
         <h1>My Books</h1>
         <BookList books = {this.state.books} >
-            <Book onClick={this.handleRemoveBook} clickText = {"Remove Book"} displayRequestActions = {true} onApproveRequest={this.handleApproveRequest} onDenyRequest={this.handleDenyRequest}  />
+            <Book>
+                <MyBooksButton onClick={this.handleRemoveBook} onApproveRequest={this.handleApproveRequest} onDenyRequest={this.handleDenyRequest}/>
+            </Book>
         </BookList > 
     </div>
         )

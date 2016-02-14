@@ -9,15 +9,6 @@ module.exports = React.createClass({
       added: false
     }
   },
-  handleOnClick: function() {
-    this.props.onClick(this.props.book);
-  },
-  handleApproveRequest: function() {
-    this.props.onApproveRequest(this.props.book);
-  },
-  handleDenyRequest: function() {
-    this.props.onDenyRequest(this.props.book);
-  },
   render: function() {
     return (
       <div key = {this.props.book.id} className="col-sm-3">
@@ -38,35 +29,13 @@ module.exports = React.createClass({
                 {author}
                 </div>);
             }):null}
-           {this.props.children?
-           //putting the book property in each child
-
+            {
               React.Children.map(this.props.children, function(child) {
                     return React.cloneElement(child, { book: this.props.book });
                 }.bind(this))
-           :this.props.clickText?
-              <button className="btn btn-default" onClick={this.handleOnClick}>{this.props.clickText}</button>:null
-           }
+            }
            
-             {this.props.displayRequestActions && this.props.book.user_request?
-            <div>
-              <hr/>
-
-                Requested By {this.props.book.user_request.user.displayName}
-                
-                {this.props.book.user_request.approved?
-                <div>
-                Approved!
-                </div>
-                :
-                <div>
-                <button className="btn btn-success" onClick={this.handleApproveRequest}><span className="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-                <button className="btn btn-danger" onClick={this.handleDenyRequest}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </div>
-                }
-                </div>
-                :null
-                }
+             
               </div>
             </div>
         </div>

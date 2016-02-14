@@ -7,7 +7,6 @@ var MyBooks = require('./MyBooks')
 var AllBooks = require('./AllBooks')
 var AddBooks = require('./AddBooks')
 var MyRequests = require('./MyRequests')
-var RequestsForYou = require('./RequestsForYou')
 var EditProfile = require('./EditProfile')
 var Login = require('./Login')
 var Footer = require('./Footer')
@@ -92,7 +91,6 @@ ReactDOM.render((
       <Route path="AddBooks" component={AddBooks}/>
       <Route path="MyBooks" component={MyBooks}/>
       <Route path="MyRequests" component={MyRequests}/>
-      <Route path="RequestsForYou" component={RequestsForYou}/>
       <Route path="Login" component={Login}/>
       <Route path="EditProfile" component={EditProfile}/>
       <IndexRoute component={AllBooks}/>
