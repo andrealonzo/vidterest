@@ -7554,6 +7554,7 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
+	var Message = __webpack_require__(90);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
