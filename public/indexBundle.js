@@ -49,15 +49,14 @@
 	var ReactDOM = __webpack_require__(1)
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
-	var MyBooks = __webpack_require__(72)
-	var AllBooks = __webpack_require__(77)
-	var AddBooks = __webpack_require__(78)
-	var MyRequests = __webpack_require__(80)
-	var EditProfile = __webpack_require__(94)
-	var Login = __webpack_require__(82)
-	var Footer = __webpack_require__(87)
+	var MyBooks = __webpack_require__(73)
+	var AllBooks = __webpack_require__(79)
+	var AddBooks = __webpack_require__(81)
+	var MyRequests = __webpack_require__(84)
+	var EditProfile = __webpack_require__(86)
+	var Login = __webpack_require__(87)
 	var AuthStore = __webpack_require__(62);
-	__webpack_require__(88);
+	__webpack_require__(92);
 	var assign = __webpack_require__(70);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
@@ -6150,7 +6149,7 @@
 
 	var AppDispatcher = __webpack_require__(63);
 	var BookConstants = __webpack_require__(68);
-	var AjaxFunctions = __webpack_require__(92);
+	var AjaxFunctions = __webpack_require__(72);
 
 	var AuthActions = {
 
@@ -6208,16 +6207,71 @@
 
 /***/ },
 /* 72 */
+/***/ function(module, exports) {
+
+	var AjaxFunctions = {
+
+	    post: function(url, data, done) {
+	        $.ajax({
+	            url: url,
+	            dataType: 'json',
+	            type: 'POST',
+	            data: data,
+	            success: function(data) {
+	                done(null, data);
+	            },
+	            error: function(err) {
+	                done(err);
+	            }
+	        });
+	    },
+	    get: function(url, done) {
+	        $.ajax({
+	            url: url,
+	            dataType: 'json',
+	            type: 'GET',
+	            success: function(data) {
+	                done(null, data);
+	            },
+	            error: function(err) {
+	                done(err);
+	            }
+	        });
+	    },
+	    delete: function(url, data,  done){
+	      
+	        $.ajax({
+	            type: "DELETE",
+	            url: url,
+	            data: data,
+	            contentType: "application/json",
+	            success: function(data) {
+	                done(null, data);
+	            }.bind(this),
+	            error: function(err) {
+	                done(err)
+	            },
+	            dataType: 'json'
+	        });  
+	    }
+
+
+	}
+
+	module.exports = AjaxFunctions;
+
+/***/ },
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var Book = __webpack_require__(74);
-	var MyBooksButton = __webpack_require__(97);
-	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(76);
+	var BookList = __webpack_require__(74);
+	var Book = __webpack_require__(75);
+	var MyBooksButton = __webpack_require__(76);
+	var BookActions = __webpack_require__(77);
+	var BookStore = __webpack_require__(78);
 
 
 	module.exports = React.createClass({displayName: "module.exports",
@@ -6292,13 +6346,13 @@
 	});
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Book = __webpack_require__(74);
+	var Book = __webpack_require__(75);
 
 	var BookList = React.createClass({displayName: "BookList",
 
@@ -6339,7 +6393,7 @@
 	module.exports = BookList;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -6389,12 +6443,59 @@
 	});
 
 /***/ },
-/* 75 */
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+	module.exports = React.createClass({displayName: "module.exports",
+
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book);
+	  },
+	  handleApproveRequest: function() {
+	    this.props.onApproveRequest(this.props.book);
+	  },
+	  handleDenyRequest: function() {
+	    this.props.onDenyRequest(this.props.book);
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", null, 
+	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Book"), 
+	      this.props.book.user_request?
+	            React.createElement("div", null, 
+	              React.createElement("hr", null), 
+
+	                "Requested By ", this.props.book.user_request.user.displayName, 
+	                
+	                this.props.book.user_request.approved?
+	                React.createElement("div", null, 
+	                "Approved!"
+	                )
+	                :
+	                React.createElement("div", null, 
+	                React.createElement("button", {className: "btn btn-success", onClick: this.handleApproveRequest}, React.createElement("span", {className: "glyphicon glyphicon-ok", "aria-hidden": "true"})), 
+	                React.createElement("button", {className: "btn btn-danger", onClick: this.handleDenyRequest}, React.createElement("span", {className: "glyphicon glyphicon-remove", "aria-hidden": "true"}))
+	                )
+	                
+	                )
+	                :null
+	                
+	       )
+	    );
+	  }
+	});
+
+/***/ },
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
 	var BookConstants = __webpack_require__(68);
-	var AjaxFunctions = __webpack_require__(92);
+	var AjaxFunctions = __webpack_require__(72);
 
 	var BookActions = {
 
@@ -6477,7 +6578,7 @@
 
 
 /***/ },
-/* 76 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
@@ -6601,17 +6702,17 @@
 
 
 /***/ },
-/* 77 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var Book = __webpack_require__(74);
-	var AllBooksButtons = __webpack_require__(95);
-	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(76);
+	var BookList = __webpack_require__(74);
+	var Book = __webpack_require__(75);
+	var AllBooksButtons = __webpack_require__(80);
+	var BookActions = __webpack_require__(77);
+	var BookStore = __webpack_require__(78);
 	var AuthStore = __webpack_require__(62);
 
 
@@ -6701,17 +6802,50 @@
 	module.exports = AllBooks;
 
 /***/ },
-/* 78 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var Book = __webpack_require__(74);
-	var BookActions = __webpack_require__(75);
-	var AddBookButtons = __webpack_require__(93);
-	var ExternalSearchStore = __webpack_require__(79);
+	var Link = __webpack_require__(4).Link;
+
+	module.exports = React.createClass({displayName: "module.exports",
+
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book);
+	  },
+	  render: function() {
+	    return (
+	      //check if user is logged in
+	      !this.props.user?
+	      React.createElement(Link, {className: "btn btn-default", to: {pathname: "Login", state: { modal: true }}}, "Login"):
+	      //check if book has an approved request
+	      this.props.book.user_request && this.props.book.user_request.approved ?
+	      React.createElement("div", null, "Swap Approved") :
+	      //check if book has an unapproved request
+	      this.props.book.user_request ?
+	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
+	      //if the current user added the book, they can't request it
+	      this.props.user._id != this.props.book.addedBy._id?
+	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book"):
+	      null
+	    );
+	  }
+	});
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var BookList = __webpack_require__(74);
+	var Book = __webpack_require__(75);
+	var BookActions = __webpack_require__(77);
+	var AddBookButtons = __webpack_require__(82);
+	var ExternalSearchStore = __webpack_require__(83);
 	var assign = __webpack_require__(70);
 
 
@@ -6774,14 +6908,47 @@
 	});
 
 /***/ },
-/* 79 */
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  getInitialState: function() {
+	    return {
+	      added: false
+	    }
+	  },
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book, function(err) {
+	      if (!err) {
+	        this.setState({
+	          added: true
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  render: function() {
+	    return (
+	      this.state.added ?
+	        React.createElement("div", {className: "alert alert-success", role: "alert"}, "Added!") :
+	        React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Book")
+	    );
+	  }
+	});
+
+/***/ },
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
 	var EventEmitter = __webpack_require__(67).EventEmitter;
 	var BookConstants = __webpack_require__(68);
 	var assign = __webpack_require__(70);
-	var AjaxFunctions = __webpack_require__(92);
+	var AjaxFunctions = __webpack_require__(72);
 
 
 	var CHANGE_EVENT = 'change';
@@ -6861,17 +7028,17 @@
 
 
 /***/ },
-/* 80 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(73);
-	var Book = __webpack_require__(74);
-	var MyRequestsButton = __webpack_require__(96);
-	var BookActions = __webpack_require__(75);
-	var BookStore = __webpack_require__(76);
+	var BookList = __webpack_require__(74);
+	var Book = __webpack_require__(75);
+	var MyRequestsButton = __webpack_require__(85);
+	var BookActions = __webpack_require__(77);
+	var BookStore = __webpack_require__(78);
 
 
 	module.exports = React.createClass({displayName: "module.exports",
@@ -6936,16 +7103,136 @@
 	});
 
 /***/ },
-/* 81 */,
-/* 82 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var ExternalLoginOptions = __webpack_require__(83);
-	var Signup = __webpack_require__(84);
-	var LocalLogin = __webpack_require__(86);
+
+	module.exports = React.createClass({displayName: "module.exports",
+
+	  handleOnClick: function() {
+	    this.props.onClick(this.props.book);
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Request")
+	    );
+	  }
+	});
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var AuthStore = __webpack_require__(62);
+	var AuthActions = __webpack_require__(71);
+	var assign = __webpack_require__(70);
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  getInitialState: function() {
+	    return {
+	      user: {},
+	      alert: {}
+	    }
+	  },
+	  componentDidMount: function() {
+	    AuthStore.getLoggedInUser(function(err, user) {
+	      if (!err) {
+	        this.setState({
+	          user: user
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleSubmit: function(e) {
+	    e.preventDefault();
+	    var updatedUser = assign({}, this.state.user);
+	    AuthActions.updateUser(updatedUser, function(err) {
+	      if (err) {
+	        this.setState({
+	          alert: {
+	            type: "danger",
+	            msg: "There was an error updating profile"
+	          }
+	        });
+	      }
+	      else {
+	        this.setState({
+	          alert: {
+	            type: "success",
+	            msg: "Profile was successfully updated"
+	          }
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleDisplayNameChange:function(e){
+	    var user = assign({},this.state.user, {displayName: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleImageUrlChange:function(e){
+	    var user = assign({},this.state.user, {imageUrl: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleCityChange:function(e){
+	    var user = assign({},this.state.user, {city:e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleStateChange:function(e){
+	    var user = assign({},this.state.user, {state:e.target.value});
+	    this.setState({user:user});
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", null, 
+	      React.createElement("h1", null, "Edit Profile"), 
+	      this.state.alert?
+	        
+	      React.createElement("div", {className: "alert alert-" + this.state.alert.type, role: "alert"}, this.state.alert.msg):null, 
+	        
+	      
+	      React.createElement("form", {onSubmit: this.handleSubmit}, 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Display Name"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Display Name", value: this.state.user.displayName, onChange: this.handleDisplayNameChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Profile Image Url"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Image Url", value: this.state.user.imageUrl, onChange: this.handleImageUrlChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "City"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "City", value: this.state.user.city, onChange: this.handleCityChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputPassword1"}, "State"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputPassword1", placeholder: "State", value: this.state.user.state, onChange: this.handleStateChange})
+	        ), 
+	       
+	        React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
+	      )
+	    )
+
+
+	    );
+	  }
+	});
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var ExternalLoginOptions = __webpack_require__(88);
+	var Signup = __webpack_require__(89);
+	var LocalLogin = __webpack_require__(91);
 	var AuthActions = __webpack_require__(71);
 
 
@@ -7073,7 +7360,7 @@
 	});
 
 /***/ },
-/* 83 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -7159,13 +7446,13 @@
 			
 
 /***/ },
-/* 84 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(85);
+	var Message = __webpack_require__(90);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -7238,7 +7525,7 @@
 			
 
 /***/ },
-/* 85 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -7261,13 +7548,12 @@
 			
 
 /***/ },
-/* 86 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(85);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -7324,38 +7610,16 @@
 			
 
 /***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	module.exports = React.createClass({displayName: "module.exports",
-	    
-			  render:function(){
-			    return(
-			      
-			React.createElement("nav", {className: "navbar navbar-default"}, 
-	          React.createElement("div", {className: "container text-center"}, 
-	           "API provided by Yelp.com.  Site design inspired by zomato.com."
-	          )
-	        )
-	)
-			  }
-			});
-			
-
-/***/ },
-/* 88 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(89);
+	var content = __webpack_require__(93);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(95)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -7372,21 +7636,21 @@
 	}
 
 /***/ },
-/* 89 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(94)();
 	// imports
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.zs-profile-pic {\n  width: 50px;\n  height: 50px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 90 */
+/* 94 */
 /***/ function(module, exports) {
 
 	/*
@@ -7442,7 +7706,7 @@
 
 
 /***/ },
-/* 91 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -7694,295 +7958,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 92 */
-/***/ function(module, exports) {
-
-	var AjaxFunctions = {
-
-	    post: function(url, data, done) {
-	        $.ajax({
-	            url: url,
-	            dataType: 'json',
-	            type: 'POST',
-	            data: data,
-	            success: function(data) {
-	                done(null, data);
-	            },
-	            error: function(err) {
-	                done(err);
-	            }
-	        });
-	    },
-	    get: function(url, done) {
-	        $.ajax({
-	            url: url,
-	            dataType: 'json',
-	            type: 'GET',
-	            success: function(data) {
-	                done(null, data);
-	            },
-	            error: function(err) {
-	                done(err);
-	            }
-	        });
-	    },
-	    delete: function(url, data,  done){
-	      
-	        $.ajax({
-	            type: "DELETE",
-	            url: url,
-	            data: data,
-	            contentType: "application/json",
-	            success: function(data) {
-	                done(null, data);
-	            }.bind(this),
-	            error: function(err) {
-	                done(err)
-	            },
-	            dataType: 'json'
-	        });  
-	    }
-
-
-	}
-
-	module.exports = AjaxFunctions;
-
-/***/ },
-/* 93 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  getInitialState: function() {
-	    return {
-	      added: false
-	    }
-	  },
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book, function(err) {
-	      if (!err) {
-	        this.setState({
-	          added: true
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  render: function() {
-	    return (
-	      this.state.added ?
-	        React.createElement("div", {className: "alert alert-success", role: "alert"}, "Added!") :
-	        React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Book")
-	    );
-	  }
-	});
-
-/***/ },
-/* 94 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var AuthStore = __webpack_require__(62);
-	var AuthActions = __webpack_require__(71);
-	var assign = __webpack_require__(70);
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  getInitialState: function() {
-	    return {
-	      user: {},
-	      alert: {}
-	    }
-	  },
-	  componentDidMount: function() {
-	    AuthStore.getLoggedInUser(function(err, user) {
-	      if (!err) {
-	        this.setState({
-	          user: user
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  handleSubmit: function(e) {
-	    e.preventDefault();
-	    var updatedUser = assign({}, this.state.user);
-	    AuthActions.updateUser(updatedUser, function(err) {
-	      if (err) {
-	        this.setState({
-	          alert: {
-	            type: "danger",
-	            msg: "There was an error updating profile"
-	          }
-	        });
-	      }
-	      else {
-	        this.setState({
-	          alert: {
-	            type: "success",
-	            msg: "Profile was successfully updated"
-	          }
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  handleDisplayNameChange:function(e){
-	    var user = assign({},this.state.user, {displayName: e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleImageUrlChange:function(e){
-	    var user = assign({},this.state.user, {imageUrl: e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleCityChange:function(e){
-	    var user = assign({},this.state.user, {city:e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleStateChange:function(e){
-	    var user = assign({},this.state.user, {state:e.target.value});
-	    this.setState({user:user});
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("div", null, 
-	      React.createElement("h1", null, "Edit Profile"), 
-	      this.state.alert?
-	        
-	      React.createElement("div", {className: "alert alert-" + this.state.alert.type, role: "alert"}, this.state.alert.msg):null, 
-	        
-	      
-	      React.createElement("form", {onSubmit: this.handleSubmit}, 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Display Name"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Display Name", value: this.state.user.displayName, onChange: this.handleDisplayNameChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Profile Image Url"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Image Url", value: this.state.user.imageUrl, onChange: this.handleImageUrlChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "City"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "City", value: this.state.user.city, onChange: this.handleCityChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputPassword1"}, "State"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputPassword1", placeholder: "State", value: this.state.user.state, onChange: this.handleStateChange})
-	        ), 
-	       
-	        React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
-	      )
-	    )
-
-
-	    );
-	  }
-	});
-
-/***/ },
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Link = __webpack_require__(4).Link;
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      //check if user is logged in
-	      !this.props.user?
-	      React.createElement(Link, {className: "btn btn-default", to: {pathname: "Login", state: { modal: true }}}, "Login"):
-	      //check if book has an approved request
-	      this.props.book.user_request && this.props.book.user_request.approved ?
-	      React.createElement("div", null, "Swap Approved") :
-	      //check if book has an unapproved request
-	      this.props.book.user_request ?
-	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
-	      //if the current user added the book, they can't request it
-	      this.props.user._id != this.props.book.addedBy._id?
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book"):
-	      null
-	    );
-	  }
-	});
-
-/***/ },
-/* 96 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Request")
-	    );
-	  }
-	});
-
-/***/ },
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  handleApproveRequest: function() {
-	    this.props.onApproveRequest(this.props.book);
-	  },
-	  handleDenyRequest: function() {
-	    this.props.onDenyRequest(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("div", null, 
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Book"), 
-	      this.props.book.user_request?
-	            React.createElement("div", null, 
-	              React.createElement("hr", null), 
-
-	                "Requested By ", this.props.book.user_request.user.displayName, 
-	                
-	                this.props.book.user_request.approved?
-	                React.createElement("div", null, 
-	                "Approved!"
-	                )
-	                :
-	                React.createElement("div", null, 
-	                React.createElement("button", {className: "btn btn-success", onClick: this.handleApproveRequest}, React.createElement("span", {className: "glyphicon glyphicon-ok", "aria-hidden": "true"})), 
-	                React.createElement("button", {className: "btn btn-danger", onClick: this.handleDenyRequest}, React.createElement("span", {className: "glyphicon glyphicon-remove", "aria-hidden": "true"}))
-	                )
-	                
-	                )
-	                :null
-	                
-	       )
-	    );
-	  }
-	});
 
 /***/ }
 /******/ ]);

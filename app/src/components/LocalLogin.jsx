@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 'use strict'
 var React = require("react");
-var Message = require("./Message");
 module.exports = React.createClass({
       handleSubmit:function(e){
         e.preventDefault();

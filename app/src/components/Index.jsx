@@ -9,7 +9,6 @@ var AddBooks = require('./AddBooks')
 var MyRequests = require('./MyRequests')
 var EditProfile = require('./EditProfile')
 var Login = require('./Login')
-var Footer = require('./Footer')
 var AuthStore = require('../../stores/AuthStore');
 require("../css/main.scss");
 var assign = require('object-assign');
