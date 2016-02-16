@@ -23,7 +23,7 @@ module.exports = React.createClass({
     AuthActions.signup(signupData, function(err) {
       if (err) {
         this.setState({
-          message: {
+          msg: {
             msg: err.responseJSON.msg,
             type: "error"
           }
@@ -33,7 +33,7 @@ module.exports = React.createClass({
       else {
         this.setState({
           showPage: "LocalLogin",
-          message: {
+          msg: {
             msg: "Registration successful! Please log in.",
             type: "success"
           }
@@ -46,7 +46,7 @@ module.exports = React.createClass({
     AuthActions.login(loginData, function(err) {
       if (err) {
         this.setState({
-          message: {
+          msg: {
             msg: err.responseJSON.msg,
             type: "error"
           }
@@ -65,25 +65,25 @@ module.exports = React.createClass({
   handleBackClickOnLocalLogin: function() {
     this.setState({
       showPage: "ExternalLoginOptions",
-      message: {}
+      msg: {}
     });
   },
   handleBackClickOnSignup: function() {
     this.setState({
       showPage: "ExternalLoginOptions",
-      message: {}
+      msg: {}
     });
   },
   handleLoginClick: function() {
     this.setState({
       showPage: "LocalLogin",
-      message: {}
+      msg: {}
     });
   },
   handleSignupClick: function() {
     this.setState({
       showPage: "Signup",
-      message: {}
+      msg: {}
     });
   },
   componentDidMount: function() {
@@ -95,25 +95,26 @@ module.exports = React.createClass({
   getInitialState: function() {
     return ({
       showPage: "ExternalLoginOptions",
-      messages: {}
+      msgs: {}
     });
   },
   render: function() {
     return (
+      
       <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div className="modal-dialog modal-sm" role="document">
         {this.state.showPage==='LocalLogin'?
           <LocalLogin 
             onBackClick = {this.handleBackClickOnLocalLogin}
             onSubmit = {this.handleLoginSubmit}
-            message = {this.state.message}
+            msg = {this.state.msg}
             >
           </LocalLogin>:
           this.state.showPage==="Signup"?
           <Signup 
             onBackClick = {this.handleBackClickOnSignup} 
             onSubmit = {this.handleSignupSubmit}
-            message = {this.state.message}
+            msg = {this.state.msg}
             >
           </Signup>:
           <ExternalLoginOptions 

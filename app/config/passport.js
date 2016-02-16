@@ -24,85 +24,85 @@ module.exports = function(passport) {
 			callbackURL: configAuth.googleAuth.callbackURL
 		},
 		function(token, refreshToken, profile, done) {
-			
-				if (!profile.emails) {
-					return done({
-						msg: "No email associated with account"
+
+			if (!profile.emails) {
+				return done(null, false);
+			}
+			User.findOne({
+				'email': profile.emails[0].value
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (user) {
+					return done(null, user);
+				}
+				else {
+					var newUser = new User();
+					newUser.email = profile.emails[0].value;
+					if (profile.image) {
+						newUser.imageUrl = profile.image.url;
+					}
+					newUser.displayName = profile.displayName;
+
+					newUser.save(function(err) {
+						if (err) {
+							throw err;
+						}
+
+						return done(null, newUser);
 					});
 				}
-				User.findOne({
-					'email': profile.emails[0].value
-				}, function(err, user) {
-					if (err) {
-						return done(err);
-					}
+			});
 
-					if (user) {
-						return done(null, user);
-					}
-					else {
-						var newUser = new User();
-						newUser.email = profile.emails[0].value;
-						if (profile.image) {
-							newUser.imageUrl = profile.image.url;
-						}
-						newUser.displayName = profile.displayName;
-
-						newUser.save(function(err) {
-							if (err) {
-								throw err;
-							}
-
-							return done(null, newUser);
-						});
-					}
-				});
-			
 		}));
 
 	passport.use(new FacebookStrategy({
 			clientID: configAuth.facebookAuth.clientID,
 			clientSecret: configAuth.facebookAuth.clientSecret,
 			callbackURL: configAuth.facebookAuth.callbackURL,
-			profileFields: ['emails', 'displayName', 'photos']
+			profileFields: ['emails', 'displayName', 'photos'],
+			passReqToCallback: true
 
 		},
-		function(token, refreshToken, profile, done) {
-			
-				if(!profile.emails){
-					return done({
-						msg: "No email associated with account"
+		function(req, token, refreshToken, profile, done) {
+
+			if (!profile.emails) {
+				req.flash('errors', {
+					msg: 'We were unable to get your email address.'
+				});
+				return done(null, false);
+			}
+			User.findOne({
+				'email': profile.emails[0].value
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (user) {
+					return done(null, user);
+				}
+				else {
+					var newUser = new User();
+
+					newUser.email = profile.emails[0].value;
+					if (profile.photos) {
+						newUser.imageUrl = profile.photos[0].value;
+					}
+					newUser.displayName = profile.displayName;
+
+					newUser.save(function(err) {
+						if (err) {
+							throw err;
+						}
+
+						return done(null, newUser);
 					});
 				}
-				User.findOne({
-					'email': profile.emails[0].value
-				}, function(err, user) {
-					if (err) {
-						return done(err);
-					}
+			});
 
-					if (user) {
-						return done(null, user);
-					}
-					else {
-						var newUser = new User();
-
-						newUser.email = profile.emails[0].value;
-						if (profile.photos) {
-							newUser.imageUrl = profile.photos[0].value;
-						}
-						newUser.displayName = profile.displayName;
-
-						newUser.save(function(err) {
-							if (err) {
-								throw err;
-							}
-
-							return done(null, newUser);
-						});
-					}
-				});
-			
 		}));
 
 	passport.use(new GitHubStrategy({
@@ -111,41 +111,39 @@ module.exports = function(passport) {
 			callbackURL: configAuth.githubAuth.callbackURL
 		},
 		function(token, refreshToken, profile, done) {
-			if(!profile.emails){
-				return done({
-						msg: "No email associated with account"
-				});
+			if (!profile.emails) {
+				return done(null, false);
 			}
 
-			
-				User.findOne({
-					'email': profile.emails[0].value
-				}, function(err, user) {
-					if (err) {
-						return done(err);
-					}
 
-					if (user) {
-						return done(null, user);
+			User.findOne({
+				'email': profile.emails[0].value
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (user) {
+					return done(null, user);
+				}
+				else {
+					var newUser = new User();
+					newUser.email = profile.emails[0].value;
+					if (profile.photos) {
+						newUser.imageUrl = profile.photos[0].value;
 					}
-					else {
-						var newUser = new User();
-						newUser.email = profile.emails[0].value;
-						if(profile.photos){
-							newUser.imageUrl = profile.photos[0].value;
+					newUser.displayName = profile.displayName;
+
+					newUser.save(function(err) {
+						if (err) {
+							throw err;
 						}
-						newUser.displayName = profile.displayName;
 
-						newUser.save(function(err) {
-							if (err) {
-								throw err;
-							}
+						return done(null, newUser);
+					});
+				}
+			});
 
-							return done(null, newUser);
-						});
-					}
-				});
-			
 		}));
 
 

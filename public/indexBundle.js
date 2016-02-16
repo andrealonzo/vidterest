@@ -7252,7 +7252,7 @@
 	    AuthActions.signup(signupData, function(err) {
 	      if (err) {
 	        this.setState({
-	          message: {
+	          msg: {
 	            msg: err.responseJSON.msg,
 	            type: "error"
 	          }
@@ -7262,7 +7262,7 @@
 	      else {
 	        this.setState({
 	          showPage: "LocalLogin",
-	          message: {
+	          msg: {
 	            msg: "Registration successful! Please log in.",
 	            type: "success"
 	          }
@@ -7275,7 +7275,7 @@
 	    AuthActions.login(loginData, function(err) {
 	      if (err) {
 	        this.setState({
-	          message: {
+	          msg: {
 	            msg: err.responseJSON.msg,
 	            type: "error"
 	          }
@@ -7294,25 +7294,25 @@
 	  handleBackClickOnLocalLogin: function() {
 	    this.setState({
 	      showPage: "ExternalLoginOptions",
-	      message: {}
+	      msg: {}
 	    });
 	  },
 	  handleBackClickOnSignup: function() {
 	    this.setState({
 	      showPage: "ExternalLoginOptions",
-	      message: {}
+	      msg: {}
 	    });
 	  },
 	  handleLoginClick: function() {
 	    this.setState({
 	      showPage: "LocalLogin",
-	      message: {}
+	      msg: {}
 	    });
 	  },
 	  handleSignupClick: function() {
 	    this.setState({
 	      showPage: "Signup",
-	      message: {}
+	      msg: {}
 	    });
 	  },
 	  componentDidMount: function() {
@@ -7324,25 +7324,26 @@
 	  getInitialState: function() {
 	    return ({
 	      showPage: "ExternalLoginOptions",
-	      messages: {}
+	      msgs: {}
 	    });
 	  },
 	  render: function() {
 	    return (
+	      
 	      React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
 	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
 	        this.state.showPage==='LocalLogin'?
 	          React.createElement(LocalLogin, {
 	            onBackClick: this.handleBackClickOnLocalLogin, 
 	            onSubmit: this.handleLoginSubmit, 
-	            message: this.state.message
+	            msg: this.state.msg
 	            }
 	          ):
 	          this.state.showPage==="Signup"?
 	          React.createElement(Signup, {
 	            onBackClick: this.handleBackClickOnSignup, 
 	            onSubmit: this.handleSignupSubmit, 
-	            message: this.state.message
+	            msg: this.state.msg
 	            }
 	          ):
 	          React.createElement(ExternalLoginOptions, {
