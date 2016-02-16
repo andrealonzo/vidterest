@@ -24,8 +24,7 @@ module.exports = function(passport) {
 			callbackURL: configAuth.googleAuth.callbackURL
 		},
 		function(token, refreshToken, profile, done) {
-
-			process.nextTick(function() {
+			
 				if (!profile.emails) {
 					return done({
 						msg: "No email associated with account"
@@ -58,7 +57,7 @@ module.exports = function(passport) {
 						});
 					}
 				});
-			});
+			
 		}));
 
 	passport.use(new FacebookStrategy({
@@ -69,7 +68,7 @@ module.exports = function(passport) {
 
 		},
 		function(token, refreshToken, profile, done) {
-			process.nextTick(function() {
+			
 				if(!profile.emails){
 					return done({
 						msg: "No email associated with account"
@@ -103,7 +102,7 @@ module.exports = function(passport) {
 						});
 					}
 				});
-			});
+			
 		}));
 
 	passport.use(new GitHubStrategy({
@@ -118,7 +117,7 @@ module.exports = function(passport) {
 				});
 			}
 
-			process.nextTick(function() {
+			
 				User.findOne({
 					'email': profile.emails[0].value
 				}, function(err, user) {
@@ -146,7 +145,7 @@ module.exports = function(passport) {
 						});
 					}
 				});
-			});
+			
 		}));
 
 
