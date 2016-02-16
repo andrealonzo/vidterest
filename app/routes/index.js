@@ -57,7 +57,7 @@ module.exports = function (app, passport) {
 		});
 		
 	app.route('/auth/github')
-		.get(passport.authenticate('github'));
+		.get(passport.authenticate('github', { scope: 'user:email'  }));
 
 	app.route('/auth/github/callback')
 		.get(passport.authenticate('github', {
