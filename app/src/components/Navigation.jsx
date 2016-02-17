@@ -44,7 +44,7 @@ module.exports = React.createClass({
     },
     render: function() {
         return (
-            <nav className="navbar navbar-default zs-nav">
+            <nav className="navbar navbar-default">
         <div className="container">
             <div className="navbar-header">
                 <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" >
@@ -52,19 +52,18 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
                     <span className="icon-bar" ></span>
-                </button><Link to={"/"} className="navbar-brand" id="AllBooks"><img src="/public/img/BCeater-right.png" className="pull-left" height="20px"></img><span className="zs-brand">ZOTSWAP</span> <span className="zs-subhead">online book exchange</span> </Link></div>
+                </button><Link to={"/"} className="navbar-brand" id="AllBooks"><span className="title">Vidterest</span></Link></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         {this.state.loggedInUser?
         <ul className="nav navbar-nav navbar-right">
-        <li ><Link to={"MyRequests"} ><div  className="zs-nav-button">My Requests</div></Link></li>
-        <li ><Link to={"MyBooks"} ><div  className="zs-nav-button">My Books</div></Link></li>
-        <li ><Link to={"AddBooks"} ><div  className="zs-nav-button">Add a Book</div></Link></li>
+        <li ><Link to={"MyRequests"} >My Videos</Link></li>
+        <li ><Link to={"MyBooks"} >Add Video</Link></li>
         <li className="dropdown">
         {this.state.loggedInUser.imageUrl?
-          <a href="#" className="dropdown-toggle zs-profile-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img className="zs-profile-pic" src={this.state.loggedInUser.imageUrl}/> </a>
+          <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
          
             :
-        <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div className="zs-nav-button">Welcome {this.state.loggedInUser.displayName}</div></a>
+        <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>
          
         }
           <ul className="dropdown-menu">
@@ -81,7 +80,7 @@ module.exports = React.createClass({
                         pathname: "Login",
                         state: { modal: true }
                       }}>
-                      <div className="zs-nav-button" >Login</div></Link></li>
+                      <div  >Login</div></Link></li>
                     
         </ul>   
             

@@ -1,18 +1,18 @@
-# Book Exchange Application
+# Video Pinterest Application
 
 ## Overview
 
-This is my implementation of the book exchange application, which is project for freecodecamp
+This is my implementation of the pinterest clone application, which is project for freecodecamp
 
 You may view a running version of this app at
-[http://zotswap.heroku.com](http://zotswap.heroku.com)
+[http://vidterest.heroku.com](http://vidterest.heroku.com)
 
 
 # Quick Start Guide
 
 ### Prerequisites
 
-In order to use the voting application, you must have the following installed:
+In order to use the  application, you must have the following installed:
 
 - [Node.js](https://nodejs.org/)
 - [NPM](https://nodejs.org/)
@@ -24,7 +24,7 @@ In order to use the voting application, you must have the following installed:
 To install the app, simply enter the below in the terminal window:
 
 ```bash
-$ git clone https://github.com/paycoguy/book-exchange.git your-project
+$ git clone https://github.com/paycoguy/vidterest.git your-project
 ```
 
 This will install the  app components into the `your-project` directory.
@@ -68,8 +68,10 @@ Next, open your browser and enter `http://localhost:8080/`. Congrats, you're up 
 | Node.js         
 | Passport         
 | Mongoose  
-| Flux
-| Webpack             
+| Redux
+| Webpack    
+| ES6        
+| Jade           
 
 ## License
 
