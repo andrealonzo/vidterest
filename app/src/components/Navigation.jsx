@@ -54,17 +54,17 @@ module.exports = React.createClass({
                     <span className="icon-bar" ></span>
                 </button><Link to={"/"} className="navbar-brand" id="AllBooks"><span className="title">Vidterest</span></Link></div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        {!this.state.loggedInUser?
+        {this.state.loggedInUser?
         <ul className="nav navbar-nav navbar-right">
         <li ><Link to={"MyVideos"} >My Videos</Link></li>
         <li ><Link to={"AddVideo"} >Add Video</Link></li>
         <li className="dropdown">
         {
-        // this.state.loggedInUser.imageUrl?
-        //   <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
+        this.state.loggedInUser.imageUrl?
+          <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
          
-        //     :
-        // <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>
+            :
+        <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>
          
         }
           <ul className="dropdown-menu">

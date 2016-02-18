@@ -28,7 +28,8 @@ module.exports = function(app, passport) {
 		});
 
 	app.route('/api/video/')
-		.post(videoHandler.add);
+		.post(videoHandler.add)
+		.get(videoHandler.getAll);
 
 
 

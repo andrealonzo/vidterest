@@ -49,13 +49,13 @@
 	var ReactDOM = __webpack_require__(1)
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
-	var MyVideos = __webpack_require__(107)
-	var AllVideos= __webpack_require__(106)
-	var AddVideo = __webpack_require__(108)
-	var EditProfile = __webpack_require__(86)
-	var Login = __webpack_require__(87)
+	var MyVideos = __webpack_require__(73)
+	var AllVideos= __webpack_require__(84)
+	var AddVideo = __webpack_require__(87)
+	var EditProfile = __webpack_require__(88)
+	var Login = __webpack_require__(89)
 	var AuthStore = __webpack_require__(62);
-	__webpack_require__(92);
+	__webpack_require__(94);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
 	var IndexRoute = __webpack_require__(4).IndexRoute;
@@ -217,17 +217,17 @@
 	                    React.createElement("span", {className: "icon-bar"})
 	                ), React.createElement(Link, {to: "/", className: "navbar-brand", id: "AllBooks"}, React.createElement("span", {className: "title"}, "Vidterest"))), 
 	            React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
-	        !this.state.loggedInUser?
+	        this.state.loggedInUser?
 	        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
 	        React.createElement("li", null, React.createElement(Link, {to: "MyVideos"}, "My Videos")), 
 	        React.createElement("li", null, React.createElement(Link, {to: "AddVideo"}, "Add Video")), 
 	        React.createElement("li", {className: "dropdown"}, 
 	        
-	        // this.state.loggedInUser.imageUrl?
-	        //   <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
+	        this.state.loggedInUser.imageUrl?
+	          React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {src: this.state.loggedInUser.imageUrl}), " ")
 	         
-	        //     :
-	        // <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>
+	            :
+	        React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("div", null, "Welcome ", this.state.loggedInUser.displayName)), 
 	         
 	        
 	          React.createElement("ul", {className: "dropdown-menu"}, 
@@ -6349,865 +6349,174 @@
 	module.exports = AjaxFunctions;
 
 /***/ },
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var AuthStore = __webpack_require__(62);
-	var AuthActions = __webpack_require__(71);
-	var assign = __webpack_require__(70);
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  getInitialState: function() {
-	    return {
-	      user: {},
-	      alert: {}
-	    }
-	  },
-	  componentDidMount: function() {
-	    AuthStore.getLoggedInUser(function(err, user) {
-	      if (!err) {
-	        this.setState({
-	          user: user
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  handleSubmit: function(e) {
-	    e.preventDefault();
-	    var updatedUser = assign({}, this.state.user);
-	    AuthActions.updateUser(updatedUser, function(err) {
-	      if (err) {
-	        this.setState({
-	          alert: {
-	            type: "danger",
-	            msg: "There was an error updating profile"
-	          }
-	        });
-	      }
-	      else {
-	        this.setState({
-	          alert: {
-	            type: "success",
-	            msg: "Profile was successfully updated"
-	          }
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  handleDisplayNameChange:function(e){
-	    var user = assign({},this.state.user, {displayName: e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleImageUrlChange:function(e){
-	    var user = assign({},this.state.user, {imageUrl: e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleCityChange:function(e){
-	    var user = assign({},this.state.user, {city:e.target.value});
-	    this.setState({user:user});
-	  },
-	  handleStateChange:function(e){
-	    var user = assign({},this.state.user, {state:e.target.value});
-	    this.setState({user:user});
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("div", null, 
-	      React.createElement("h1", null, "Edit Profile"), 
-	      this.state.alert?
-	        
-	      React.createElement("div", {className: "alert alert-" + this.state.alert.type, role: "alert"}, this.state.alert.msg):null, 
-	        
-	      
-	      React.createElement("form", {onSubmit: this.handleSubmit}, 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Display Name"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Display Name", value: this.state.user.displayName, onChange: this.handleDisplayNameChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Profile Image Url"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Image Url", value: this.state.user.imageUrl, onChange: this.handleImageUrlChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "City"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "City", value: this.state.user.city, onChange: this.handleCityChange})
-	        ), 
-	        React.createElement("div", {className: "form-group"}, 
-	          React.createElement("label", {htmlFor: "exampleInputPassword1"}, "State"), 
-	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputPassword1", placeholder: "State", value: this.state.user.state, onChange: this.handleStateChange})
-	        ), 
-	       
-	        React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
-	      )
-	    )
+	var Masonry = __webpack_require__(74);
 
 
-	    );
-	  }
-	});
-
-/***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var ExternalLoginOptions = __webpack_require__(88);
-	var Signup = __webpack_require__(89);
-	var LocalLogin = __webpack_require__(91);
-	var AuthActions = __webpack_require__(71);
-
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-
-	  handleDisplayErrors: function() {
-	    this.setState({
-	      errors: []
-	    })
-	  },
-
-	  handleSignupSubmit: function(signupData) {
-	    AuthActions.signup(signupData, function(err) {
-	      if (err) {
-	        this.setState({
-	          msg: {
-	            msg: err.responseJSON.msg,
-	            type: "error"
-	          }
-	        });
-	        return;
-	      }
-	      else {
-	        this.setState({
-	          showPage: "LocalLogin",
-	          msg: {
-	            msg: "Registration successful! Please log in.",
-	            type: "success"
-	          }
-	        });
-	      }
-	    }.bind(this));
-
-	  },
-	  handleLoginSubmit: function(loginData) {
-	    AuthActions.login(loginData, function(err) {
-	      if (err) {
-	        this.setState({
-	          msg: {
-	            msg: err.responseJSON.msg,
-	            type: "error"
-	          }
-	        });
-	      }
-	      else {
-	        if (location.state && location.state.nextPathname) {
-	          this.context.router.replace(location.state.nextPathname)
-	        }
-	        else {
-	          this.context.router.replace('/')
-	        }
-	      }
-	    }.bind(this));
-	  },
-	  handleBackClickOnLocalLogin: function() {
-	    this.setState({
-	      showPage: "ExternalLoginOptions",
-	      msg: {}
-	    });
-	  },
-	  handleBackClickOnSignup: function() {
-	    this.setState({
-	      showPage: "ExternalLoginOptions",
-	      msg: {}
-	    });
-	  },
-	  handleLoginClick: function() {
-	    this.setState({
-	      showPage: "LocalLogin",
-	      msg: {}
-	    });
-	  },
-	  handleSignupClick: function() {
-	    this.setState({
-	      showPage: "Signup",
-	      msg: {}
-	    });
-	  },
-	  componentDidMount: function() {
-	    $('#myModal').modal('show');
-	  },
-	  componentWillUnmount: function() {
-	    $('#myModal').modal('hide');
-	  },
-	  getInitialState: function() {
-	    return ({
-	      showPage: "ExternalLoginOptions",
-	      msgs: {}
-	    });
-	  },
-	  render: function() {
-	    return (
-	      
-	      React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
-	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
-	        this.state.showPage==='LocalLogin'?
-	          React.createElement(LocalLogin, {
-	            onBackClick: this.handleBackClickOnLocalLogin, 
-	            onSubmit: this.handleLoginSubmit, 
-	            msg: this.state.msg
-	            }
-	          ):
-	          this.state.showPage==="Signup"?
-	          React.createElement(Signup, {
-	            onBackClick: this.handleBackClickOnSignup, 
-	            onSubmit: this.handleSignupSubmit, 
-	            msg: this.state.msg
-	            }
-	          ):
-	          React.createElement(ExternalLoginOptions, {
-	            onSignupClick: this.handleSignupClick, 
-	            onLoginClick: this.handleLoginClick}
-	          )
-	          
-	        
-	        
-	  )
-	)
-
-	    )
-	  }
-	});
-
-/***/ },
-/* 88 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	module.exports = React.createClass({displayName: "module.exports",
-			  render:function(){
-			    return(
-			        React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-center"}, 
-	    
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
-	            React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-1 text-left"}, 
-							React.createElement("i", {className: "fa fa-facebook fa-md modal-icons"})
-							), 
-							
-	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
-							 "LOGIN WITH FACEBOOK"
-							)
-							
-							)
-							)
-			), 
-			React.createElement("div", null, 
-			"Recommended.  We will never post anything without your permission."
-			), 
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
-	           React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-1 text-left"}, 
-	  						React.createElement("i", {className: "fa fa-google-plus fa-md modal-icons"})
-	  						), 
-	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
-	  						 "LOGIN WITH GOOGLE"
-	  						)
-							)
-							)
-			), 
-			
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
-	         React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-1 text-left"}, 
-								React.createElement("i", {className: "fa fa-github fa-md modal-icons"})
-								), 
-								React.createElement("div", {className: "col-xs-10 text-left"}, 
-							 "LOGIN WITH GITHUB"
-							)
-							)
-							)
-			), 
-			React.createElement("hr", null), 
-			React.createElement("div", null, 
-			"or use your email address", 
-			React.createElement("div", {className: "row"}, 
-			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onLoginClick}, 
-	    		"Login"
-	    		)
-	    		), 
-			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onSignupClick}, 
-	    		"Signup"
-	    		)
-	    		)
-	    	)
-			)
-			
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
-
-	)
-			  }
-			});
-			
-
-/***/ },
-/* 89 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Message = __webpack_require__(90);
-	module.exports = React.createClass({displayName: "module.exports",
-	      handleSubmit:function(e){
-	        e.preventDefault();
-	        this.props.onSubmit(this.state);
-	      },
-	      handleDisplayNameChange:function(e){
-	        this.setState({displayName:e.target.value});
-	      },
-	      handleEmailChange:function(e){
-	        this.setState({email:e.target.value});
-	      },
-	      handlePasswordChange:function(e){
-	        this.setState({password:e.target.value});
-	      },
-	      handleConfirmPasswordChange:function(e){
-	        this.setState({confirmPassword:e.target.value});
-	      },
-	      getInitialState:function(){
-	        return{
-	          displayName:'',
-	          email:'',
-	          password:'',
-	          confirmPassword:''
-	        }
-	      },
-			  render:function(){
-			    return(
-			        React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Register")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-left"}, 
-	          React.createElement(Message, {message: this.props.message}), 
-	            React.createElement("form", {onSubmit: this.handleSubmit}, 
-	            
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Full Name"), 
-	            React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", value: this.state.displayName, onChange: this.handleDisplayNameChange})
-	          ), 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Email address"), 
-	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
-	          ), 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Password"), 
-	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
-	          ), 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Confirm Password"), 
-	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.confirmPassword, onChange: this.handleConfirmPasswordChange})
-	          ), 
-	          React.createElement("div", {className: "row"}, 
-	          React.createElement("div", {className: "col-xs-6"}, 
-	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
-	          ), 
-	          React.createElement("div", {className: "col-xs-6 text-right"}, 
-	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
-	          )
-	          )
-	        )
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
-
-	)
-			  }
-			});
-			
-
-/***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	module.exports = React.createClass({displayName: "module.exports",
-			  render:function(){
-			    if(this.props.message.msg)
-			    {
-			      return  React.createElement("div", {className: "alert animated fadeIn " + (this.props.message.type==="error"?
-	                              "alert-danger":
-	                              "alert-success"), 
-	                            role: "alert"}, this.props.message.msg)
-			    }
-			    else{
-			      return React.createElement("div", null)
-			    }
-			  }
-			});
-			
-
-/***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Message = __webpack_require__(90);
-	module.exports = React.createClass({displayName: "module.exports",
-	      handleSubmit:function(e){
-	        e.preventDefault();
-	        this.props.onSubmit(this.state);
-	      },
-	      handleEmailChange:function(e){
-	        this.setState({email:e.target.value});
-	      },
-	      handlePasswordChange:function(e){
-	        this.setState({password:e.target.value});
-	      },
-	      getInitialState:function(){
-	        return({
-	          email:'',
-	          password:''
-	        });
-	      },
-			  render:function(){
-			    return(
-			        React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-left"}, 
-	          React.createElement(Message, {message: this.props.message}), 
-	            React.createElement("form", {onSubmit: this.handleSubmit}, 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Email address"), 
-	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
-	          ), 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Password"), 
-	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
-	          ), 
-	          React.createElement("div", {className: "row"}, 
-	          React.createElement("div", {className: "col-xs-6"}, 
-	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
-	          ), 
-	          React.createElement("div", {className: "col-xs-6 text-right"}, 
-	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Login")
-	          )
-	          )
-	        )
-
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
-
-	)
-			  }
-			});
-			
-
-/***/ },
-/* 92 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(93);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(95)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 93 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(94)();
-	// imports
-	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
-	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Oleo+Script);", ""]);
-
-	// module
-	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.title {\n  font-family: 'Oleo Script', cursive;\n  color: #125688; }\n\niframe {\n  border: 0px; }\n\n.instagram-media {\n  background: #FFF;\n  border: 0;\n  border-radius: 3px;\n  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 10px 0 rgba(0, 0, 0, 0.15);\n  margin: 1px;\n  max-width: 658px;\n  padding: 0;\n  width: 99.375%;\n  width: -webkit-calc(100% - 2px);\n  width: calc(100% - 2px); }\n\n.ig-wrapper {\n  padding: 8px; }\n\n.ig-image-wrapper {\n  background: #F8F8F8;\n  line-height: 0;\n  margin-top: 40px;\n  padding: 50.0% 0;\n  text-align: center;\n  width: 100%; }\n\n.ig-image {\n  display: block;\n  height: 44px;\n  margin: 0 auto -44px;\n  position: relative;\n  top: -22px;\n  width: 44px; }\n\n.ig-link-wrapper {\n  margin: 8px 0 0 0;\n  padding: 0 4px; }\n\n.ig-link {\n  color: #000;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 17px;\n  text-decoration: none;\n  word-wrap: break-word; }\n\n.ig-meta {\n  color: #c9c8cd;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px;\n  margin-bottom: 0;\n  margin-top: 8px;\n  overflow: hidden;\n  padding: 8px 0 7px;\n  text-align: center;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.ig-time {\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px; }\n\n/* clear fix */\n.grid {\n  margin: 0 auto; }\n\n.grid:after {\n  content: '';\n  display: block;\n  clear: both; }\n\n.grid-sizer,\n.grid-item {\n  width: 300px;\n  margin-bottom: 10px; }\n\n.video-item {\n  width: 100%; }\n\n.grid-item {\n  float: left; }\n\n.grid-item img {\n  display: block;\n  max-width: 100%; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:focus,\n.navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.zs-profile-pic {\n  width: 50px;\n  height: 50px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 94 */
-/***/ function(module, exports) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	// css base code, injected by the css-loader
-	module.exports = function() {
-		var list = [];
-
-		// return the list of modules as css string
-		list.toString = function toString() {
-			var result = [];
-			for(var i = 0; i < this.length; i++) {
-				var item = this[i];
-				if(item[2]) {
-					result.push("@media " + item[2] + "{" + item[1] + "}");
-				} else {
-					result.push(item[1]);
-				}
-			}
-			return result.join("");
-		};
-
-		// import a list of modules into the list
-		list.i = function(modules, mediaQuery) {
-			if(typeof modules === "string")
-				modules = [[null, modules, ""]];
-			var alreadyImportedModules = {};
-			for(var i = 0; i < this.length; i++) {
-				var id = this[i][0];
-				if(typeof id === "number")
-					alreadyImportedModules[id] = true;
-			}
-			for(i = 0; i < modules.length; i++) {
-				var item = modules[i];
-				// skip already imported module
-				// this implementation is not 100% perfect for weird media query combinations
-				//  when a module is imported multiple times with different media queries.
-				//  I hope this will never occur (Hey this way we have smaller bundles)
-				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-					if(mediaQuery && !item[2]) {
-						item[2] = mediaQuery;
-					} else if(mediaQuery) {
-						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-					}
-					list.push(item);
-				}
-			}
-		};
-		return list;
+	var masonryOptions = {
+	    itemSelector: '.grid-item',
+	    columnWidth: 300,
+	    fitWidth: true,
+	      gutter: 10
 	};
 
+	var MyVideos = React.createClass({displayName: "MyVideos",
+
+
+	    componentDidMount: function() {
+	        this.setVideoResizeListeners();
+	    },
+	    setVideoResizeListeners: function() {
+	        // Find all YouTube videos
+	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
+	        // The element that is fluid width
+	        var $fluidEl = $(".grid-item");
+
+	        // Figure out and save aspect ratio for each video
+	        $allVideos.each(function() {
+	            $(this)
+	                .data('aspectRatio', this.height / this.width)
+	            // and remove the hard coded width/height
+	            .removeAttr('height')
+	                .removeAttr('width')
+	            .addClass('video-item');
+	                
+
+	        });
+	        // When the window is resized
+	        $(window).resize(function() {
+	            var newWidth = $fluidEl.width();
+	            // Resize all videos according to their own aspect ratio
+	            $allVideos.each(function() {
+	                var $el = $(this);
+	                $el
+	                    .width(newWidth)
+	                    .height(newWidth * $el.data('aspectRatio'));
+
+	            });
+
+	            // Kick off one resize to fix all videos on page load
+	        }).resize();
+	    },
+	    render: function() {
+	        return (
+	            
+	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	    React.createElement("div", {className: "grid-sizer"}), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	        React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
+	    ), 
+	       React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+
+	 
+	    
+	    React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
+	    )
+	)
+
+	        )
+	    }
+
+
+	});
+
+	module.exports = MyVideos;
 
 /***/ },
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	var stylesInDom = {},
-		memoize = function(fn) {
-			var memo;
-			return function () {
-				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-				return memo;
-			};
-		},
-		isOldIE = memoize(function() {
-			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
-		}),
-		getHeadElement = memoize(function () {
-			return document.head || document.getElementsByTagName("head")[0];
-		}),
-		singletonElement = null,
-		singletonCounter = 0,
-		styleElementsInsertedAtTop = [];
-
-	module.exports = function(list, options) {
-		if(false) {
-			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-		}
-
-		options = options || {};
-		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-		// tags it will allow on a page
-		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-		// By default, add <style> tags to the bottom of <head>.
-		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-		var styles = listToStyles(list);
-		addStylesToDom(styles, options);
-
-		return function update(newList) {
-			var mayRemove = [];
-			for(var i = 0; i < styles.length; i++) {
-				var item = styles[i];
-				var domStyle = stylesInDom[item.id];
-				domStyle.refs--;
-				mayRemove.push(domStyle);
-			}
-			if(newList) {
-				var newStyles = listToStyles(newList);
-				addStylesToDom(newStyles, options);
-			}
-			for(var i = 0; i < mayRemove.length; i++) {
-				var domStyle = mayRemove[i];
-				if(domStyle.refs === 0) {
-					for(var j = 0; j < domStyle.parts.length; j++)
-						domStyle.parts[j]();
-					delete stylesInDom[domStyle.id];
-				}
-			}
-		};
-	}
-
-	function addStylesToDom(styles, options) {
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			if(domStyle) {
-				domStyle.refs++;
-				for(var j = 0; j < domStyle.parts.length; j++) {
-					domStyle.parts[j](item.parts[j]);
-				}
-				for(; j < item.parts.length; j++) {
-					domStyle.parts.push(addStyle(item.parts[j], options));
-				}
-			} else {
-				var parts = [];
-				for(var j = 0; j < item.parts.length; j++) {
-					parts.push(addStyle(item.parts[j], options));
-				}
-				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-			}
-		}
-	}
-
-	function listToStyles(list) {
-		var styles = [];
-		var newStyles = {};
-		for(var i = 0; i < list.length; i++) {
-			var item = list[i];
-			var id = item[0];
-			var css = item[1];
-			var media = item[2];
-			var sourceMap = item[3];
-			var part = {css: css, media: media, sourceMap: sourceMap};
-			if(!newStyles[id])
-				styles.push(newStyles[id] = {id: id, parts: [part]});
-			else
-				newStyles[id].parts.push(part);
-		}
-		return styles;
-	}
-
-	function insertStyleElement(options, styleElement) {
-		var head = getHeadElement();
-		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-		if (options.insertAt === "top") {
-			if(!lastStyleElementInsertedAtTop) {
-				head.insertBefore(styleElement, head.firstChild);
-			} else if(lastStyleElementInsertedAtTop.nextSibling) {
-				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-			} else {
-				head.appendChild(styleElement);
-			}
-			styleElementsInsertedAtTop.push(styleElement);
-		} else if (options.insertAt === "bottom") {
-			head.appendChild(styleElement);
-		} else {
-			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-		}
-	}
-
-	function removeStyleElement(styleElement) {
-		styleElement.parentNode.removeChild(styleElement);
-		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-		if(idx >= 0) {
-			styleElementsInsertedAtTop.splice(idx, 1);
-		}
-	}
-
-	function createStyleElement(options) {
-		var styleElement = document.createElement("style");
-		styleElement.type = "text/css";
-		insertStyleElement(options, styleElement);
-		return styleElement;
-	}
-
-	function createLinkElement(options) {
-		var linkElement = document.createElement("link");
-		linkElement.rel = "stylesheet";
-		insertStyleElement(options, linkElement);
-		return linkElement;
-	}
-
-	function addStyle(obj, options) {
-		var styleElement, update, remove;
-
-		if (options.singleton) {
-			var styleIndex = singletonCounter++;
-			styleElement = singletonElement || (singletonElement = createStyleElement(options));
-			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-		} else if(obj.sourceMap &&
-			typeof URL === "function" &&
-			typeof URL.createObjectURL === "function" &&
-			typeof URL.revokeObjectURL === "function" &&
-			typeof Blob === "function" &&
-			typeof btoa === "function") {
-			styleElement = createLinkElement(options);
-			update = updateLink.bind(null, styleElement);
-			remove = function() {
-				removeStyleElement(styleElement);
-				if(styleElement.href)
-					URL.revokeObjectURL(styleElement.href);
-			};
-		} else {
-			styleElement = createStyleElement(options);
-			update = applyToTag.bind(null, styleElement);
-			remove = function() {
-				removeStyleElement(styleElement);
-			};
-		}
-
-		update(obj);
-
-		return function updateStyle(newObj) {
-			if(newObj) {
-				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-					return;
-				update(obj = newObj);
-			} else {
-				remove();
-			}
-		};
-	}
-
-	var replaceText = (function () {
-		var textStore = [];
-
-		return function (index, replacement) {
-			textStore[index] = replacement;
-			return textStore.filter(Boolean).join('\n');
-		};
-	})();
-
-	function applyToSingletonTag(styleElement, index, remove, obj) {
-		var css = remove ? "" : obj.css;
-
-		if (styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = replaceText(index, css);
-		} else {
-			var cssNode = document.createTextNode(css);
-			var childNodes = styleElement.childNodes;
-			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-			if (childNodes.length) {
-				styleElement.insertBefore(cssNode, childNodes[index]);
-			} else {
-				styleElement.appendChild(cssNode);
-			}
-		}
-	}
-
-	function applyToTag(styleElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-		var sourceMap = obj.sourceMap;
-
-		if(media) {
-			styleElement.setAttribute("media", media)
-		}
-
-		if(styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = css;
-		} else {
-			while(styleElement.firstChild) {
-				styleElement.removeChild(styleElement.firstChild);
-			}
-			styleElement.appendChild(document.createTextNode(css));
-		}
-	}
-
-	function updateLink(linkElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-		var sourceMap = obj.sourceMap;
-
-		if(sourceMap) {
-			// http://stackoverflow.com/a/26603875
-			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-		}
-
-		var blob = new Blob([css], { type: "text/css" });
-
-		var oldSrc = linkElement.href;
-
-		linkElement.href = URL.createObjectURL(blob);
-
-		if(oldSrc)
-			URL.revokeObjectURL(oldSrc);
-	}
-
-
-/***/ },
-/* 96 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isBrowser = (typeof window !== 'undefined');
-	var Masonry = isBrowser ? window.Masonry || __webpack_require__(97) : null;
-	var imagesloaded = isBrowser ? __webpack_require__(104) : null;
+	var Masonry = isBrowser ? window.Masonry || __webpack_require__(75) : null;
+	var imagesloaded = isBrowser ? __webpack_require__(82) : null;
 	var React = __webpack_require__(2);
 	var refName = 'masonryContainer';
 
@@ -7403,7 +6712,7 @@
 
 
 /***/ },
-/* 97 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7420,8 +6729,8 @@
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(98),
-	        __webpack_require__(100)
+	        __webpack_require__(76),
+	        __webpack_require__(78)
 	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
@@ -7613,7 +6922,7 @@
 
 
 /***/ },
-/* 98 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7629,10 +6938,10 @@
 	  if ( true ) {
 	    // AMD - RequireJS
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(99),
-	        __webpack_require__(100),
-	        __webpack_require__(101),
-	        __webpack_require__(103)
+	        __webpack_require__(77),
+	        __webpack_require__(78),
+	        __webpack_require__(79),
+	        __webpack_require__(81)
 	      ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter, getSize, utils, Item ) {
 	        return factory( window, EvEmitter, getSize, utils, Item);
 	      }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -8514,7 +7823,7 @@
 
 
 /***/ },
-/* 99 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -8629,7 +7938,7 @@
 
 
 /***/ },
-/* 100 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -8844,7 +8153,7 @@
 
 
 /***/ },
-/* 101 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -8861,7 +8170,7 @@
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(102)
+	      __webpack_require__(80)
 	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( matchesSelector ) {
 	      return factory( window, matchesSelector );
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -9085,7 +8394,7 @@
 
 
 /***/ },
-/* 102 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -9144,7 +8453,7 @@
 
 
 /***/ },
-/* 103 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -9157,8 +8466,8 @@
 	  if ( true ) {
 	    // AMD - RequireJS
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(99),
-	        __webpack_require__(100)
+	        __webpack_require__(77),
+	        __webpack_require__(78)
 	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
@@ -9688,7 +8997,7 @@
 
 
 /***/ },
-/* 104 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9705,7 +9014,7 @@
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(105)
+	      __webpack_require__(83)
 	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter ) {
 	      return factory( window, EvEmitter );
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -10064,7 +9373,7 @@
 
 
 /***/ },
-/* 105 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -10179,25 +9488,39 @@
 
 
 /***/ },
-/* 106 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Masonry = __webpack_require__(96);
+	var Masonry = __webpack_require__(74);
+	var VideoStore = __webpack_require__(85);
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
 	    columnWidth: 300,
 	    fitWidth: true,
-	      gutter: 10
+	    gutter: 10
 	};
 
 	var AllVideos = React.createClass({displayName: "AllVideos",
 
-
+	    setVideosState: function() {
+	        VideoStore.getAll(function(err, videos) {
+	            this.setState({
+	                videos: videos
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return {
+	            videos: []
+	        };
+	    },
 	    componentDidMount: function() {
+	        console.log("here");
+	        this.setVideosState();
 	        this.setVideoResizeListeners();
 	    },
 	    setVideoResizeListeners: function() {
@@ -10210,11 +9533,11 @@
 	        $allVideos.each(function() {
 	            $(this)
 	                .data('aspectRatio', this.height / this.width)
-	            // and remove the hard coded width/height
-	            .removeAttr('height')
+	                // and remove the hard coded width/height
+	                .removeAttr('height')
 	                .removeAttr('width')
-	            .addClass('video-item');
-	                
+	                .addClass('video-item');
+
 
 	        });
 	        // When the window is resized
@@ -10234,101 +9557,51 @@
 	    },
 	    render: function() {
 	        return (
-	            
-	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+
+	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
 	    React.createElement("div", {className: "grid-sizer"}), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
+	    
+	    this.state.videos.map(function(video){
+	        if(video.source == 'youtube'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item youtube-item"}, 
+	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true})
 	            )
-	        )
-	    ), 
-	        React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
-	    ), 
-	       React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
+	            );
+	        }else if(video.source == 'vine'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
 	            )
-	        )
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
+	            );
+	        }else if(video.source == 'vimeo'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
 	            )
-	        )
-	    ), 
-	    
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
+	            );
+	        }
+	        // }else if(video.source == 'instagram'){
+	        //     return(
+	        //      <div key = {video._id} className="grid-item">
+	        //         <blockquote className="instagram-media"  data-instgrm-version="6">
+	        //             <div className = "ig-wrapper" >
+	        //                 <div className = 'ig-image-wrapper'>
+	        //                     <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
+	        //                 </div>
+	        //                 <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
+	        //                 <p className='ig-meta' >&nbsp;
+	        //                 </p>
+	        //             </div>
+	        //         </blockquote>
+	        //     </div>
+	        //     );
+	        // }
+	        
+	    }
+	    )
 
 	 
-	    
-	    React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
-	    )
 	)
 
 	        )
@@ -10340,185 +9613,105 @@
 	module.exports = AllVideos;
 
 /***/ },
-/* 107 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Masonry = __webpack_require__(96);
+	var AppDispatcher = __webpack_require__(63);
+	var EventEmitter = __webpack_require__(67).EventEmitter;
+	var VideoConstants = __webpack_require__(86);
+	var AjaxFunctions = __webpack_require__(72);
+	var assign = __webpack_require__(70);
 
-	var masonryOptions = {
-	    itemSelector: '.grid-item',
-	    columnWidth: 300,
-	    fitWidth: true,
-	      gutter: 10
-	};
+	var CHANGE_EVENT = 'change';
 
-	var AllVideos = React.createClass({displayName: "AllVideos",
+	var VideoStore = assign({}, EventEmitter.prototype, {
 
+	  getAll: function(done) {
+	    var url = "/api/video/";
+	    AjaxFunctions.get(url, function(err, data) {
+	      done(err, data);
+	    });
+	  },
+	  emitChange: function() {
+	    this.emit(CHANGE_EVENT);
+	  },
 
-	    componentDidMount: function() {
-	        this.setVideoResizeListeners();
-	    },
-	    setVideoResizeListeners: function() {
-	        // Find all YouTube videos
-	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
-	        // The element that is fluid width
-	        var $fluidEl = $(".grid-item");
+	  /**
+	   * @param {function} callback
+	   */
+	  addChangeListener: function(callback) {
+	    this.on(CHANGE_EVENT, callback);
+	  },
 
-	        // Figure out and save aspect ratio for each video
-	        $allVideos.each(function() {
-	            $(this)
-	                .data('aspectRatio', this.height / this.width)
-	            // and remove the hard coded width/height
-	            .removeAttr('height')
-	                .removeAttr('width')
-	            .addClass('video-item');
-	                
-
-	        });
-	        // When the window is resized
-	        $(window).resize(function() {
-	            var newWidth = $fluidEl.width();
-	            // Resize all videos according to their own aspect ratio
-	            $allVideos.each(function() {
-	                var $el = $(this);
-	                $el
-	                    .width(newWidth)
-	                    .height(newWidth * $el.data('aspectRatio'));
-
-	            });
-
-	            // Kick off one resize to fix all videos on page load
-	        }).resize();
-	    },
-	    render: function() {
-	        return (
-	            
-	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
-	    React.createElement("div", {className: "grid-sizer"}), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	        React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
-	    ), 
-	       React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-
-	 
-	    
-	    React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
-	    )
-	)
-
-	        )
-	    }
-
-
+	  /**
+	   * @param {function} callback
+	   */
+	  removeChangeListener: function(callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
 	});
 
-	module.exports = AllVideos;
+	// Register callback to handle all updates
+	AppDispatcher.register(function(action) {
+	  switch (action.actionType) {
+
+	    case VideoConstants.VIDEOS_UPDATE:
+	      VideoStore.emitChange();
+	      break;
+
+	    default:
+	      // no op
+	  }
+	});
+
+	module.exports = VideoStore;
+
 
 /***/ },
-/* 108 */
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * TodoConstants
+	 */
+
+	var keyMirror = __webpack_require__(69);
+
+	module.exports = keyMirror({
+	  VIDEOS_UPDATE: null
+	});
+
+
+/***/ },
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
+
+	var VideoActions = __webpack_require__(98);
 
 
 	module.exports = React.createClass({displayName: "module.exports",
 
 	    handleOnClick:function(){
-	      console.log(this.refs.urlToAdd.value);
+	      VideoActions.addVideo({url:this.refs.urlToAdd.value}, function(err, addedVideo){
+	          console.log(addedVideo);
+	      });
 	    },
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
 	        React.createElement("h1", null, "Add Video"), 
-	        React.createElement("h4", null, "Please add a url from Youtube, Vimeo, Instagram, or Vine"), 
+	        React.createElement("h4", null, "Please add a url from Youtube or Vimeo"), 
 	            React.createElement("div", {className: "form-group"}, 
 	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
 	                React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Video")
@@ -10527,6 +9720,879 @@
 	        )
 	    }
 	});
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var AuthStore = __webpack_require__(62);
+	var AuthActions = __webpack_require__(71);
+	var assign = __webpack_require__(70);
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  getInitialState: function() {
+	    return {
+	      user: {},
+	      alert: {}
+	    }
+	  },
+	  componentDidMount: function() {
+	    AuthStore.getLoggedInUser(function(err, user) {
+	      if (!err) {
+	        this.setState({
+	          user: user
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleSubmit: function(e) {
+	    e.preventDefault();
+	    var updatedUser = assign({}, this.state.user);
+	    AuthActions.updateUser(updatedUser, function(err) {
+	      if (err) {
+	        this.setState({
+	          alert: {
+	            type: "danger",
+	            msg: "There was an error updating profile"
+	          }
+	        });
+	      }
+	      else {
+	        this.setState({
+	          alert: {
+	            type: "success",
+	            msg: "Profile was successfully updated"
+	          }
+	        });
+	      }
+	    }.bind(this));
+	  },
+	  handleDisplayNameChange:function(e){
+	    var user = assign({},this.state.user, {displayName: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleImageUrlChange:function(e){
+	    var user = assign({},this.state.user, {imageUrl: e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleCityChange:function(e){
+	    var user = assign({},this.state.user, {city:e.target.value});
+	    this.setState({user:user});
+	  },
+	  handleStateChange:function(e){
+	    var user = assign({},this.state.user, {state:e.target.value});
+	    this.setState({user:user});
+	  },
+	  render: function() {
+	    return (
+	      React.createElement("div", null, 
+	      React.createElement("h1", null, "Edit Profile"), 
+	      this.state.alert?
+	        
+	      React.createElement("div", {className: "alert alert-" + this.state.alert.type, role: "alert"}, this.state.alert.msg):null, 
+	        
+	      
+	      React.createElement("form", {onSubmit: this.handleSubmit}, 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Display Name"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Display Name", value: this.state.user.displayName, onChange: this.handleDisplayNameChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "Profile Image Url"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "Image Url", value: this.state.user.imageUrl, onChange: this.handleImageUrlChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputEmail1"}, "City"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", placeholder: "City", value: this.state.user.city, onChange: this.handleCityChange})
+	        ), 
+	        React.createElement("div", {className: "form-group"}, 
+	          React.createElement("label", {htmlFor: "exampleInputPassword1"}, "State"), 
+	          React.createElement("input", {type: "text", className: "form-control", id: "exampleInputPassword1", placeholder: "State", value: this.state.user.state, onChange: this.handleStateChange})
+	        ), 
+	       
+	        React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
+	      )
+	    )
+
+
+	    );
+	  }
+	});
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var ExternalLoginOptions = __webpack_require__(90);
+	var Signup = __webpack_require__(91);
+	var LocalLogin = __webpack_require__(93);
+	var AuthActions = __webpack_require__(71);
+
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+
+	  handleDisplayErrors: function() {
+	    this.setState({
+	      errors: []
+	    })
+	  },
+
+	  handleSignupSubmit: function(signupData) {
+	    AuthActions.signup(signupData, function(err) {
+	      if (err) {
+	        this.setState({
+	          msg: {
+	            msg: err.responseJSON.msg,
+	            type: "error"
+	          }
+	        });
+	        return;
+	      }
+	      else {
+	        this.setState({
+	          showPage: "LocalLogin",
+	          msg: {
+	            msg: "Registration successful! Please log in.",
+	            type: "success"
+	          }
+	        });
+	      }
+	    }.bind(this));
+
+	  },
+	  handleLoginSubmit: function(loginData) {
+	    AuthActions.login(loginData, function(err) {
+	      if (err) {
+	        this.setState({
+	          msg: {
+	            msg: err.responseJSON.msg,
+	            type: "error"
+	          }
+	        });
+	      }
+	      else {
+	        if (location.state && location.state.nextPathname) {
+	          this.context.router.replace(location.state.nextPathname)
+	        }
+	        else {
+	          this.context.router.replace('/')
+	        }
+	      }
+	    }.bind(this));
+	  },
+	  handleBackClickOnLocalLogin: function() {
+	    this.setState({
+	      showPage: "ExternalLoginOptions",
+	      msg: {}
+	    });
+	  },
+	  handleBackClickOnSignup: function() {
+	    this.setState({
+	      showPage: "ExternalLoginOptions",
+	      msg: {}
+	    });
+	  },
+	  handleLoginClick: function() {
+	    this.setState({
+	      showPage: "LocalLogin",
+	      msg: {}
+	    });
+	  },
+	  handleSignupClick: function() {
+	    this.setState({
+	      showPage: "Signup",
+	      msg: {}
+	    });
+	  },
+	  componentDidMount: function() {
+	    $('#myModal').modal('show');
+	  },
+	  componentWillUnmount: function() {
+	    $('#myModal').modal('hide');
+	  },
+	  getInitialState: function() {
+	    return ({
+	      showPage: "ExternalLoginOptions",
+	      msgs: {}
+	    });
+	  },
+	  render: function() {
+	    return (
+	      
+	      React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
+	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
+	        this.state.showPage==='LocalLogin'?
+	          React.createElement(LocalLogin, {
+	            onBackClick: this.handleBackClickOnLocalLogin, 
+	            onSubmit: this.handleLoginSubmit, 
+	            msg: this.state.msg
+	            }
+	          ):
+	          this.state.showPage==="Signup"?
+	          React.createElement(Signup, {
+	            onBackClick: this.handleBackClickOnSignup, 
+	            onSubmit: this.handleSignupSubmit, 
+	            msg: this.state.msg
+	            }
+	          ):
+	          React.createElement(ExternalLoginOptions, {
+	            onSignupClick: this.handleSignupClick, 
+	            onLoginClick: this.handleLoginClick}
+	          )
+	          
+	        
+	        
+	  )
+	)
+
+	    )
+	  }
+	});
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    return(
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-center"}, 
+	    
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
+	            React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+							React.createElement("i", {className: "fa fa-facebook fa-md modal-icons"})
+							), 
+							
+	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
+							 "LOGIN WITH FACEBOOK"
+							)
+							
+							)
+							)
+			), 
+			React.createElement("div", null, 
+			"Recommended.  We will never post anything without your permission."
+			), 
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
+	           React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+	  						React.createElement("i", {className: "fa fa-google-plus fa-md modal-icons"})
+	  						), 
+	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
+	  						 "LOGIN WITH GOOGLE"
+	  						)
+							)
+							)
+			), 
+			
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	         React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-1 text-left"}, 
+								React.createElement("i", {className: "fa fa-github fa-md modal-icons"})
+								), 
+								React.createElement("div", {className: "col-xs-10 text-left"}, 
+							 "LOGIN WITH GITHUB"
+							)
+							)
+							)
+			), 
+			React.createElement("hr", null), 
+			React.createElement("div", null, 
+			"or use your email address", 
+			React.createElement("div", {className: "row"}, 
+			  React.createElement("div", {className: "col-xs-6"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onLoginClick}, 
+	    		"Login"
+	    		)
+	    		), 
+			  React.createElement("div", {className: "col-xs-6"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onSignupClick}, 
+	    		"Signup"
+	    		)
+	    		)
+	    	)
+			)
+			
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Message = __webpack_require__(92);
+	module.exports = React.createClass({displayName: "module.exports",
+	      handleSubmit:function(e){
+	        e.preventDefault();
+	        this.props.onSubmit(this.state);
+	      },
+	      handleDisplayNameChange:function(e){
+	        this.setState({displayName:e.target.value});
+	      },
+	      handleEmailChange:function(e){
+	        this.setState({email:e.target.value});
+	      },
+	      handlePasswordChange:function(e){
+	        this.setState({password:e.target.value});
+	      },
+	      handleConfirmPasswordChange:function(e){
+	        this.setState({confirmPassword:e.target.value});
+	      },
+	      getInitialState:function(){
+	        return{
+	          displayName:'',
+	          email:'',
+	          password:'',
+	          confirmPassword:''
+	        }
+	      },
+			  render:function(){
+			    return(
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Register")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-left"}, 
+	          React.createElement(Message, {message: this.props.message}), 
+	            React.createElement("form", {onSubmit: this.handleSubmit}, 
+	            
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Full Name"), 
+	            React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", value: this.state.displayName, onChange: this.handleDisplayNameChange})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Email address"), 
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Confirm Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.confirmPassword, onChange: this.handleConfirmPasswordChange})
+	          ), 
+	          React.createElement("div", {className: "row"}, 
+	          React.createElement("div", {className: "col-xs-6"}, 
+	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
+	          ), 
+	          React.createElement("div", {className: "col-xs-6 text-right"}, 
+	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
+	          )
+	          )
+	        )
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    if(this.props.message.msg)
+			    {
+			      return  React.createElement("div", {className: "alert animated fadeIn " + (this.props.message.type==="error"?
+	                              "alert-danger":
+	                              "alert-success"), 
+	                            role: "alert"}, this.props.message.msg)
+			    }
+			    else{
+			      return React.createElement("div", null)
+			    }
+			  }
+			});
+			
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Message = __webpack_require__(92);
+	module.exports = React.createClass({displayName: "module.exports",
+	      handleSubmit:function(e){
+	        e.preventDefault();
+	        this.props.onSubmit(this.state);
+	      },
+	      handleEmailChange:function(e){
+	        this.setState({email:e.target.value});
+	      },
+	      handlePasswordChange:function(e){
+	        this.setState({password:e.target.value});
+	      },
+	      getInitialState:function(){
+	        return({
+	          email:'',
+	          password:''
+	        });
+	      },
+			  render:function(){
+			    return(
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-left"}, 
+	          React.createElement(Message, {message: this.props.message}), 
+	            React.createElement("form", {onSubmit: this.handleSubmit}, 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Email address"), 
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
+	          ), 
+	          React.createElement("div", {className: "row"}, 
+	          React.createElement("div", {className: "col-xs-6"}, 
+	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
+	          ), 
+	          React.createElement("div", {className: "col-xs-6 text-right"}, 
+	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Login")
+	          )
+	          )
+	        )
+
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 94 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(95);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(97)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(96)();
+	// imports
+	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
+	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Oleo+Script);", ""]);
+
+	// module
+	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.title {\n  font-family: 'Oleo Script', cursive;\n  color: #125688; }\n\niframe {\n  border: 0px; }\n\n.instagram-media {\n  background: #FFF;\n  border: 0;\n  border-radius: 3px;\n  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 10px 0 rgba(0, 0, 0, 0.15);\n  margin: 1px;\n  max-width: 658px;\n  padding: 0;\n  width: 99.375%;\n  width: -webkit-calc(100% - 2px);\n  width: calc(100% - 2px); }\n\n.ig-wrapper {\n  padding: 8px; }\n\n.ig-image-wrapper {\n  background: #F8F8F8;\n  line-height: 0;\n  margin-top: 40px;\n  padding: 50.0% 0;\n  text-align: center;\n  width: 100%; }\n\n.ig-image {\n  display: block;\n  height: 44px;\n  margin: 0 auto -44px;\n  position: relative;\n  top: -22px;\n  width: 44px; }\n\n.ig-link-wrapper {\n  margin: 8px 0 0 0;\n  padding: 0 4px; }\n\n.ig-link {\n  color: #000;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 17px;\n  text-decoration: none;\n  word-wrap: break-word; }\n\n.ig-meta {\n  color: #c9c8cd;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px;\n  margin-bottom: 0;\n  margin-top: 8px;\n  overflow: hidden;\n  padding: 8px 0 7px;\n  text-align: center;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.ig-time {\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px; }\n\n/* clear fix */\n.grid {\n  margin: 0 auto; }\n\n.grid:after {\n  content: '';\n  display: block;\n  clear: both; }\n\n.grid-sizer,\n.grid-item {\n  width: 300px;\n  margin-bottom: 10px; }\n\n.video-item {\n  width: 100%; }\n\n.grid-item {\n  float: left; }\n\n.grid-item img {\n  display: block;\n  max-width: 100%; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:focus,\n.navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.zs-profile-pic {\n  width: 50px;\n  height: 50px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 96 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 97 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	var replaceText = (function () {
+		var textStore = [];
+
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+
+		var blob = new Blob([css], { type: "text/css" });
+
+		var oldSrc = linkElement.href;
+
+		linkElement.href = URL.createObjectURL(blob);
+
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 98 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var VideoConstants = __webpack_require__(86);
+	var AjaxFunctions = __webpack_require__(72);
+	var AppDispatcher = __webpack_require__(63);
+
+
+	var VideoActions = {
+
+	    addVideo: function(videoUrl, done) {
+	        var url = "/api/video/";
+	        AjaxFunctions.post(url, videoUrl, function(err, data) {
+	            
+	            if (err) {
+	                console.log("error adding data", err);
+	                done(err, null);
+	            }
+	            else {
+	                AppDispatcher.dispatch({
+	                    actionType: VideoConstants.VIDEOS_UPDATE
+	                });
+	                done(null, data);
+	            }
+
+	        });
+	    },
+	}
+
+
+	module.exports = VideoActions;
 
 /***/ }
 /******/ ]);

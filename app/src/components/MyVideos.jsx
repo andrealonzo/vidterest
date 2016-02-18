@@ -3,6 +3,7 @@
 var React = require("react");
 var Masonry = require('react-masonry-component');
 
+
 var masonryOptions = {
     itemSelector: '.grid-item',
     columnWidth: 300,
