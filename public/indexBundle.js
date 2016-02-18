@@ -49,27 +49,18 @@
 	var ReactDOM = __webpack_require__(1)
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
-	var MyBooks = __webpack_require__(73)
-	var AllBooks = __webpack_require__(79)
-	var AddBooks = __webpack_require__(81)
-	var MyRequests = __webpack_require__(84)
+	var MyVideos = __webpack_require__(107)
+	var AllVideos= __webpack_require__(106)
+	var AddVideo = __webpack_require__(108)
 	var EditProfile = __webpack_require__(86)
 	var Login = __webpack_require__(87)
 	var AuthStore = __webpack_require__(62);
 	__webpack_require__(92);
-	var assign = __webpack_require__(70);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
 	var IndexRoute = __webpack_require__(4).IndexRoute;
 	var browserHistory = __webpack_require__(4).browserHistory;
-	var Masonry = __webpack_require__(96);
 
-	var masonryOptions = {
-	    itemSelector: '.grid-item',
-	    columnWidth: 300,
-	    fitWidth: true,
-	      gutter: 10
-	};
 
 
 
@@ -85,7 +76,6 @@
 	    },
 	    componentDidMount: function() {
 	        this.setAuthState();
-	        this.setVideoResizeListeners();
 	        AuthStore.addChangeListener(this._onChange);
 
 	    },
@@ -95,39 +85,6 @@
 	    componentWillReceiveProps: function(nextProps) {
 	        this.previousChildren = this.props.children
 
-	    },
-	    setVideoResizeListeners: function() {
-	        // Find all YouTube videos
-	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
-	        // The element that is fluid width
-	        var $fluidEl = $(".grid-item");
-
-	        // Figure out and save aspect ratio for each video
-	        $allVideos.each(function() {
-	            $(this)
-	                .data('aspectRatio', this.height / this.width)
-	            // and remove the hard coded width/height
-	            .removeAttr('height')
-	                .removeAttr('width')
-	            .addClass('video-item');
-	                
-
-	        });
-	        // When the window is resized
-	        $(window).resize(function() {
-	            var newWidth = $fluidEl.width();
-	                console.log(newWidth);
-	            // Resize all videos according to their own aspect ratio
-	            $allVideos.each(function() {
-	                var $el = $(this);
-	                $el
-	                    .width(newWidth)
-	                    .height(newWidth * $el.data('aspectRatio'));
-
-	            });
-
-	            // Kick off one resize to fix all videos on page load
-	        }).resize();
 	    },
 	    setAuthState: function() {
 	        AuthStore.getLoggedInUser(function(err, user) {
@@ -151,131 +108,26 @@
 	    },
 	    render: function() {
 
-	        return (
-	            
-	                React.createElement("div", {className: "container-fluid text-center"}, 
-	                React.createElement(Navigation, {user: this.state.user, onPageChange:  this.handlePageChange}), 
-	            React.createElement("h1", {className: "title text-center"}, "Vidterest"), 
-	            React.createElement("div", null, 
-	            React.createElement("a", {href: "#"}, React.createElement("i", {className: "fa fa-plus-square-o"}))
-	            ), 
-	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
-	    React.createElement("div", {className: "grid-sizer"}), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(Navigation, {user: this.state.user, onPageChange:  this.handlePageChange}), 
+	                    React.createElement("div", {className: "container text-center"}, 
+	                        React.createElement("p", null), 
+	                        this.props.location.state && this.props.location.state.modal?
+	                            this.previousChildren:null, 
+
+
+	                    
+	                        //add the user property to each of the children
+	                        React.Children.map(this.props.children, function(child) {
+	                            return React.cloneElement(child, { user: this.state.user });
+	                        }.bind(this))
+
+	                    
+
 	                )
 	            )
 	        )
-	    ), 
-	        React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameborder: "0", allowfullscreen: true})
-	    ), 
-	       React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameborder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameborder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowfullscreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-
-	 
-	    
-	    React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameborder: "0", allowfullscreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameborder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowfullscreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
-	    )
-	)
-	)
-	            )
-	            // return (
-	            //     <div>
-	            //         <Navigation user={this.state.user} onPageChange={ this.handlePageChange}/>
-	            //         <div className="container text-center">
-	            //             <p></p>
-	            //             {this.props.location.state && this.props.location.state.modal?
-	            //                 this.previousChildren:null}
-
-
-	        //             {
-	        //                 //add the user property to each of the children
-	        //                 React.Children.map(this.props.children, function(child) {
-	        //                     return React.cloneElement(child, { user: this.state.user });
-	        //                 }.bind(this))
-
-	        //             }
-
-	        //         </div>
-	        //     </div>
-	        // )
 	    }
 	});
 
@@ -283,12 +135,11 @@
 	ReactDOM.render((
 	    React.createElement(Router, {history: browserHistory}, 
 	    React.createElement(Route, {path: "/", component: App}, 
-	      React.createElement(Route, {path: "AddBooks", component: AddBooks}), 
-	      React.createElement(Route, {path: "MyBooks", component: MyBooks}), 
-	      React.createElement(Route, {path: "MyRequests", component: MyRequests}), 
+	      React.createElement(Route, {path: "AddVideo", component: AddVideo}), 
+	      React.createElement(Route, {path: "MyVideos", component: MyVideos}), 
 	      React.createElement(Route, {path: "Login", component: Login}), 
 	      React.createElement(Route, {path: "EditProfile", component: EditProfile}), 
-	      React.createElement(IndexRoute, {component: AllBooks})
+	      React.createElement(IndexRoute, {component: AllVideos})
 	    )
 	  )
 	), document.getElementById('app'));
@@ -366,16 +217,17 @@
 	                    React.createElement("span", {className: "icon-bar"})
 	                ), React.createElement(Link, {to: "/", className: "navbar-brand", id: "AllBooks"}, React.createElement("span", {className: "title"}, "Vidterest"))), 
 	            React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
-	        this.state.loggedInUser?
+	        !this.state.loggedInUser?
 	        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	        React.createElement("li", null, React.createElement(Link, {to: "MyRequests"}, "My Videos")), 
-	        React.createElement("li", null, React.createElement(Link, {to: "MyBooks"}, "Add Video")), 
+	        React.createElement("li", null, React.createElement(Link, {to: "MyVideos"}, "My Videos")), 
+	        React.createElement("li", null, React.createElement(Link, {to: "AddVideo"}, "Add Video")), 
 	        React.createElement("li", {className: "dropdown"}, 
-	        this.state.loggedInUser.imageUrl?
-	          React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {src: this.state.loggedInUser.imageUrl}), " ")
+	        
+	        // this.state.loggedInUser.imageUrl?
+	        //   <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
 	         
-	            :
-	        React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("div", null, "Welcome ", this.state.loggedInUser.displayName)), 
+	        //     :
+	        // <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>
 	         
 	        
 	          React.createElement("ul", {className: "dropdown-menu"}, 
@@ -6497,868 +6349,19 @@
 	module.exports = AjaxFunctions;
 
 /***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(74);
-	var Book = __webpack_require__(75);
-	var MyBooksButton = __webpack_require__(76);
-	var BookActions = __webpack_require__(77);
-	var BookStore = __webpack_require__(78);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	    setBooksState: function() {
-	        BookStore.getAllFromUser(function(books) {
-
-	            //sort books based on pending, and approved requests
-	            books.sort(function(book1, book2) {
-	                if (!book1.user_request && !book2.user_request)
-
-	                {
-	                    return 0;
-	                }
-	                if (!book1.user_request && book2.user_request.approved) {
-	                    return -1;
-	                }
-	                if (!book1.user_request && !book2.user_request.approved) {
-	                    return 1;
-	                }
-	                if (!book2.user_request && book1.user_request.approved) {
-	                    return 1;
-	                }
-	                if (!book2.user_request && !book1.user_request.approved) {
-	                    return -1;
-	                }
-	                return book1.user_request.approved - book2.user_request.approved;
-	            })
-	            this.setState({
-	                books: books
-	            });
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return {
-	            books: []
-	        }
-	    },
-	    componentDidMount: function() {
-	        this.setBooksState();
-	        BookStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        BookStore.removeChangeListener(this._onChange);
-	    },
-	    handleRemoveBook: function(book) {
-	        BookActions.removeBook(book);
-	    },
-	    handleDenyRequest: function(book) {
-	        BookActions.removeRequest(book);
-	    },
-	    handleApproveRequest: function(book) {
-	        BookActions.approveRequest(book);
-	    },
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	        React.createElement("h1", null, "My Books"), 
-	        React.createElement(BookList, {books: this.state.books}, 
-	            React.createElement(Book, null, 
-	                React.createElement(MyBooksButton, {onClick: this.handleRemoveBook, onApproveRequest: this.handleApproveRequest, onDenyRequest: this.handleDenyRequest})
-	            )
-	        )
-	    )
-	        )
-	    },
-	    /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setBooksState();
-	    }
-	});
-
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Book = __webpack_require__(75);
-
-	var BookList = React.createClass({displayName: "BookList",
-
-	    handleOnClick: function(book) {
-	        this.props.bookClickAction(book);
-	    },
-	    render: function() {
-
-	        var columnsPerRow = 4;
-	        return (
-
-	            React.createElement("div", {className: "row"}, 
-	        this.props.books.map(function(book, index){
-	             var rowEnd;
-	             if(index%columnsPerRow == columnsPerRow-1){
-	                 rowEnd = React.createElement("div", {className: "clearfix"})
-	             }
-	            return(
-	            React.createElement("div", {key: book._id || book.id}, 
-	            
-	            //putting the book property in each Child
-	                React.Children.map(this.props.children, function(child) {
-	                    return React.cloneElement(child, { book: book });
-	                }.bind(book)), 
-	            
-	            rowEnd
-	            )
-	            )
-	        }.bind(this))
-	            
-	        )
-
-	        )
-	    }
-
-	});
-
-	module.exports = BookList;
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  getInitialState: function() {
-	    return {
-	      added: false
-	    }
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("div", {key: this.props.book.id, className: "col-sm-3"}, 
-	            React.createElement("div", {className: "panel panel-default"}, 
-	              React.createElement("div", {className: "panel-body"}, 
-	                  
-	            React.createElement("img", {className: "img-responsive", src: this.props.book.thumbnail}
-	            ), 
-	            this.props.book.addedBy?
-	            React.createElement("div", null, "Added by ", this.props.book.addedBy.displayName):null, 
-	            
-	            
-	            React.createElement("div", null, React.createElement("a", {href: "#"}, this.props.book.title)), 
-	            
-	            this.props.book.authors?this.props.book.authors.map(function(author){
-	                return(
-	                React.createElement("div", null, 
-	                author
-	                ));
-	            }):null, 
-	            
-	              React.Children.map(this.props.children, function(child) {
-	                    return React.cloneElement(child, { book: this.props.book });
-	                }.bind(this))
-	            
-	           
-	             
-	              )
-	            )
-	        )
-	             
-	    );
-	  }
-	});
-
-/***/ },
-/* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  handleApproveRequest: function() {
-	    this.props.onApproveRequest(this.props.book);
-	  },
-	  handleDenyRequest: function() {
-	    this.props.onDenyRequest(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("div", null, 
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Book"), 
-	      this.props.book.user_request?
-	            React.createElement("div", null, 
-	              React.createElement("hr", null), 
-
-	                "Requested By ", this.props.book.user_request.user.displayName, 
-	                
-	                this.props.book.user_request.approved?
-	                React.createElement("div", null, 
-	                "Approved!"
-	                )
-	                :
-	                React.createElement("div", null, 
-	                React.createElement("button", {className: "btn btn-success", onClick: this.handleApproveRequest}, React.createElement("span", {className: "glyphicon glyphicon-ok", "aria-hidden": "true"})), 
-	                React.createElement("button", {className: "btn btn-danger", onClick: this.handleDenyRequest}, React.createElement("span", {className: "glyphicon glyphicon-remove", "aria-hidden": "true"}))
-	                )
-	                
-	                )
-	                :null
-	                
-	       )
-	    );
-	  }
-	});
-
-/***/ },
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(63);
-	var BookConstants = __webpack_require__(68);
-	var AjaxFunctions = __webpack_require__(72);
-
-	var BookActions = {
-
-	    addBook:function(book, done){
-	        var url = "/api/books/";
-	        AjaxFunctions.post(url, book, function(err, data){
-	            if(err){
-	               console.log("error adding data", err);
-	               done(err);
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.BOOKS_UPDATE
-	                });
-	                done();
-	            }
-	            
-	        });
-	    },
-	    removeBook:function(book){
-	        
-	        var url = "/api/books/";
-	        
-	        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
-	            if(err){
-	               console.log("error deleting book", err);
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.BOOKS_UPDATE
-	                });
-	            }
-	            
-	        });
-	       
-	    },
-	    requestBook:function(book){
-	        var url = "/api/books/request";
-	        AjaxFunctions.post(url, book, function(err, data){
-	            if(err){
-	               console.log("error requesting book", err);
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.BOOKS_UPDATE
-	                });
-	            }
-	            
-	        });
-	    },
-	    removeRequest:function(book){
-	        var url = "/api/books/request";
-	        AjaxFunctions.delete(url, JSON.stringify(book), function(err, data){
-	            if(err){
-	               console.log("error removing request", err);
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.BOOKS_UPDATE
-	                });
-	            }
-	            
-	        });
-	    },
-	    
-	    approveRequest:function(book){
-	        var url = "/api/books/request/approve/";
-	        AjaxFunctions.post(url, book, function(err, data){
-	            if(err){
-	               console.log("error approving request", err);
-	            }else{
-	                AppDispatcher.dispatch({
-	                    actionType: BookConstants.BOOKS_UPDATE
-	                });
-	            }
-	            
-	        });
-	    }
-
-
-	};
-
-	module.exports = BookActions;
-
-
-/***/ },
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(63);
-	var EventEmitter = __webpack_require__(67).EventEmitter;
-	var BookConstants = __webpack_require__(68);
-	var assign = __webpack_require__(70);
-
-	var CHANGE_EVENT = 'change';
-
-
-
-	var BookStore = assign({}, EventEmitter.prototype, {
-
-	  getAll: function(done) {
-	    var url = "/api/books/";
-	    $.ajax({
-	      type: "GET",
-	      url: url,
-	      contentType: "application/json",
-	      success: function(data) {
-	        done(data);
-	      },
-	      error: function(data) {
-	        console.log("error receiving data", data);
-	        done([]);
-	      },
-	      dataType: 'json'
-	    });
-
-	  },
-	  
-	    getAvailable: function(done) {
-	    var url = "/api/books/available/";
-	    $.ajax({
-	      type: "GET",
-	      url: url,
-	      contentType: "application/json",
-	      success: function(data) {
-	        done(data);
-	      },
-	      error: function(data) {
-	        console.log("error receiving data", data);
-	        done([]);
-	      },
-	      dataType: 'json'
-	    });
-
-	  },
-
-	  getAllFromUser: function(done) {
-	    var url = "/api/user/books/";
-	    $.ajax({
-	      type: "GET",
-	      url: url,
-	      contentType: "application/json",
-	      success: function(data) {
-	        done(data);
-	      },
-	      error: function(data) {
-	        console.log("error receiving data", data);
-	        done([]);
-	      },
-	      dataType: 'json'
-	    });
-	  },
-	  
-
-	  getUserRequests: function(done) {
-	    
-	        console.log('geting User Requests');
-	    var url = "/api/books/request/";
-	    $.ajax({
-	      type: "GET",
-	      url: url,
-	      contentType: "application/json",
-	      success: function(data) {
-	        console.log('got user requests');
-	        done(data);
-	      },
-	      error: function(data) {
-	        console.log("error receiving data", data);
-	        done([]);
-	      },
-	      dataType: 'json'
-	    });
-	  },
-
-	  emitChange: function() {
-	    this.emit(CHANGE_EVENT);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  addChangeListener: function(callback) {
-	    this.on(CHANGE_EVENT, callback);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  removeChangeListener: function(callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
-	  }
-	});
-
-	// Register callback to handle all updates
-	AppDispatcher.register(function(action) {
-	  switch (action.actionType) {
-
-	    case BookConstants.BOOKS_UPDATE:
-	      BookStore.emitChange();
-	      break;
-
-	    default:
-	      // no op
-	  }
-	});
-
-	module.exports = BookStore;
-
-
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(74);
-	var Book = __webpack_require__(75);
-	var AllBooksButtons = __webpack_require__(80);
-	var BookActions = __webpack_require__(77);
-	var BookStore = __webpack_require__(78);
-	var AuthStore = __webpack_require__(62);
-
-
-	var AllBooks = React.createClass({displayName: "AllBooks",
-	    setBooksState: function() {
-	        AuthStore.getLoggedInUser(function(err, user) {
-	            if (err) { //do nothing
-	            }
-	            console.log("logged in user", user);
-	            BookStore.getAll(function(books) {
-	                books = books.sort(function(book1, book2) {
-	                    //check if both books were added by the current user
-	                    if (user) {
-	                        if (book1.addedBy._id == user._id && book2.addedBy._id == user._id) {
-	                            return 0;
-	                        }
-	                        //put books added by the current user to the end of the list
-	                        if (book1.addedBy._id == user._id) {
-	                            return 1;
-	                        }
-	                        if (book2.addedBy._id == user._id) {
-	                            return -1;
-	                        }
-	                    }
-	                    //check if there are any requests made
-	                    if (!book1.user_request && !book2.user_request) {
-	                        return 0;
-	                    }
-	                    //put books that have no request to the front of the list
-	                    if (!book1.user_request) {
-	                        return -1;
-	                    }
-	                    if (!book2.user_request) {
-	                        return 1;
-	                    }
-	                    return book1.user_request.approved - book2.user_request.approved;
-	                });
-	                this.setState({
-	                    books: books
-	                });
-	            }.bind(this));
-
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return {
-	            books: []
-	        };
-	    },
-	    componentDidMount: function() {
-	        this.setBooksState();
-	        BookStore.addChangeListener(this._onChange);
-	        AuthStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        BookStore.removeChangeListener(this._onChange);
-	        AuthStore.removeChangeListener(this._onChange);
-	    },
-	    handleRequestBook: function(book) {
-	        BookActions.requestBook(book);
-	    },
-
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	            React.createElement("h1", null, "All Books"), 
-	            React.createElement(BookList, {books: this.state.books}, 
-	                React.createElement(Book, null, 
-	                    React.createElement(AllBooksButtons, {onClick: this.handleRequestBook, user: this.props.user})
-	                )
-	            )
-
-	        )
-
-	        )
-	    },
-	    /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setBooksState();
-	    }
-
-
-	});
-
-	module.exports = AllBooks;
-
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Link = __webpack_require__(4).Link;
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      //check if user is logged in
-	      !this.props.user?
-	      React.createElement(Link, {className: "btn btn-default", to: {pathname: "Login", state: { modal: true }}}, "Login"):
-	      //check if book has an approved request
-	      this.props.book.user_request && this.props.book.user_request.approved ?
-	      React.createElement("div", null, "Swap Approved") :
-	      //check if book has an unapproved request
-	      this.props.book.user_request ?
-	      React.createElement("div", null, "Requested By ", this.props.book.user_request.user.displayName) :
-	      //if the current user added the book, they can't request it
-	      this.props.user._id != this.props.book.addedBy._id?
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Request Book"):
-	      null
-	    );
-	  }
-	});
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(74);
-	var Book = __webpack_require__(75);
-	var BookActions = __webpack_require__(77);
-	var AddBookButtons = __webpack_require__(82);
-	var ExternalSearchStore = __webpack_require__(83);
-	var assign = __webpack_require__(70);
-
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	    typingTimer: null, //timer identifier
-	    doneTypingInterval: 1000, //time in ms, 5 second for example
-	    getInitialState: function() {
-	        return {
-	            books:[],
-	            searching: false
-	        };
-	    },
-	    handleOnChange: function(e) {
-	        this.setState({
-	            searching: true
-	        });
-	        //wait til user is done typing
-	        //setup before functions
-
-	        clearTimeout(this.typingTimer);
-	        this.typingTimer = setTimeout(function() {
-	            ExternalSearchStore.getAll(e.target.value, function(books){
-	                console.log(books);
-	                this.setState({
-	                    books:books,
-	                    searching:false
-	                    })
-	            }.bind(this))
-	           // BookActions.searchExternal(e.target.value);
-	        }.bind(this, e), this.doneTypingInterval);
-
-
-	    },
-	    handleAddBook: function(book, done) {
-	        BookActions.addBook(book, done);
-	    },
-	    render: function() {
-
-	        return (
-	            React.createElement("div", null, 
-
-	        
-	        React.createElement("h1", null, "Add Book"), 
-	            React.createElement("div", {className: "form-group"}, 
-	                React.createElement("input", {type: "text", className: "form-control", id: "exampleInputName2", placeholder: "Search For a Book To Add", onChange: this.handleOnChange})
-	            ), 
-
-	        this.state.searching?React.createElement("img", {src: "/public/img/ajax-loader.gif"}):null, 
-	        React.createElement(BookList, {books: this.state.books}, 
-	                React.createElement(Book, {onClick: this.handleAddBook, clickText: "Add Book"}, 
-	                    React.createElement(AddBookButtons, {onClick: this.handleAddBook, clickText: "Add Book"})
-	                )
-	        )
-
-	    )
-	        )
-	    }
-	});
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	  getInitialState: function() {
-	    return {
-	      added: false
-	    }
-	  },
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book, function(err) {
-	      if (!err) {
-	        this.setState({
-	          added: true
-	        });
-	      }
-	    }.bind(this));
-	  },
-	  render: function() {
-	    return (
-	      this.state.added ?
-	        React.createElement("div", {className: "alert alert-success", role: "alert"}, "Added!") :
-	        React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Book")
-	    );
-	  }
-	});
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(63);
-	var EventEmitter = __webpack_require__(67).EventEmitter;
-	var BookConstants = __webpack_require__(68);
-	var assign = __webpack_require__(70);
-	var AjaxFunctions = __webpack_require__(72);
-
-
-	var CHANGE_EVENT = 'change';
-
-	var _books = [];
-
-	/**
-	 * Create a TODO item.
-	 * @param  {string} text The content of the TODO
-	 */
-	function load(books) {
-	  _books = books;
-	}
-
-
-	var ExternalSearchStore = assign({}, EventEmitter.prototype, {
-
-	  /**
-	   * Get the entire collection of TODOs.
-	   * @return {object}
-	   */
-	  getAll: function(searchTerm, done) {
-	    if (!searchTerm) {
-	      return done([]);
-	    }
-	    var url = "/api/searchExternal/" + searchTerm;
-	    AjaxFunctions.get(url, function(err, books) {
-	      if (err) {
-	        console.log("error receiving books", err);
-	        done([]);
-	      }
-	      else {
-	        done(books);
-	      }
-
-	    });
-	  },
-
-	  emitChange: function() {
-	    this.emit(CHANGE_EVENT);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  addChangeListener: function(callback) {
-	    this.on(CHANGE_EVENT, callback);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  removeChangeListener: function(callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
-	  }
-	});
-
-	// Register callback to handle all updates
-	AppDispatcher.register(function(action) {
-	  var text;
-
-	  switch (action.actionType) {
-
-
-	    case BookConstants.SEARCH_EXTERNAL_RESULTS:
-	      var books = action.data;
-	      load(books);
-	      ExternalSearchStore.emitChange();
-	      break;
-
-	    default:
-	      // no op
-	  }
-	});
-
-	module.exports = ExternalSearchStore;
-
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var BookList = __webpack_require__(74);
-	var Book = __webpack_require__(75);
-	var MyRequestsButton = __webpack_require__(85);
-	var BookActions = __webpack_require__(77);
-	var BookStore = __webpack_require__(78);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-	    setBooksState: function() {
-	        BookStore.getUserRequests(function(books) {
-	            var outstandingRequests = books.filter(function(book){
-	                return (!book.user_request.approved);
-	            });
-	            var approvedRequests = books.filter(function(book){
-	                return (book.user_request.approved);
-	            });
-	            this.setState({
-	                outstandingRequests:outstandingRequests,
-	                approvedRequests:approvedRequests
-	            });
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return{
-	            outstandingRequests:[],
-	            approvedRequests:[]
-	        }
-	    },
-	    componentDidMount: function() {
-	        this.setBooksState();
-	        BookStore.addChangeListener(this._onChange);
-	    },
-	    componentWillUnmount: function() {
-	        BookStore.removeChangeListener(this._onChange);
-	    },
-	    handleRemoveRequest:function(book){
-	        BookActions.removeRequest(book);
-	    },
-	    render: function() {
-	        return (
-	             React.createElement("div", null, 
-	        React.createElement("h1", null, "My Outstanding Requests"), 
-	        React.createElement(BookList, {books: this.state.outstandingRequests}, 
-	        
-	            React.createElement(Book, null, 
-	                React.createElement(MyRequestsButton, {onClick: this.handleRemoveRequest})
-	            )
-	        ), 
-	    
-	        React.createElement("h1", null, "My Approved Requests"), 
-	        React.createElement(BookList, {books: this.state.approvedRequests}, 
-	            React.createElement(Book, null, 
-	            
-	                React.createElement(MyRequestsButton, {onClick: this.handleRemoveRequest})
-	            )
-	        )
-	         
-	    )
-	        )
-	    },
-	        /**
-	     * Event handler for 'change' events coming from the BookStore
-	     */
-	    _onChange: function() {
-	        this.setBooksState();
-	    }
-	});
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  handleOnClick: function() {
-	    this.props.onClick(this.props.book);
-	  },
-	  render: function() {
-	    return (
-	      React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Remove Request")
-	    );
-	  }
-	});
-
-/***/ },
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -11174,6 +10177,356 @@
 
 	}));
 
+
+/***/ },
+/* 106 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Masonry = __webpack_require__(96);
+
+	var masonryOptions = {
+	    itemSelector: '.grid-item',
+	    columnWidth: 300,
+	    fitWidth: true,
+	      gutter: 10
+	};
+
+	var AllVideos = React.createClass({displayName: "AllVideos",
+
+
+	    componentDidMount: function() {
+	        this.setVideoResizeListeners();
+	    },
+	    setVideoResizeListeners: function() {
+	        // Find all YouTube videos
+	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
+	        // The element that is fluid width
+	        var $fluidEl = $(".grid-item");
+
+	        // Figure out and save aspect ratio for each video
+	        $allVideos.each(function() {
+	            $(this)
+	                .data('aspectRatio', this.height / this.width)
+	            // and remove the hard coded width/height
+	            .removeAttr('height')
+	                .removeAttr('width')
+	            .addClass('video-item');
+	                
+
+	        });
+	        // When the window is resized
+	        $(window).resize(function() {
+	            var newWidth = $fluidEl.width();
+	            // Resize all videos according to their own aspect ratio
+	            $allVideos.each(function() {
+	                var $el = $(this);
+	                $el
+	                    .width(newWidth)
+	                    .height(newWidth * $el.data('aspectRatio'));
+
+	            });
+
+	            // Kick off one resize to fix all videos on page load
+	        }).resize();
+	    },
+	    render: function() {
+	        return (
+	            
+	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	    React.createElement("div", {className: "grid-sizer"}), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	        React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
+	    ), 
+	       React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+
+	 
+	    
+	    React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
+	    )
+	)
+
+	        )
+	    }
+
+
+	});
+
+	module.exports = AllVideos;
+
+/***/ },
+/* 107 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Masonry = __webpack_require__(96);
+
+	var masonryOptions = {
+	    itemSelector: '.grid-item',
+	    columnWidth: 300,
+	    fitWidth: true,
+	      gutter: 10
+	};
+
+	var AllVideos = React.createClass({displayName: "AllVideos",
+
+
+	    componentDidMount: function() {
+	        this.setVideoResizeListeners();
+	    },
+	    setVideoResizeListeners: function() {
+	        // Find all YouTube videos
+	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
+	        // The element that is fluid width
+	        var $fluidEl = $(".grid-item");
+
+	        // Figure out and save aspect ratio for each video
+	        $allVideos.each(function() {
+	            $(this)
+	                .data('aspectRatio', this.height / this.width)
+	            // and remove the hard coded width/height
+	            .removeAttr('height')
+	                .removeAttr('width')
+	            .addClass('video-item');
+	                
+
+	        });
+	        // When the window is resized
+	        $(window).resize(function() {
+	            var newWidth = $fluidEl.width();
+	            // Resize all videos according to their own aspect ratio
+	            $allVideos.each(function() {
+	                var $el = $(this);
+	                $el
+	                    .width(newWidth)
+	                    .height(newWidth * $el.data('aspectRatio'));
+
+	            });
+
+	            // Kick off one resize to fix all videos on page load
+	        }).resize();
+	    },
+	    render: function() {
+	        return (
+	            
+	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	    React.createElement("div", {className: "grid-sizer"}), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	        React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
+	    ), 
+	       React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+	    
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	            React.createElement("div", {className: "ig-wrapper"}, 
+	                React.createElement("div", {className: "ig-image-wrapper"}, 
+	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                ), 
+	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
+	                React.createElement("p", {className: "ig-meta"}, " "
+	                )
+	            )
+	        )
+	    ), 
+	    
+
+	 
+	    
+	    React.createElement("div", {className: "grid-item youtube-item"}, 
+	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
+	    ), 
+	    React.createElement("div", {className: "grid-item"}, 
+	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
+	    )
+	)
+
+	        )
+	    }
+
+
+	});
+
+	module.exports = AllVideos;
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+
+	module.exports = React.createClass({displayName: "module.exports",
+
+	    handleOnClick:function(){
+	      console.log(this.refs.urlToAdd.value);
+	    },
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	        React.createElement("h1", null, "Add Video"), 
+	        React.createElement("h4", null, "Please add a url from Youtube, Vimeo, Instagram, or Vine"), 
+	            React.createElement("div", {className: "form-group"}, 
+	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
+	                React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Video")
+	            )
+	    )
+	        )
+	    }
+	});
 
 /***/ }
 /******/ ]);

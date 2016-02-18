@@ -20,7 +20,8 @@
     "javascript"
   ],
   "scripts": {
-    "start": "node server.js"
+    "test": "mocha --watch --reporter spec --bail --check-leaks test/",
+    "test-w": "nodemon --exec 'mocha --reporter spec --bail --check-leaks test/'"
   },
   "author": "Andre Alonzo",
   "license": "MIT",
@@ -52,11 +53,16 @@
   },
   "devDependencies": {
     "css-loader": "^0.23.1",
+    "expect.js": "^0.3.1",
     "jsx-loader": "^0.13.2",
+    "mocha": "^2.4.5",
     "node-sass": "^3.4.2",
     "nodemon": "^1.8.1",
+    "request": "^2.69.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
+    "superagent": "^1.7.2",
+    "supertest": "^1.2.0",
     "webpack": "^1.12.9"
   }
 }

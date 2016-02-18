@@ -2,7 +2,7 @@
 
 var path = process.cwd();
 var UserHandler = require(path + '/app/controllers/userHandler.server.js');
-var BookHandler = require(path + '/app/controllers/bookHandler.server.js');
+var VideoHandler = require(path + '/app/controllers/videoHandler.server.js');
 
 module.exports = function(app, passport) {
 
@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 	}
 
 	var userHandler = new UserHandler();
-	var bookHandler = new BookHandler();
+	var videoHandler = new VideoHandler();
 
 
 	app.route('/logout')
@@ -27,30 +27,8 @@ module.exports = function(app, passport) {
 			});
 		});
 
-
-
-	app.route('/api/searchExternal/:searchTerm')
-		.get(bookHandler.searchExternal);
-
-
-	app.route('/api/user/books/')
-		.get(bookHandler.getBooksFromUser);
-
-	app.route('/api/books/request/approve/')
-		.post(bookHandler.approveRequest);
-
-	app.route('/api/books/request/')
-		.post(bookHandler.request)
-		.get(bookHandler.getRequests)
-		.delete(bookHandler.removeRequest)
-
-	app.route('/api/books/available/')
-		.get(bookHandler.getAvailable);
-
-	app.route('/api/books/')
-		.post(bookHandler.add)
-		.delete(bookHandler.remove)
-		.get(bookHandler.getAll);
+	app.route('/api/video/')
+		.post(videoHandler.add);
 
 
 
