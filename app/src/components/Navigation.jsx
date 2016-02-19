@@ -60,7 +60,7 @@ module.exports = React.createClass({
         <li className="dropdown">
         {
         this.state.loggedInUser.imageUrl?
-          <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img  src={this.state.loggedInUser.imageUrl}/> </a>
+          <a href="#" className="dropdown-toggle profile" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img className="profile-pic" src={this.state.loggedInUser.imageUrl}/> </a>
          
             :
         <a href="#" className="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><div>Welcome {this.state.loggedInUser.displayName}</div></a>

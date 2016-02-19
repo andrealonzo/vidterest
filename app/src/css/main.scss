@@ -113,55 +113,18 @@ iframe{
     max-width: 100%;
 }
 
-
-.zs-nav {
-    background-color: #0064a4;
-    color: white;
-    border-radius: 0px;
-    border: 0px;
-}
-
-.zs-brand {
-    color: #ffd200;
-    font-weight: 900;
-}
-
-.img-responsive {
-    margin: 0 auto;
-}
-
-.zs-nav-button {
-    color: white;
-}
-
-.zs-subhead {
-    color: white;
-}
-
 .navbar-default .navbar-nav>.open>a,
 .navbar-default .navbar-nav>.open>a:focus,
 .navbar-default .navbar-nav>.open>a:hover {
     background-color: inherit;
 }
 
-.navbar-nav>li>a.zs-profile-dropdown {
+.navbar-nav>li>a.profile {
     padding-top: 0px;
     padding-bottom: 0px;
 }
 
-.zs-profile-pic {
+.profile-pic {
     width: 50px;
     height: 50px;
-}
-
-.navbar-default .navbar-nav .open .dropdown-menu>li>a {
-    color: white;
-}
-
-.dropdown-menu {
-    background-color: #0064a4;
-}
-
-.dropdown-menu li > a:hover {
-    background-color: #007ecc;
 }

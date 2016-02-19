@@ -50,11 +50,11 @@
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
 	var MyVideos = __webpack_require__(73)
-	var AllVideos= __webpack_require__(84)
-	var EditProfile = __webpack_require__(88)
-	var Login = __webpack_require__(89)
+	var AllVideos= __webpack_require__(88)
+	var EditProfile = __webpack_require__(89)
+	var Login = __webpack_require__(90)
 	var AuthStore = __webpack_require__(62);
-	__webpack_require__(94);
+	__webpack_require__(95);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
 	var IndexRoute = __webpack_require__(4).IndexRoute;
@@ -221,7 +221,7 @@
 	        React.createElement("li", {className: "dropdown"}, 
 	        
 	        this.state.loggedInUser.imageUrl?
-	          React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {src: this.state.loggedInUser.imageUrl}), " ")
+	          React.createElement("a", {href: "#", className: "dropdown-toggle profile", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("img", {className: "profile-pic", src: this.state.loggedInUser.imageUrl}), " ")
 	         
 	            :
 	        React.createElement("a", {href: "#", className: "dropdown-toggle ", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, React.createElement("div", null, "Welcome ", this.state.loggedInUser.displayName)), 
@@ -6353,9 +6353,9 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var Masonry = __webpack_require__(74);
-	var VideoStore = __webpack_require__(85);
-	var VideoActions = __webpack_require__(98);
-	var Video = __webpack_require__(99);
+	var VideoStore = __webpack_require__(84);
+	var VideoActions = __webpack_require__(86);
+	var Video = __webpack_require__(87);
 
 
 	var masonryOptions = {
@@ -9452,11 +9452,194 @@
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(63);
+	var EventEmitter = __webpack_require__(67).EventEmitter;
+	var VideoConstants = __webpack_require__(85);
+	var AjaxFunctions = __webpack_require__(72);
+	var assign = __webpack_require__(70);
+
+	var CHANGE_EVENT = 'change';
+
+	var VideoStore = assign({}, EventEmitter.prototype, {
+
+	  getAllFromUser: function(done) {
+	    var url = "/api/user/video/";
+	    AjaxFunctions.get(url, function(err, data) {
+	      done(err, data);
+	    });
+	  },
+	  getAll: function(done) {
+	    var url = "/api/video/";
+	    AjaxFunctions.get(url, function(err, data) {
+	      done(err, data);
+	    });
+	  },
+	  emitChange: function() {
+	    this.emit(CHANGE_EVENT);
+	  },
+
+	  /**
+	   * @param {function} callback
+	   */
+	  addChangeListener: function(callback) {
+	    this.on(CHANGE_EVENT, callback);
+	  },
+
+	  /**
+	   * @param {function} callback
+	   */
+	  removeChangeListener: function(callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
+	});
+
+	// Register callback to handle all updates
+	AppDispatcher.register(function(action) {
+	  switch (action.actionType) {
+
+	    case VideoConstants.VIDEOS_UPDATE:
+	      VideoStore.emitChange();
+	      break;
+
+	    default:
+	      // no op
+	  }
+	});
+
+	module.exports = VideoStore;
+
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * TodoConstants
+	 */
+
+	var keyMirror = __webpack_require__(69);
+
+	module.exports = keyMirror({
+	  VIDEOS_UPDATE: null
+	});
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var VideoConstants = __webpack_require__(85);
+	var AjaxFunctions = __webpack_require__(72);
+	var AppDispatcher = __webpack_require__(63);
+
+
+	var VideoActions = {
+
+	    add: function(videoUrl, done) {
+	        var url = "/api/video/";
+	        AjaxFunctions.post(url, videoUrl, function(err, data) {
+	            
+	            if (err) {
+	                console.log("error adding data", err);
+	                done(err, null);
+	            }
+	            else {
+	                AppDispatcher.dispatch({
+	                    actionType: VideoConstants.VIDEOS_UPDATE
+	                });
+	                done(null, data);
+	            }
+
+	        });
+	    },
+	    
+	    remove: function(video_id, done) {
+	        var url = "/api/video/";
+	        AjaxFunctions.delete(url, video_id, function(err, data) {
+	            if (err) {
+	                console.log("error adding data", err);
+	                done(err, null);
+	            }
+	            else {
+	                AppDispatcher.dispatch({
+	                    actionType: VideoConstants.VIDEOS_UPDATE
+	                });
+	                done(null, data);
+	            }
+
+	        });
+	    },
+	}
+
+
+	module.exports = VideoActions;
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+	var Video = React.createClass({displayName: "Video",
+	    
+	    handleOnClick:function(){
+	        this.props.onRemoveClick({_id:this.props.video._id});
+	    },
+	    render: function() {
+
+	        var video = this.props.video;
+	        if(video.source == 'youtube'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }else if(video.source == 'vine'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }else if(video.source == 'vimeo'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }
+	    }
+	    
+
+	 
+	        
+	    
+
+
+	});
+
+	module.exports = Video;
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
 	var Masonry = __webpack_require__(74);
-	var VideoStore = __webpack_require__(85);
+	var VideoStore = __webpack_require__(84);
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
@@ -9575,91 +9758,7 @@
 	module.exports = AllVideos;
 
 /***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(63);
-	var EventEmitter = __webpack_require__(67).EventEmitter;
-	var VideoConstants = __webpack_require__(86);
-	var AjaxFunctions = __webpack_require__(72);
-	var assign = __webpack_require__(70);
-
-	var CHANGE_EVENT = 'change';
-
-	var VideoStore = assign({}, EventEmitter.prototype, {
-
-	  getAllFromUser: function(done) {
-	    var url = "/api/user/video/";
-	    AjaxFunctions.get(url, function(err, data) {
-	      done(err, data);
-	    });
-	  },
-	  getAll: function(done) {
-	    var url = "/api/video/";
-	    AjaxFunctions.get(url, function(err, data) {
-	      done(err, data);
-	    });
-	  },
-	  emitChange: function() {
-	    this.emit(CHANGE_EVENT);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  addChangeListener: function(callback) {
-	    this.on(CHANGE_EVENT, callback);
-	  },
-
-	  /**
-	   * @param {function} callback
-	   */
-	  removeChangeListener: function(callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
-	  }
-	});
-
-	// Register callback to handle all updates
-	AppDispatcher.register(function(action) {
-	  switch (action.actionType) {
-
-	    case VideoConstants.VIDEOS_UPDATE:
-	      VideoStore.emitChange();
-	      break;
-
-	    default:
-	      // no op
-	  }
-	});
-
-	module.exports = VideoStore;
-
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * TodoConstants
-	 */
-
-	var keyMirror = __webpack_require__(69);
-
-	module.exports = keyMirror({
-	  VIDEOS_UPDATE: null
-	});
-
-
-/***/ },
-/* 87 */,
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -9760,15 +9859,15 @@
 	});
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var ExternalLoginOptions = __webpack_require__(90);
-	var Signup = __webpack_require__(91);
-	var LocalLogin = __webpack_require__(93);
+	var ExternalLoginOptions = __webpack_require__(91);
+	var Signup = __webpack_require__(92);
+	var LocalLogin = __webpack_require__(94);
 	var AuthActions = __webpack_require__(71);
 
 
@@ -9897,7 +9996,7 @@
 	});
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -9983,13 +10082,13 @@
 			
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(92);
+	var Message = __webpack_require__(93);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -10062,7 +10161,7 @@
 			
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -10085,13 +10184,13 @@
 			
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(92);
+	var Message = __webpack_require__(93);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -10148,16 +10247,16 @@
 			
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(95);
+	var content = __webpack_require__(96);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(97)(content, {});
+	var update = __webpack_require__(98)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -10174,22 +10273,22 @@
 	}
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)();
+	exports = module.exports = __webpack_require__(97)();
 	// imports
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Oleo+Script);", ""]);
 
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.title {\n  font-family: 'Oleo Script', cursive;\n  color: #125688; }\n\niframe {\n  border: 0px; }\n\n.instagram-media {\n  background: #FFF;\n  border: 0;\n  border-radius: 3px;\n  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 10px 0 rgba(0, 0, 0, 0.15);\n  margin: 1px;\n  max-width: 658px;\n  padding: 0;\n  width: 99.375%;\n  width: -webkit-calc(100% - 2px);\n  width: calc(100% - 2px); }\n\n.ig-wrapper {\n  padding: 8px; }\n\n.ig-image-wrapper {\n  background: #F8F8F8;\n  line-height: 0;\n  margin-top: 40px;\n  padding: 50.0% 0;\n  text-align: center;\n  width: 100%; }\n\n.ig-image {\n  display: block;\n  height: 44px;\n  margin: 0 auto -44px;\n  position: relative;\n  top: -22px;\n  width: 44px; }\n\n.ig-link-wrapper {\n  margin: 8px 0 0 0;\n  padding: 0 4px; }\n\n.ig-link {\n  color: #000;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 17px;\n  text-decoration: none;\n  word-wrap: break-word; }\n\n.ig-meta {\n  color: #c9c8cd;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px;\n  margin-bottom: 0;\n  margin-top: 8px;\n  overflow: hidden;\n  padding: 8px 0 7px;\n  text-align: center;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.ig-time {\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px; }\n\n/* clear fix */\n.grid {\n  margin: 0 auto; }\n\n.grid:after {\n  content: '';\n  display: block;\n  clear: both; }\n\n.grid-sizer,\n.grid-item {\n  width: 300px;\n  margin-bottom: 10px; }\n\n.video-item {\n  width: 100%; }\n\n.grid-item {\n  float: left; }\n\n.grid-item img {\n  display: block;\n  max-width: 100%; }\n\n.zs-nav {\n  background-color: #0064a4;\n  color: white;\n  border-radius: 0px;\n  border: 0px; }\n\n.zs-brand {\n  color: #ffd200;\n  font-weight: 900; }\n\n.img-responsive {\n  margin: 0 auto; }\n\n.zs-nav-button {\n  color: white; }\n\n.zs-subhead {\n  color: white; }\n\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:focus,\n.navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.zs-profile-dropdown {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.zs-profile-pic {\n  width: 50px;\n  height: 50px; }\n\n.navbar-default .navbar-nav .open .dropdown-menu > li > a {\n  color: white; }\n\n.dropdown-menu {\n  background-color: #0064a4; }\n\n.dropdown-menu li > a:hover {\n  background-color: #007ecc; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Lato', sans-serif; }\n\n.title {\n  font-family: 'Oleo Script', cursive;\n  color: #125688; }\n\niframe {\n  border: 0px; }\n\n.instagram-media {\n  background: #FFF;\n  border: 0;\n  border-radius: 3px;\n  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 10px 0 rgba(0, 0, 0, 0.15);\n  margin: 1px;\n  max-width: 658px;\n  padding: 0;\n  width: 99.375%;\n  width: -webkit-calc(100% - 2px);\n  width: calc(100% - 2px); }\n\n.ig-wrapper {\n  padding: 8px; }\n\n.ig-image-wrapper {\n  background: #F8F8F8;\n  line-height: 0;\n  margin-top: 40px;\n  padding: 50.0% 0;\n  text-align: center;\n  width: 100%; }\n\n.ig-image {\n  display: block;\n  height: 44px;\n  margin: 0 auto -44px;\n  position: relative;\n  top: -22px;\n  width: 44px; }\n\n.ig-link-wrapper {\n  margin: 8px 0 0 0;\n  padding: 0 4px; }\n\n.ig-link {\n  color: #000;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 17px;\n  text-decoration: none;\n  word-wrap: break-word; }\n\n.ig-meta {\n  color: #c9c8cd;\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px;\n  margin-bottom: 0;\n  margin-top: 8px;\n  overflow: hidden;\n  padding: 8px 0 7px;\n  text-align: center;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.ig-time {\n  font-family: Arial, sans-serif;\n  font-size: 14px;\n  line-height: 17px; }\n\n/* clear fix */\n.grid {\n  margin: 0 auto; }\n\n.grid:after {\n  content: '';\n  display: block;\n  clear: both; }\n\n.grid-sizer,\n.grid-item {\n  width: 300px;\n  margin-bottom: 10px; }\n\n.video-item {\n  width: 100%; }\n\n.grid-item {\n  float: left; }\n\n.grid-item img {\n  display: block;\n  max-width: 100%; }\n\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:focus,\n.navbar-default .navbar-nav > .open > a:hover {\n  background-color: inherit; }\n\n.navbar-nav > li > a.profile {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.profile-pic {\n  width: 50px;\n  height: 50px; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports) {
 
 	/*
@@ -10245,7 +10344,7 @@
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10497,106 +10596,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var VideoConstants = __webpack_require__(86);
-	var AjaxFunctions = __webpack_require__(72);
-	var AppDispatcher = __webpack_require__(63);
-
-
-	var VideoActions = {
-
-	    add: function(videoUrl, done) {
-	        var url = "/api/video/";
-	        AjaxFunctions.post(url, videoUrl, function(err, data) {
-	            
-	            if (err) {
-	                console.log("error adding data", err);
-	                done(err, null);
-	            }
-	            else {
-	                AppDispatcher.dispatch({
-	                    actionType: VideoConstants.VIDEOS_UPDATE
-	                });
-	                done(null, data);
-	            }
-
-	        });
-	    },
-	    
-	    remove: function(video_id, done) {
-	        var url = "/api/video/";
-	        AjaxFunctions.delete(url, video_id, function(err, data) {
-	            if (err) {
-	                console.log("error adding data", err);
-	                done(err, null);
-	            }
-	            else {
-	                AppDispatcher.dispatch({
-	                    actionType: VideoConstants.VIDEOS_UPDATE
-	                });
-	                done(null, data);
-	            }
-
-	        });
-	    },
-	}
-
-
-	module.exports = VideoActions;
-
-/***/ },
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	var Video = React.createClass({displayName: "Video",
-	    
-	    handleOnClick:function(){
-	        this.props.onRemoveClick({_id:this.props.video._id});
-	    },
-	    render: function() {
-
-	        var video = this.props.video;
-	        if(video.source == 'youtube'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
-	            )
-	            );
-	        }else if(video.source == 'vine'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
-	            )
-	            );
-	        }else if(video.source == 'vimeo'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
-	            )
-	            );
-	        }
-	    }
-	    
-
-	 
-	        
-	    
-
-
-	});
-
-	module.exports = Video;
 
 /***/ }
 /******/ ]);
