@@ -6373,7 +6373,6 @@
 	var VideoStore = __webpack_require__(84);
 	var VideoActions = __webpack_require__(86);
 	var Video = __webpack_require__(87);
-	var RemoveVideoButton = __webpack_require__(100);
 
 
 
@@ -6410,12 +6409,11 @@
 	    componentWillUnmount: function() {
 	        VideoStore.removeChangeListener(this._onChange);
 	    },
-	    handleRemoveClick: function(videoId) {
-	        console.log(videoId);
+	    handleRemoveClick: function(video) {
 	        this.setState({
 	            message: null
 	        });
-	        VideoActions.remove(videoId, function(err, video) {
+	        VideoActions.remove({_id:video._id}, function(err, video) {
 	            if (err) {
 	                this.setState({
 	                    message: {
@@ -6519,8 +6517,8 @@
 	            video.source == 'vine' ||
 	            video.source == 'instagram'){
 	            return(
-	            React.createElement(Video, {key: video._id, video: video, onRemoveClick: this.handleRemoveClick}, 
-	                React.createElement("button", {className: "btn btn-danger", onClick: this.onClick}, "Remove Video")
+	            React.createElement(Video, {key: video._id, video: video}, 
+	                React.createElement("button", {className: "btn btn-danger", onClick: this.handleRemoveClick.bind(this,video)}, "Remove Video")
 	            )
 	            )
 	        }
@@ -9667,42 +9665,48 @@
 	var React = __webpack_require__(2);
 
 	var Video = React.createClass({displayName: "Video",
-	    
-	    componentDidMount:function(){
+
+	    componentDidMount: function() {
 	        //load instagram videos
-	        window.instgrm.Embeds.process(); 
+	        window.instgrm.Embeds.process();
 	    },
-	    handleOnClick:function(){
-	        this.props.onRemoveClick({_id:this.props.video._id});
+	    handleOnClick: function() {
+	        this.props.onRemoveClick({
+	            _id: this.props.video._id
+	        });
 	    },
 	    render: function() {
 
 	        var video = this.props.video;
-	        if(video.source == 'youtube'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	        if (video.source == 'youtube') {
+	            return (
+	                React.createElement("div", {key: video._id, className: "grid-item"}, 
 	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
-	            this.props.children, 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            this.props.children
 	            )
 	            );
-	        }else if(video.source == 'vine'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	        }
+	        else if (video.source == 'vine') {
+	            return (
+	                React.createElement("div", {key: video._id, className: "grid-item"}, 
 	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            
+	            this.props.children
 	            )
 	            );
-	        }else if(video.source == 'vimeo'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	        }
+	        else if (video.source == 'vimeo') {
+	            return (
+	                React.createElement("div", {key: video._id, className: "grid-item"}, 
 	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
-	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            
+	            this.props.children
 	            )
 	            );
-	        }else if(video.source == 'instagram'){
-	            return(
-	             React.createElement("div", {key: video._id, className: "grid-item"}, 
+	        }
+	        else if (video.source == 'instagram') {
+	            return (
+	                React.createElement("div", {key: video._id, className: "grid-item"}, 
 	                React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
 	                    React.createElement("div", {className: "ig-wrapper"}, 
 	                        React.createElement("div", {className: "ig-image-wrapper"}, 
@@ -9712,16 +9716,18 @@
 	                        React.createElement("p", {className: "ig-meta"}, " "
 	                        )
 	                    )
-	                )
+	                ), 
+	                
+	            this.props.children
 	            )
 	            );
 	        }
 	    }
-	    
 
-	 
-	        
-	    
+
+
+
+
 
 
 	});
@@ -9738,6 +9744,7 @@
 	var Masonry = __webpack_require__(74);
 	var VideoStore = __webpack_require__(84);
 	var Link = __webpack_require__(4).Link;
+	var Video = __webpack_require__(87);
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
@@ -9765,9 +9772,9 @@
 	        console.log("here");
 	        this.setVideosState();
 	        this.setVideoResizeListeners();
-	        
+
 	        //load all instagram videos
-	        window.instgrm.Embeds.process(); 
+	        window.instgrm.Embeds.process();
 	    },
 	    setVideoResizeListeners: function() {
 	        // Find all YouTube videos
@@ -9808,54 +9815,22 @@
 	    React.createElement("div", {className: "grid-sizer"}), 
 	    
 	    this.state.videos.map(function(video){
-	        if(video.source == 'youtube'){
+	    
+	        if(
+	            video.source== 'youtube' || 
+	            video.source== 'vimeo' ||
+	            video.source == 'vine' ||
+	            video.source == 'instagram'){
 	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item youtube-item"}, 
-	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
-	            video.addedBy?
-	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
-	            :null
-	            
+	            React.createElement(Video, {key: video._id, video: video}, 
+	                video.addedBy?
+	                React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
+	                :null
+	                
 	            )
-	            );
-	        }else if(video.source == 'vine'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
-	            
-	             video.addedBy?
-	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
-	            :null
-	            
 	            )
-	            );
-	        }else if(video.source == 'vimeo'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
-	            
-	            video.addedBy?
-	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
-	            :null
-	            
-	            )
-	            );
-	        }else if(video.source == 'instagram'){
-	            return(
-	             React.createElement("div", {key: video._id, className: "grid-item"}, 
-	                React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	                    React.createElement("div", {className: "ig-wrapper"}, 
-	                        React.createElement("div", {className: "ig-image-wrapper"}, 
-	                            React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                        ), 
-	                        React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/"+video.videoId+"/", target: "_blank"}, " ")), 
-	                        React.createElement("p", {className: "ig-meta"}, " "
-	                        )
-	                    )
-	                )
-	            )
-	            );
-	        }
+	        } 
+	        
 	        
 	    }
 	    )
@@ -10721,6 +10696,7 @@
 	var Masonry = __webpack_require__(74);
 	var VideoStore = __webpack_require__(84);
 	var AuthStore = __webpack_require__(62);
+	var Video = __webpack_require__(87);
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
@@ -10796,46 +10772,23 @@
 	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
 	    React.createElement("div", {className: "grid-sizer"}), 
 	    
-	    this.state.videos.map(function(video){
-	        if(video.source == 'youtube'){
+	     this.state.videos.map(function(video){
+	    
+	        if(
+	            video.source== 'youtube' || 
+	            video.source== 'vimeo' ||
+	            video.source == 'vine' ||
+	            video.source == 'instagram'){
 	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item youtube-item"}, 
-	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true})
+	            React.createElement(Video, {key: video._id, video: video}
 	            )
-	            );
-	        }else if(video.source == 'vine'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
 	            )
-	            );
-	        }else if(video.source == 'vimeo'){
-	            return(
-	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
-
-	            )
-	            );
-	        }
-	        // }else if(video.source == 'instagram'){
-	        //     return(
-	        //      <div key = {video._id} className="grid-item">
-	        //         <blockquote className="instagram-media"  data-instgrm-version="6">
-	        //             <div className = "ig-wrapper" >
-	        //                 <div className = 'ig-image-wrapper'>
-	        //                     <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
-	        //                 </div>
-	        //                 <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
-	        //                 <p className='ig-meta' >&nbsp;
-	        //                 </p>
-	        //             </div>
-	        //         </blockquote>
-	        //     </div>
-	        //     );
-	        // }
+	        } 
+	        
 	        
 	    }
 	    )
+
 
 	 
 	)
@@ -10848,23 +10801,6 @@
 	});
 
 	module.exports = UserVideos;
-
-/***/ },
-/* 100 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	  render: function() {
-	    return (
-	        React.createElement("button", {className: "btn btn-danger", onClick: this.onClick}, "Remove Video")
-	    );
-	  }
-	});
 
 /***/ }
 /******/ ]);

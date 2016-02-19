@@ -5,7 +5,6 @@ var Masonry = require('react-masonry-component');
 var VideoStore = require('../../stores/VideoStore');
 var VideoActions = require('../../actions/VideoActions');
 var Video = require('./Video');
-var RemoveVideoButton = require('./RemoveVideoButton');
 
 
 
@@ -42,12 +41,11 @@ var MyVideos = React.createClass({
     componentWillUnmount: function() {
         VideoStore.removeChangeListener(this._onChange);
     },
-    handleRemoveClick: function(videoId) {
-        console.log(videoId);
+    handleRemoveClick: function(video) {
         this.setState({
             message: null
         });
-        VideoActions.remove(videoId, function(err, video) {
+        VideoActions.remove({_id:video._id}, function(err, video) {
             if (err) {
                 this.setState({
                     message: {
@@ -151,8 +149,8 @@ var MyVideos = React.createClass({
             video.source == 'vine' ||
             video.source == 'instagram'){
             return(
-            <Video key={video._id} video={video} onRemoveClick={this.handleRemoveClick}>
-                <button className="btn btn-danger" onClick={this.onClick}>Remove Video</button>
+            <Video key={video._id} video={video}>
+                <button className="btn btn-danger" onClick={this.handleRemoveClick.bind(this,video)}>Remove Video</button>
             </Video>
             )
         }
