@@ -6369,7 +6369,7 @@
 
 	    setVideosState: function() {
 	        VideoStore.getAllFromUser(function(err, videos) {
-	            if(err) return;
+	            if (err) return;
 	            this.setState({
 	                videos: videos
 	            });
@@ -6388,18 +6388,57 @@
 	    componentWillUnmount: function() {
 	        VideoStore.removeChangeListener(this._onChange);
 	    },
-	    handleRemoveClick:function(videoId){
+	    handleRemoveClick: function(videoId) {
 	        console.log(videoId);
-	        VideoActions.remove(videoId, function(err,video){
-	            if(err) return;
-	            console.log(video);
+	        this.setState({
+	            message: null
 	        });
+	        VideoActions.remove(videoId, function(err, video) {
+	            if (err) {
+	                this.setState({
+	                    message: {
+	                        type: 'danger',
+	                        text: 'There was an error trying to remove video'
+	                    }
+	                });
+	            }
+	            else {
+	                this.setState({
+	                    message: {
+	                        type: 'success',
+	                        text: 'Video was successfully removed'
+	                    }
+	                });
+
+	            }
+	        }.bind(this));
 	    },
-	    handleOnClick:function(){
-	      VideoActions.add({url:this.refs.urlToAdd.value}, function(err, addedVideo){
-	          console.log(addedVideo);
-	      });
-	      this.refs.urlToAdd.value= "";
+	    handleOnClick: function() {
+	        this.setState({
+	            message: null
+	        });
+	        VideoActions.add({
+	            url: this.refs.urlToAdd.value
+	        }, function(err, addedVideo) {
+	            if (err) {
+	                this.setState({
+	                    message: {
+	                        type: 'danger',
+	                        text: 'There was an error trying to add video'
+	                    }
+	                });
+	            }
+	            else {
+	                this.setState({
+	                    message: {
+	                        type: 'success',
+	                        text: 'Video was successfully added'
+	                    }
+	                });
+
+	            }
+	        }.bind(this));
+	        this.refs.urlToAdd.value = "";
 	    },
 	    setVideoResizeListeners: function() {
 	        // Find all YouTube videos
@@ -6435,11 +6474,15 @@
 	    },
 	    render: function() {
 	        return (
-	         React.createElement("div", null, 
+	            React.createElement("div", null, 
 	        React.createElement("h1", null, "Add Video"), 
 	        React.createElement("h4", null, "Please add a url from Youtube or Vimeo"), 
 	            React.createElement("div", {className: "form-group"}, 
 	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
+	                this.state.message?
+	                    React.createElement("div", {className: "alert alert-" + this.state.message.type, role: "alert"}, this.state.message.text)
+	                    :null, 
+	                
 	                React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Video")
 	            ), 
 	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 

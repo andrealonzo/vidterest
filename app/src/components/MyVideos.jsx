@@ -18,7 +18,7 @@ var MyVideos = React.createClass({
 
     setVideosState: function() {
         VideoStore.getAllFromUser(function(err, videos) {
-            if(err) return;
+            if (err) return;
             this.setState({
                 videos: videos
             });
@@ -37,18 +37,57 @@ var MyVideos = React.createClass({
     componentWillUnmount: function() {
         VideoStore.removeChangeListener(this._onChange);
     },
-    handleRemoveClick:function(videoId){
+    handleRemoveClick: function(videoId) {
         console.log(videoId);
-        VideoActions.remove(videoId, function(err,video){
-            if(err) return;
-            console.log(video);
+        this.setState({
+            message: null
         });
+        VideoActions.remove(videoId, function(err, video) {
+            if (err) {
+                this.setState({
+                    message: {
+                        type: 'danger',
+                        text: 'There was an error trying to remove video'
+                    }
+                });
+            }
+            else {
+                this.setState({
+                    message: {
+                        type: 'success',
+                        text: 'Video was successfully removed'
+                    }
+                });
+
+            }
+        }.bind(this));
     },
-    handleOnClick:function(){
-      VideoActions.add({url:this.refs.urlToAdd.value}, function(err, addedVideo){
-          console.log(addedVideo);
-      });
-      this.refs.urlToAdd.value= "";
+    handleOnClick: function() {
+        this.setState({
+            message: null
+        });
+        VideoActions.add({
+            url: this.refs.urlToAdd.value
+        }, function(err, addedVideo) {
+            if (err) {
+                this.setState({
+                    message: {
+                        type: 'danger',
+                        text: 'There was an error trying to add video'
+                    }
+                });
+            }
+            else {
+                this.setState({
+                    message: {
+                        type: 'success',
+                        text: 'Video was successfully added'
+                    }
+                });
+
+            }
+        }.bind(this));
+        this.refs.urlToAdd.value = "";
     },
     setVideoResizeListeners: function() {
         // Find all YouTube videos
@@ -84,11 +123,15 @@ var MyVideos = React.createClass({
     },
     render: function() {
         return (
-         <div >
+            <div >
         <h1>Add Video</h1>
         <h4>Please add a url from Youtube or Vimeo</h4>
             <div className="form-group">
                 <input type="text" ref="urlToAdd" className="form-control" placeholder="Video Url to Add"/>
+                {this.state.message?
+                    <div className={"alert alert-" + this.state.message.type} role="alert">{this.state.message.text}</div>
+                    :null
+                }
                 <button className="btn btn-default" onClick = {this.handleOnClick}>Add Video</button>
             </div>
             <Masonry className="grid " options={masonryOptions} disableImagesLoaded={false}>
