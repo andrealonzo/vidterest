@@ -29,13 +29,13 @@ module.exports = React.createClass({
 		Recommended.  We will never post anything without your permission.
 		</div>
         <div>
-        <a className="btn btn-danger btn-lg btn-block login-button" href="/auth/google" role="button">
+        <a className="btn btn-danger btn-lg btn-block login-button" href="/auth/twitter" role="button">
            <div className="row ">
               <div className="col-xs-1 text-left">
-  						<i className="fa fa-google-plus fa-md modal-icons"></i> 
+  						<i className="fa fa-twitter fa-md modal-icons"></i> 
   						</div>
   						<div className="col-xs-10 text-left">
-  						 LOGIN WITH GOOGLE
+  						 LOGIN WITH TWITTER
   						</div>
 						</div>
 						</a>

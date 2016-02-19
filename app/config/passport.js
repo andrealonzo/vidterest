@@ -2,6 +2,7 @@
 
 var GitHubStrategy = require('passport-github2').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/users');
@@ -133,6 +134,48 @@ module.exports = function(passport) {
 						newUser.imageUrl = profile.photos[0].value;
 					}
 					newUser.displayName = profile.displayName;
+
+					newUser.save(function(err) {
+						if (err) {
+							throw err;
+						}
+
+						return done(null, newUser);
+					});
+				}
+			});
+
+		}));
+
+
+
+	passport.use(new TwitterStrategy({
+			consumerKey: configAuth.twitterAuth.clientID,
+			consumerSecret: configAuth.twitterAuth.clientSecret,
+			callbackURL: configAuth.twitterAuth.callbackURL
+		},
+		function(token, refreshToken, profile, done) {
+			console.log(profile);
+			if (!profile.emails) {
+				return done(null, false);
+			}
+
+
+			User.findOne({
+				'email': profile.emails[0].value
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (user) {
+					return done(null, user);
+				}
+				else {
+					var newUser = new User();
+					newUser.email = profile.emails[0].value;
+					newUser.imageUrl = profile.profile_image_url_https;
+					newUser.displayName = profile.name;
 
 					newUser.save(function(err) {
 						if (err) {

@@ -1,12 +1,20 @@
 'use strict';
 var Video = require('../models/videos.js');
 var Url = require('url');
+var mongoose = require('mongoose');
 
 
 module.exports = function() {
 
-  this.getAll = function(req, res) {
-    Video.find({})
+  this.getAllFromUser = function(req, res) {
+    if (!req.user) {
+      return res.json({});
+    }
+    Video.find({
+        addedBy: mongoose.Types.ObjectId(req.user._id)
+      }).sort({
+        _id: -1
+      })
       .exec(function(err, videos) {
         if (err) {
           console.log("An error occurred", err);
@@ -18,11 +26,52 @@ module.exports = function() {
       });
   }
 
+  this.getAll = function(req, res) {
+    Video.find({}).sort({
+        _id: -1
+      })
+      .exec(function(err, videos) {
+        if (err) {
+          console.log("An error occurred", err);
+          return res.status(400).json({
+            error: "An error occurred"
+          });
+        }
+        return res.json(videos);
+      });
+  }
+
+  this.remove = function(req, res) {
+    if (!req.body) {
+      return res.status(400).json({
+        msg: 'There was an error removing book'
+      });
+    }
+
+    var id = req.body._id;
+
+    Video.find({
+      _id: id
+    }).remove(function(err) {
+      if (err) {
+        console.log(err);
+        return res.status(400).json({
+          msg: 'There was an error removing book'
+        });
+      }
+      return res.json(req.body);
+    });
+
+  }
+
   this.add = function(req, res) {
     var url = req.body.url;
 
     var parsedVideo = parseVideo(url);
     var video = new Video(parsedVideo);
+    if (req.user) {
+      video.addedBy = mongoose.Types.ObjectId(req.user._id);
+    }
     video.save();
     return res.json(video);
 

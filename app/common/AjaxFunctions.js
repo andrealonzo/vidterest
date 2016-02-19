@@ -32,7 +32,7 @@ var AjaxFunctions = {
         $.ajax({
             type: "DELETE",
             url: url,
-            data: data,
+            data: JSON.stringify(data),
             contentType: "application/json",
             success: function(data) {
                 done(null, data);

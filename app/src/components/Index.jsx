@@ -5,7 +5,6 @@ var React = require("react");
 var Navigation = require('./Navigation')
 var MyVideos = require('./MyVideos')
 var AllVideos= require('./AllVideos')
-var AddVideo = require('./AddVideo')
 var EditProfile = require('./EditProfile')
 var Login = require('./Login')
 var AuthStore = require('../../stores/AuthStore');
@@ -89,7 +88,6 @@ var App = React.createClass({
 ReactDOM.render((
     <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <Route path="AddVideo" component={AddVideo}/>
       <Route path="MyVideos" component={MyVideos}/>
       <Route path="Login" component={Login}/>
       <Route path="EditProfile" component={EditProfile}/>

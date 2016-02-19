@@ -27,8 +27,12 @@ module.exports = function(app, passport) {
 			});
 		});
 
+	app.route('/api/user/video/')
+		.get(videoHandler.getAllFromUser);
+		
 	app.route('/api/video/')
 		.post(videoHandler.add)
+		.delete(videoHandler.remove)
 		.get(videoHandler.getAll);
 
 
@@ -37,6 +41,17 @@ module.exports = function(app, passport) {
 		.get(isLoggedIn, function(req, res) {
 			res.json(req.user);
 		});
+
+	app.route('/auth/twitter')
+		.get(passport.authenticate('twitter', {
+			scope: 'user:email'
+		}));
+
+	app.route('/auth/twitter/callback')
+		.get(passport.authenticate('twitter', {
+			successRedirect: '/',
+			failureRedirect: '/Login'
+		}));
 
 	app.route('/auth/github')
 		.get(passport.authenticate('github', {

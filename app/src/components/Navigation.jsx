@@ -57,7 +57,6 @@ module.exports = React.createClass({
         {this.state.loggedInUser?
         <ul className="nav navbar-nav navbar-right">
         <li ><Link to={"MyVideos"} >My Videos</Link></li>
-        <li ><Link to={"AddVideo"} >Add Video</Link></li>
         <li className="dropdown">
         {
         this.state.loggedInUser.imageUrl?

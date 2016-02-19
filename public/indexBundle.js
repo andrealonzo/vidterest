@@ -51,7 +51,6 @@
 	var Navigation = __webpack_require__(3)
 	var MyVideos = __webpack_require__(73)
 	var AllVideos= __webpack_require__(84)
-	var AddVideo = __webpack_require__(87)
 	var EditProfile = __webpack_require__(88)
 	var Login = __webpack_require__(89)
 	var AuthStore = __webpack_require__(62);
@@ -135,7 +134,6 @@
 	ReactDOM.render((
 	    React.createElement(Router, {history: browserHistory}, 
 	    React.createElement(Route, {path: "/", component: App}, 
-	      React.createElement(Route, {path: "AddVideo", component: AddVideo}), 
 	      React.createElement(Route, {path: "MyVideos", component: MyVideos}), 
 	      React.createElement(Route, {path: "Login", component: Login}), 
 	      React.createElement(Route, {path: "EditProfile", component: EditProfile}), 
@@ -220,7 +218,6 @@
 	        this.state.loggedInUser?
 	        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
 	        React.createElement("li", null, React.createElement(Link, {to: "MyVideos"}, "My Videos")), 
-	        React.createElement("li", null, React.createElement(Link, {to: "AddVideo"}, "Add Video")), 
 	        React.createElement("li", {className: "dropdown"}, 
 	        
 	        this.state.loggedInUser.imageUrl?
@@ -6331,7 +6328,7 @@
 	        $.ajax({
 	            type: "DELETE",
 	            url: url,
-	            data: data,
+	            data: JSON.stringify(data),
 	            contentType: "application/json",
 	            success: function(data) {
 	                done(null, data);
@@ -6356,20 +6353,53 @@
 	'use strict'
 	var React = __webpack_require__(2);
 	var Masonry = __webpack_require__(74);
+	var VideoStore = __webpack_require__(85);
+	var VideoActions = __webpack_require__(98);
+	var Video = __webpack_require__(99);
 
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
 	    columnWidth: 300,
 	    fitWidth: true,
-	      gutter: 10
+	    gutter: 10
 	};
 
 	var MyVideos = React.createClass({displayName: "MyVideos",
 
-
+	    setVideosState: function() {
+	        VideoStore.getAllFromUser(function(err, videos) {
+	            if(err) return;
+	            this.setState({
+	                videos: videos
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return {
+	            videos: []
+	        };
+	    },
 	    componentDidMount: function() {
+	        this.setVideosState();
 	        this.setVideoResizeListeners();
+	        VideoStore.addChangeListener(this._onChange);
+	    },
+	    componentWillUnmount: function() {
+	        VideoStore.removeChangeListener(this._onChange);
+	    },
+	    handleRemoveClick:function(videoId){
+	        console.log(videoId);
+	        VideoActions.remove(videoId, function(err,video){
+	            if(err) return;
+	            console.log(video);
+	        });
+	    },
+	    handleOnClick:function(){
+	      VideoActions.add({url:this.refs.urlToAdd.value}, function(err, addedVideo){
+	          console.log(addedVideo);
+	      });
+	      this.refs.urlToAdd.value= "";
 	    },
 	    setVideoResizeListeners: function() {
 	        // Find all YouTube videos
@@ -6381,11 +6411,11 @@
 	        $allVideos.each(function() {
 	            $(this)
 	                .data('aspectRatio', this.height / this.width)
-	            // and remove the hard coded width/height
-	            .removeAttr('height')
+	                // and remove the hard coded width/height
+	                .removeAttr('height')
 	                .removeAttr('width')
-	            .addClass('video-item');
-	                
+	                .addClass('video-item');
+
 
 	        });
 	        // When the window is resized
@@ -6405,106 +6435,37 @@
 	    },
 	    render: function() {
 	        return (
-	            
-	React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	         React.createElement("div", null, 
+	        React.createElement("h1", null, "Add Video"), 
+	        React.createElement("h4", null, "Please add a url from Youtube or Vimeo"), 
+	            React.createElement("div", {className: "form-group"}, 
+	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
+	                React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Video")
+	            ), 
+	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
 	    React.createElement("div", {className: "grid-sizer"}), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/_zMLE-K84y/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
+	    
+	    this.state.videos.map(function(video){
+	        if(video.source== 'youtube' || video.source== 'vimeo'){
+	            return(
+	            React.createElement(Video, {key: video._id, video: video, onRemoveClick: this.handleRemoveClick})
 	            )
-	        )
-	    ), 
-	        React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", allowFullScreen: true})
-	    ), 
-	       React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("iframe", {src: "https://vine.co/v/h3MKjWWr5XH/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBES4RhBM1I/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/BBgd3L6vwx6/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
-	    
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
-	            React.createElement("div", {className: "ig-wrapper"}, 
-	                React.createElement("div", {className: "ig-image-wrapper"}, 
-	                    React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
-	                ), 
-	                React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/kVFiyIAp1w/", target: "_blank"}, " ")), 
-	                React.createElement("p", {className: "ig-meta"}, " "
-	                )
-	            )
-	        )
-	    ), 
-	    
+	        }
+	    }.bind(this)
+	    )
 
 	 
-	    
-	    React.createElement("div", {className: "grid-item youtube-item"}, 
-	    React.createElement("iframe", {width: "560", height: "315", src: "https://www.youtube.com/embed/3pzIlq7jZzw", frameBorder: "0", frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	    React.createElement("iframe", {src: "https://player.vimeo.com/video/155043659?title=0&byline=0&portrait=0", width: "500", height: "281", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, frameBorder: true})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg"})
-	    ), 
-	    React.createElement("div", {className: "grid-item"}, 
-	        React.createElement("img", {src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg"})
-	    )
 	)
 
+	    )
 	        )
+	    },
+	    /**
+	     * Event handler for 'change' events coming from the BookStore
+	     */
+	    _onChange: function() {
+	        this.setVideosState();
 	    }
-
 
 	});
 
@@ -9508,6 +9469,7 @@
 
 	    setVideosState: function() {
 	        VideoStore.getAll(function(err, videos) {
+	            if(err) return;
 	            this.setState({
 	                videos: videos
 	            });
@@ -9626,6 +9588,12 @@
 
 	var VideoStore = assign({}, EventEmitter.prototype, {
 
+	  getAllFromUser: function(done) {
+	    var url = "/api/user/video/";
+	    AjaxFunctions.get(url, function(err, data) {
+	      done(err, data);
+	    });
+	  },
 	  getAll: function(done) {
 	    var url = "/api/video/";
 	    AjaxFunctions.get(url, function(err, data) {
@@ -9690,38 +9658,7 @@
 
 
 /***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-
-	var VideoActions = __webpack_require__(98);
-
-
-	module.exports = React.createClass({displayName: "module.exports",
-
-	    handleOnClick:function(){
-	      VideoActions.addVideo({url:this.refs.urlToAdd.value}, function(err, addedVideo){
-	          console.log(addedVideo);
-	      });
-	    },
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	        React.createElement("h1", null, "Add Video"), 
-	        React.createElement("h4", null, "Please add a url from Youtube or Vimeo"), 
-	            React.createElement("div", {className: "form-group"}, 
-	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
-	                React.createElement("button", {className: "btn btn-default", onClick: this.handleOnClick}, "Add Video")
-	            )
-	    )
-	        )
-	    }
-	});
-
-/***/ },
+/* 87 */,
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -9994,13 +9931,13 @@
 			"Recommended.  We will never post anything without your permission."
 			), 
 	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
+	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/twitter", role: "button"}, 
 	           React.createElement("div", {className: "row "}, 
 	              React.createElement("div", {className: "col-xs-1 text-left"}, 
-	  						React.createElement("i", {className: "fa fa-google-plus fa-md modal-icons"})
+	  						React.createElement("i", {className: "fa fa-twitter fa-md modal-icons"})
 	  						), 
 	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
-	  						 "LOGIN WITH GOOGLE"
+	  						 "LOGIN WITH TWITTER"
 	  						)
 							)
 							)
@@ -10572,10 +10509,27 @@
 
 	var VideoActions = {
 
-	    addVideo: function(videoUrl, done) {
+	    add: function(videoUrl, done) {
 	        var url = "/api/video/";
 	        AjaxFunctions.post(url, videoUrl, function(err, data) {
 	            
+	            if (err) {
+	                console.log("error adding data", err);
+	                done(err, null);
+	            }
+	            else {
+	                AppDispatcher.dispatch({
+	                    actionType: VideoConstants.VIDEOS_UPDATE
+	                });
+	                done(null, data);
+	            }
+
+	        });
+	    },
+	    
+	    remove: function(video_id, done) {
+	        var url = "/api/video/";
+	        AjaxFunctions.delete(url, video_id, function(err, data) {
 	            if (err) {
 	                console.log("error adding data", err);
 	                done(err, null);
@@ -10593,6 +10547,56 @@
 
 
 	module.exports = VideoActions;
+
+/***/ },
+/* 99 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+	var Video = React.createClass({displayName: "Video",
+	    
+	    handleOnClick:function(){
+	        this.props.onRemoveClick({_id:this.props.video._id});
+	    },
+	    render: function() {
+
+	        var video = this.props.video;
+	        if(video.source == 'youtube'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }else if(video.source == 'vine'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }else if(video.source == 'vimeo'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
+	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }
+	    }
+	    
+
+	 
+	        
+	    
+
+
+	});
+
+	module.exports = Video;
 
 /***/ }
 /******/ ]);

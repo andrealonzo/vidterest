@@ -15,6 +15,7 @@ var AllVideos = React.createClass({
 
     setVideosState: function() {
         VideoStore.getAll(function(err, videos) {
+            if(err) return;
             this.setState({
                 videos: videos
             });
