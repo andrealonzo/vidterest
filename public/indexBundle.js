@@ -6373,6 +6373,8 @@
 	var VideoStore = __webpack_require__(84);
 	var VideoActions = __webpack_require__(86);
 	var Video = __webpack_require__(87);
+	var RemoveVideoButton = __webpack_require__(100);
+
 
 
 
@@ -6399,9 +6401,11 @@
 	        };
 	    },
 	    componentDidMount: function() {
+	        
 	        this.setVideosState();
 	        this.setVideoResizeListeners();
 	        VideoStore.addChangeListener(this._onChange);
+	        
 	    },
 	    componentWillUnmount: function() {
 	        VideoStore.removeChangeListener(this._onChange);
@@ -6459,6 +6463,7 @@
 	        this.refs.urlToAdd.value = "";
 	    },
 	    setVideoResizeListeners: function() {
+	        
 	        // Find all YouTube videos
 	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
 	        // The element that is fluid width
@@ -6477,6 +6482,7 @@
 	        });
 	        // When the window is resized
 	        $(window).resize(function() {
+	            
 	            var newWidth = $fluidEl.width();
 	            // Resize all videos according to their own aspect ratio
 	            $allVideos.each(function() {
@@ -6507,13 +6513,20 @@
 	    React.createElement("div", {className: "grid-sizer"}), 
 	    
 	    this.state.videos.map(function(video){
-	        if(video.source== 'youtube' || video.source== 'vimeo'){
+	        if(
+	            video.source== 'youtube' || 
+	            video.source== 'vimeo' ||
+	            video.source == 'vine' ||
+	            video.source == 'instagram'){
 	            return(
-	            React.createElement(Video, {key: video._id, video: video, onRemoveClick: this.handleRemoveClick})
+	            React.createElement(Video, {key: video._id, video: video, onRemoveClick: this.handleRemoveClick}, 
+	                React.createElement("button", {className: "btn btn-danger", onClick: this.onClick}, "Remove Video")
+	            )
 	            )
 	        }
 	    }.bind(this)
 	    )
+	    
 
 	 
 	)
@@ -9655,6 +9668,10 @@
 
 	var Video = React.createClass({displayName: "Video",
 	    
+	    componentDidMount:function(){
+	        //load instagram videos
+	        window.instgrm.Embeds.process(); 
+	    },
 	    handleOnClick:function(){
 	        this.props.onRemoveClick({_id:this.props.video._id});
 	    },
@@ -9665,6 +9682,7 @@
 	            return(
 	            React.createElement("div", {key: video._id, className: "grid-item"}, 
 	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
+	            this.props.children, 
 	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
 	            )
 	            );
@@ -9680,6 +9698,21 @@
 	            React.createElement("div", {key: video._id, className: "grid-item"}, 
 	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
 	            React.createElement("button", {className: "btn btn-danger", onClick: this.handleOnClick}, "Remove Video")
+	            )
+	            );
+	        }else if(video.source == 'instagram'){
+	            return(
+	             React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	                    React.createElement("div", {className: "ig-wrapper"}, 
+	                        React.createElement("div", {className: "ig-image-wrapper"}, 
+	                            React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                        ), 
+	                        React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/"+video.videoId+"/", target: "_blank"}, " ")), 
+	                        React.createElement("p", {className: "ig-meta"}, " "
+	                        )
+	                    )
+	                )
 	            )
 	            );
 	        }
@@ -9732,6 +9765,9 @@
 	        console.log("here");
 	        this.setVideosState();
 	        this.setVideoResizeListeners();
+	        
+	        //load all instagram videos
+	        window.instgrm.Embeds.process(); 
 	    },
 	    setVideoResizeListeners: function() {
 	        // Find all YouTube videos
@@ -9804,23 +9840,22 @@
 	            
 	            )
 	            );
+	        }else if(video.source == 'instagram'){
+	            return(
+	             React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("blockquote", {className: "instagram-media", "data-instgrm-version": "6"}, 
+	                    React.createElement("div", {className: "ig-wrapper"}, 
+	                        React.createElement("div", {className: "ig-image-wrapper"}, 
+	                            React.createElement("div", {className: "ig-image", style: { background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}})
+	                        ), 
+	                        React.createElement("p", {className: "ig-link-wrapper"}, " ", React.createElement("a", {className: "ig-link", href: "https://www.instagram.com/p/"+video.videoId+"/", target: "_blank"}, " ")), 
+	                        React.createElement("p", {className: "ig-meta"}, " "
+	                        )
+	                    )
+	                )
+	            )
+	            );
 	        }
-	        // }else if(video.source == 'instagram'){
-	        //     return(
-	        //      <div key = {video._id} className="grid-item">
-	        //         <blockquote className="instagram-media"  data-instgrm-version="6">
-	        //             <div className = "ig-wrapper" >
-	        //                 <div className = 'ig-image-wrapper'>
-	        //                     <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
-	        //                 </div>
-	        //                 <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
-	        //                 <p className='ig-meta' >&nbsp;
-	        //                 </p>
-	        //             </div>
-	        //         </blockquote>
-	        //     </div>
-	        //     );
-	        // }
 	        
 	    }
 	    )
@@ -10813,6 +10848,23 @@
 	});
 
 	module.exports = UserVideos;
+
+/***/ },
+/* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+
+	module.exports = React.createClass({displayName: "module.exports",
+
+	  render: function() {
+	    return (
+	        React.createElement("button", {className: "btn btn-danger", onClick: this.onClick}, "Remove Video")
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);

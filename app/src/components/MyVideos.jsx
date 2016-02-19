@@ -5,6 +5,8 @@ var Masonry = require('react-masonry-component');
 var VideoStore = require('../../stores/VideoStore');
 var VideoActions = require('../../actions/VideoActions');
 var Video = require('./Video');
+var RemoveVideoButton = require('./RemoveVideoButton');
+
 
 
 
@@ -31,9 +33,11 @@ var MyVideos = React.createClass({
         };
     },
     componentDidMount: function() {
+        
         this.setVideosState();
         this.setVideoResizeListeners();
         VideoStore.addChangeListener(this._onChange);
+        
     },
     componentWillUnmount: function() {
         VideoStore.removeChangeListener(this._onChange);
@@ -91,6 +95,7 @@ var MyVideos = React.createClass({
         this.refs.urlToAdd.value = "";
     },
     setVideoResizeListeners: function() {
+        
         // Find all YouTube videos
         var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
         // The element that is fluid width
@@ -109,6 +114,7 @@ var MyVideos = React.createClass({
         });
         // When the window is resized
         $(window).resize(function() {
+            
             var newWidth = $fluidEl.width();
             // Resize all videos according to their own aspect ratio
             $allVideos.each(function() {
@@ -139,13 +145,20 @@ var MyVideos = React.createClass({
     <div className="grid-sizer"></div>
     
     {this.state.videos.map(function(video){
-        if(video.source== 'youtube' || video.source== 'vimeo'){
+        if(
+            video.source== 'youtube' || 
+            video.source== 'vimeo' ||
+            video.source == 'vine' ||
+            video.source == 'instagram'){
             return(
-            <Video key={video._id} video={video} onRemoveClick={this.handleRemoveClick}/>
+            <Video key={video._id} video={video} onRemoveClick={this.handleRemoveClick}>
+                <button className="btn btn-danger" onClick={this.onClick}>Remove Video</button>
+            </Video>
             )
         }
     }.bind(this)
     )}
+    
 
  
 </Masonry>

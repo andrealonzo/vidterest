@@ -31,6 +31,9 @@ var AllVideos = React.createClass({
         console.log("here");
         this.setVideosState();
         this.setVideoResizeListeners();
+        
+        //load all instagram videos
+        window.instgrm.Embeds.process(); 
     },
     setVideoResizeListeners: function() {
         // Find all YouTube videos
@@ -103,23 +106,22 @@ var AllVideos = React.createClass({
             }
             </div>
             );
+        }else if(video.source == 'instagram'){
+            return(
+             <div key = {video._id} className="grid-item">
+                <blockquote className="instagram-media"  data-instgrm-version="6">
+                    <div className = "ig-wrapper" >
+                        <div className = 'ig-image-wrapper'>
+                            <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
+                        </div>
+                        <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
+                        <p className='ig-meta' >&nbsp;
+                        </p>
+                    </div>
+                </blockquote>
+            </div>
+            );
         }
-        // }else if(video.source == 'instagram'){
-        //     return(
-        //      <div key = {video._id} className="grid-item">
-        //         <blockquote className="instagram-media"  data-instgrm-version="6">
-        //             <div className = "ig-wrapper" >
-        //                 <div className = 'ig-image-wrapper'>
-        //                     <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
-        //                 </div>
-        //                 <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
-        //                 <p className='ig-meta' >&nbsp;
-        //                 </p>
-        //             </div>
-        //         </blockquote>
-        //     </div>
-        //     );
-        // }
         
     }
     )}
