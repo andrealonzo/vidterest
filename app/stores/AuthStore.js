@@ -15,6 +15,21 @@ var AuthStore = assign({}, EventEmitter.prototype, {
     console.log("getting loginStatus", _isLoggedIn);
     return _isLoggedIn;
   },
+  getUser: function(userId, done) {
+    var userApiUrl = "/api/user/"+userId;
+        $.ajax({
+            type: "GET",
+            url: userApiUrl,
+            contentType: "application/json",
+            success: function(data) {
+                done(null, data);
+            }.bind(this),
+            error: function(err) {
+                done(err, null);
+            }.bind(this),
+            dataType: 'json'
+        });
+  },
   getLoggedInUser: function(done) {
     var userApiUrl = "/api/user";
         $.ajax({

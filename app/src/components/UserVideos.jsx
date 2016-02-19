@@ -3,7 +3,7 @@
 var React = require("react");
 var Masonry = require('react-masonry-component');
 var VideoStore = require('../../stores/VideoStore');
-var Link = require('react-router').Link;
+var AuthStore = require('../../stores/AuthStore');
 
 var masonryOptions = {
     itemSelector: '.grid-item',
@@ -12,10 +12,17 @@ var masonryOptions = {
     gutter: 10
 };
 
-var AllVideos = React.createClass({
-
+var UserVideos = React.createClass({
+    setUserState: function() {
+        AuthStore.getUser(this.props.params.userId,function(err, user) {
+            if (err) return;
+            this.setState({
+                user: user
+            });
+        }.bind(this));
+    },
     setVideosState: function() {
-        VideoStore.getAll(function(err, videos) {
+        VideoStore.getAllFromUser(this.props.params.userId,function(err, videos) {
             if (err) return;
             this.setState({
                 videos: videos
@@ -24,12 +31,13 @@ var AllVideos = React.createClass({
     },
     getInitialState: function() {
         return {
-            videos: []
+            videos: [],
+            user:{}
         };
     },
     componentDidMount: function() {
-        console.log("here");
         this.setVideosState();
+        this.setUserState();
         this.setVideoResizeListeners();
     },
     setVideoResizeListeners: function() {
@@ -66,7 +74,8 @@ var AllVideos = React.createClass({
     },
     render: function() {
         return (
-
+        <div>
+        <h1>Videos from {this.state.user.displayName}</h1>
             <Masonry className="grid " options={masonryOptions} disableImagesLoaded={false}>
     <div className="grid-sizer"></div>
     
@@ -75,32 +84,19 @@ var AllVideos = React.createClass({
             return(
             <div key = {video._id} className="grid-item youtube-item">
             <iframe src={"https://www.youtube.com/embed/" + video.videoId} frameBorder="0" allowFullScreen></iframe>
-            {video.addedBy?
-            <div>Added By <Link to={`/user/${video.addedBy._id}`}  >{video.addedBy.displayName}</Link></div>
-            :null
-            }
             </div>
             );
         }else if(video.source == 'vine'){
             return(
             <div key = {video._id}  className="grid-item">
                 <iframe src={"https://vine.co/v/"+video.videoId+"/embed/simple?audio=1"} width="300" height="300" frameBorder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
-            
-             {video.addedBy?
-            <div>Added By <Link to={`/user/${video.addedBy._id}`} >{video.addedBy.displayName}</Link></div>
-            :null
-            }
             </div>
             );
         }else if(video.source == 'vimeo'){
             return(
             <div  key = {video._id} className="grid-item">
             <iframe src={"https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0"}  frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
-            
-            {video.addedBy?
-            <div>Added By <Link to={`/user/${video.addedBy._id}`}  >{video.addedBy.displayName}</Link></div>
-            :null
-            }
+
             </div>
             );
         }
@@ -126,6 +122,7 @@ var AllVideos = React.createClass({
 
  
 </Masonry>
+</div>
 
         )
     }
@@ -133,4 +130,4 @@ var AllVideos = React.createClass({
 
 });
 
-module.exports = AllVideos;
+module.exports = UserVideos;

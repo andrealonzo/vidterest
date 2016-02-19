@@ -29,6 +29,8 @@ module.exports = function(app, passport) {
 
 	app.route('/api/user/video/')
 		.get(videoHandler.getAllFromUser);
+	app.route('/api/user/video/:userId')
+		.get(videoHandler.getAllFromUser);
 		
 	app.route('/api/video/')
 		.post(videoHandler.add)
@@ -95,6 +97,8 @@ module.exports = function(app, passport) {
 		.post(userHandler.signup);
 	app.route('/login')
 		.post(userHandler.login);
+	app.route('/api/user/:userId')
+		.get(userHandler.getUser);
 
 	app.route('/*')
 		.get(function(req, res) {

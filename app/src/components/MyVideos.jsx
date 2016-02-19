@@ -7,6 +7,7 @@ var VideoActions = require('../../actions/VideoActions');
 var Video = require('./Video');
 
 
+
 var masonryOptions = {
     itemSelector: '.grid-item',
     columnWidth: 300,
@@ -17,7 +18,7 @@ var masonryOptions = {
 var MyVideos = React.createClass({
 
     setVideosState: function() {
-        VideoStore.getAllFromUser(function(err, videos) {
+        VideoStore.getAllFromUser(null, function(err, videos) {
             if (err) return;
             this.setState({
                 videos: videos

@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom')
 var React = require("react");
 var Navigation = require('./Navigation')
 var MyVideos = require('./MyVideos')
+var UserVideos = require('./UserVideos')
 var AllVideos= require('./AllVideos')
 var EditProfile = require('./EditProfile')
 var Login = require('./Login')
@@ -91,6 +92,7 @@ ReactDOM.render((
       <Route path="MyVideos" component={MyVideos}/>
       <Route path="Login" component={Login}/>
       <Route path="EditProfile" component={EditProfile}/>
+      <Route path="/user/:userId" component={UserVideos}/>
       <IndexRoute component={AllVideos}/>
     </Route>
   </Router>

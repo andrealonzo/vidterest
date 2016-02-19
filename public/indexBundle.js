@@ -50,6 +50,7 @@
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
 	var MyVideos = __webpack_require__(73)
+	var UserVideos = __webpack_require__(99)
 	var AllVideos= __webpack_require__(88)
 	var EditProfile = __webpack_require__(89)
 	var Login = __webpack_require__(90)
@@ -137,6 +138,7 @@
 	      React.createElement(Route, {path: "MyVideos", component: MyVideos}), 
 	      React.createElement(Route, {path: "Login", component: Login}), 
 	      React.createElement(Route, {path: "EditProfile", component: EditProfile}), 
+	      React.createElement(Route, {path: "/user/:userId", component: UserVideos}), 
 	      React.createElement(IndexRoute, {component: AllVideos})
 	    )
 	  )
@@ -5407,6 +5409,21 @@
 	    console.log("getting loginStatus", _isLoggedIn);
 	    return _isLoggedIn;
 	  },
+	  getUser: function(userId, done) {
+	    var userApiUrl = "/api/user/"+userId;
+	        $.ajax({
+	            type: "GET",
+	            url: userApiUrl,
+	            contentType: "application/json",
+	            success: function(data) {
+	                done(null, data);
+	            }.bind(this),
+	            error: function(err) {
+	                done(err, null);
+	            }.bind(this),
+	            dataType: 'json'
+	        });
+	  },
 	  getLoggedInUser: function(done) {
 	    var userApiUrl = "/api/user";
 	        $.ajax({
@@ -6358,6 +6375,7 @@
 	var Video = __webpack_require__(87);
 
 
+
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
 	    columnWidth: 300,
@@ -6368,7 +6386,7 @@
 	var MyVideos = React.createClass({displayName: "MyVideos",
 
 	    setVideosState: function() {
-	        VideoStore.getAllFromUser(function(err, videos) {
+	        VideoStore.getAllFromUser(null, function(err, videos) {
 	            if (err) return;
 	            this.setState({
 	                videos: videos
@@ -9505,8 +9523,11 @@
 
 	var VideoStore = assign({}, EventEmitter.prototype, {
 
-	  getAllFromUser: function(done) {
-	    var url = "/api/user/video/";
+	  getAllFromUser: function(userId, done) {
+	    if(!userId){
+	      userId= '';
+	    }
+	    var url = "/api/user/video/" + userId;
 	    AjaxFunctions.get(url, function(err, data) {
 	      done(err, data);
 	    });
@@ -9683,6 +9704,7 @@
 	var React = __webpack_require__(2);
 	var Masonry = __webpack_require__(74);
 	var VideoStore = __webpack_require__(84);
+	var Link = __webpack_require__(4).Link;
 
 	var masonryOptions = {
 	    itemSelector: '.grid-item',
@@ -9695,7 +9717,7 @@
 
 	    setVideosState: function() {
 	        VideoStore.getAll(function(err, videos) {
-	            if(err) return;
+	            if (err) return;
 	            this.setState({
 	                videos: videos
 	            });
@@ -9753,19 +9775,33 @@
 	        if(video.source == 'youtube'){
 	            return(
 	            React.createElement("div", {key: video._id, className: "grid-item youtube-item"}, 
-	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true})
+	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true}), 
+	            video.addedBy?
+	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
+	            :null
+	            
 	            )
 	            );
 	        }else if(video.source == 'vine'){
 	            return(
 	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"}), 
+	            
+	             video.addedBy?
+	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
+	            :null
+	            
 	            )
 	            );
 	        }else if(video.source == 'vimeo'){
 	            return(
 	            React.createElement("div", {key: video._id, className: "grid-item"}, 
-	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
+	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true}), 
+	            
+	            video.addedBy?
+	            React.createElement("div", null, "Added By ", React.createElement(Link, {to: ("/user/" + video.addedBy._id)}, video.addedBy.displayName))
+	            :null
+	            
 	            )
 	            );
 	        }
@@ -10639,6 +10675,144 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 99 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Masonry = __webpack_require__(74);
+	var VideoStore = __webpack_require__(84);
+	var AuthStore = __webpack_require__(62);
+
+	var masonryOptions = {
+	    itemSelector: '.grid-item',
+	    columnWidth: 300,
+	    fitWidth: true,
+	    gutter: 10
+	};
+
+	var UserVideos = React.createClass({displayName: "UserVideos",
+	    setUserState: function() {
+	        AuthStore.getUser(this.props.params.userId,function(err, user) {
+	            if (err) return;
+	            this.setState({
+	                user: user
+	            });
+	        }.bind(this));
+	    },
+	    setVideosState: function() {
+	        VideoStore.getAllFromUser(this.props.params.userId,function(err, videos) {
+	            if (err) return;
+	            this.setState({
+	                videos: videos
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return {
+	            videos: [],
+	            user:{}
+	        };
+	    },
+	    componentDidMount: function() {
+	        this.setVideosState();
+	        this.setUserState();
+	        this.setVideoResizeListeners();
+	    },
+	    setVideoResizeListeners: function() {
+	        // Find all YouTube videos
+	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
+	        // The element that is fluid width
+	        var $fluidEl = $(".grid-item");
+
+	        // Figure out and save aspect ratio for each video
+	        $allVideos.each(function() {
+	            $(this)
+	                .data('aspectRatio', this.height / this.width)
+	                // and remove the hard coded width/height
+	                .removeAttr('height')
+	                .removeAttr('width')
+	                .addClass('video-item');
+
+
+	        });
+	        // When the window is resized
+	        $(window).resize(function() {
+	            var newWidth = $fluidEl.width();
+	            // Resize all videos according to their own aspect ratio
+	            $allVideos.each(function() {
+	                var $el = $(this);
+	                $el
+	                    .width(newWidth)
+	                    .height(newWidth * $el.data('aspectRatio'));
+
+	            });
+
+	            // Kick off one resize to fix all videos on page load
+	        }).resize();
+	    },
+	    render: function() {
+	        return (
+	        React.createElement("div", null, 
+	        React.createElement("h1", null, "Videos from ", this.state.user.displayName), 
+	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	    React.createElement("div", {className: "grid-sizer"}), 
+	    
+	    this.state.videos.map(function(video){
+	        if(video.source == 'youtube'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item youtube-item"}, 
+	            React.createElement("iframe", {src: "https://www.youtube.com/embed/" + video.videoId, frameBorder: "0", allowFullScreen: true})
+	            )
+	            );
+	        }else if(video.source == 'vine'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	                React.createElement("iframe", {src: "https://vine.co/v/"+video.videoId+"/embed/simple?audio=1", width: "300", height: "300", frameBorder: "0"}), React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+	            )
+	            );
+	        }else if(video.source == 'vimeo'){
+	            return(
+	            React.createElement("div", {key: video._id, className: "grid-item"}, 
+	            React.createElement("iframe", {src: "https://player.vimeo.com/video/"+video.videoId+"?title=0&byline=0&portrait=0", frameBorder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true})
+
+	            )
+	            );
+	        }
+	        // }else if(video.source == 'instagram'){
+	        //     return(
+	        //      <div key = {video._id} className="grid-item">
+	        //         <blockquote className="instagram-media"  data-instgrm-version="6">
+	        //             <div className = "ig-wrapper" >
+	        //                 <div className = 'ig-image-wrapper'>
+	        //                     <div className = 'ig-image' style = {{ background: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC)'}}></div>
+	        //                 </div>
+	        //                 <p className = 'ig-link-wrapper'> <a className='ig-link' href={"https://www.instagram.com/p/"+video.videoId+"/"} target="_blank">&nbsp;</a></p>
+	        //                 <p className='ig-meta' >&nbsp;
+	        //                 </p>
+	        //             </div>
+	        //         </blockquote>
+	        //     </div>
+	        //     );
+	        // }
+	        
+	    }
+	    )
+
+	 
+	)
+	)
+
+	        )
+	    }
+
+
+	});
+
+	module.exports = UserVideos;
 
 /***/ }
 /******/ ]);

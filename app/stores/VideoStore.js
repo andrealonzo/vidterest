@@ -8,8 +8,11 @@ var CHANGE_EVENT = 'change';
 
 var VideoStore = assign({}, EventEmitter.prototype, {
 
-  getAllFromUser: function(done) {
-    var url = "/api/user/video/";
+  getAllFromUser: function(userId, done) {
+    if(!userId){
+      userId= '';
+    }
+    var url = "/api/user/video/" + userId;
     AjaxFunctions.get(url, function(err, data) {
       done(err, data);
     });

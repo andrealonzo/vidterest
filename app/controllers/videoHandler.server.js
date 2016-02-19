@@ -7,12 +7,20 @@ var mongoose = require('mongoose');
 module.exports = function() {
 
   this.getAllFromUser = function(req, res) {
-    if (!req.user) {
-      return res.json({});
+    //if no user id is specified, use the current logged in user
+    var userId;
+    if(!req.params.userId){
+      if (!req.user) {
+        return res.json({});
+      }else{
+        userId = req.user._id
+      }
+    }else{
+      userId = req.params.userId;
     }
     Video.find({
-        addedBy: mongoose.Types.ObjectId(req.user._id)
-      }).sort({
+        addedBy: mongoose.Types.ObjectId(userId)
+      }).populate('addedBy').sort({
         _id: -1
       })
       .exec(function(err, videos) {
@@ -27,7 +35,7 @@ module.exports = function() {
   }
 
   this.getAll = function(req, res) {
-    Video.find({}).sort({
+    Video.find({}).populate('addedBy').sort({
         _id: -1
       })
       .exec(function(err, videos) {
