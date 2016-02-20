@@ -10187,7 +10187,7 @@
 			        React.createElement("div", {className: "modal-content"}, 
 	      React.createElement("div", {className: "modal-header"}, 
 	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Login")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-center"}, 
 	    
@@ -10392,7 +10392,7 @@
 			        React.createElement("div", {className: "modal-content"}, 
 	      React.createElement("div", {className: "modal-header"}, 
 	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into ZotSwap")
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Login")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-left"}, 
 	          React.createElement(Message, {message: this.props.message}), 
