@@ -46,7 +46,7 @@ module.exports = function(app, passport) {
 
 	app.route('/auth/twitter')
 		.get(passport.authenticate('twitter', {
-			scope: 'user:email'
+			scope: 'email'
 		}));
 
 	app.route('/auth/twitter/callback')

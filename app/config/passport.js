@@ -112,6 +112,7 @@ module.exports = function(passport) {
 			callbackURL: configAuth.githubAuth.callbackURL
 		},
 		function(token, refreshToken, profile, done) {
+			console.log(profile);
 			if (!profile.emails) {
 				return done(null, false);
 			}
@@ -130,9 +131,7 @@ module.exports = function(passport) {
 				else {
 					var newUser = new User();
 					newUser.email = profile.emails[0].value;
-					if (profile.photos) {
-						newUser.imageUrl = profile.photos[0].value;
-					}
+					newUser.imageUrl = profile._json.avatar_url;
 					newUser.displayName = profile.displayName;
 
 					newUser.save(function(err) {
@@ -155,14 +154,13 @@ module.exports = function(passport) {
 			callbackURL: configAuth.twitterAuth.callbackURL
 		},
 		function(token, refreshToken, profile, done) {
-			console.log(profile);
-			if (!profile.emails) {
+			if (!profile._json.email) {
 				return done(null, false);
 			}
 
 
 			User.findOne({
-				'email': profile.emails[0].value
+				'email': profile._json.email
 			}, function(err, user) {
 				if (err) {
 					return done(err);
@@ -173,9 +171,9 @@ module.exports = function(passport) {
 				}
 				else {
 					var newUser = new User();
-					newUser.email = profile.emails[0].value;
-					newUser.imageUrl = profile.profile_image_url_https;
-					newUser.displayName = profile.name;
+					newUser.email = profile._json.email;
+					newUser.imageUrl = profile._json.profile_image_url_https;
+					newUser.displayName = profile.displayName;
 
 					newUser.save(function(err) {
 						if (err) {
