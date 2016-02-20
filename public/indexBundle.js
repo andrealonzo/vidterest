@@ -242,7 +242,7 @@
 	                        pathname: "Login",
 	                        state: { modal: true }
 	                      }}, 
-	                      React.createElement("div", null, "Login")))
+	                      React.createElement("div", null, "Login to Bookmark Videos")))
 	                    
 	        )
 	            

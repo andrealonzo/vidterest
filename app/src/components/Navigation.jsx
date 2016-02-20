@@ -79,7 +79,7 @@ module.exports = React.createClass({
                         pathname: "Login",
                         state: { modal: true }
                       }}>
-                      <div  >Login</div></Link></li>
+                      <div>Login to Bookmark Videos</div></Link></li>
                     
         </ul>   
             
