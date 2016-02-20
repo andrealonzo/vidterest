@@ -130,7 +130,7 @@ var MyVideos = React.createClass({
         return (
             <div >
         <h1>Add Video</h1>
-        <h4>Please add a url from Youtube or Vimeo</h4>
+        <h4>Please add a url from Youtube, Vimeo, or Instagram</h4>
             <div className="form-group">
                 <input type="text" ref="urlToAdd" className="form-control" placeholder="Video Url to Add"/>
                 {this.state.message?

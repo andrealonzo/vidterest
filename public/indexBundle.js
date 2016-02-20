@@ -5393,7 +5393,7 @@
 
 	var AppDispatcher = __webpack_require__(63);
 	var EventEmitter = __webpack_require__(67).EventEmitter;
-	var BookConstants = __webpack_require__(68);
+	var BookConstants = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../constants/BookConstants\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var assign = __webpack_require__(70);
 
 	var CHANGE_EVENT = 'change';
@@ -6115,32 +6115,7 @@
 
 
 /***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * TodoConstants
-	 */
-
-	var keyMirror = __webpack_require__(69);
-
-	module.exports = keyMirror({
-	  UPDATE_BOOKS: null,
-	  USER_BOOKS_LOAD: null,
-	  SEARCH_EXTERNAL_RESULTS:null,
-	  UPDATE_LOGIN:null,
-	  LOGIN:null
-	});
-
-
-/***/ },
+/* 68 */,
 /* 69 */
 /***/ function(module, exports) {
 
@@ -6249,7 +6224,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
-	var BookConstants = __webpack_require__(68);
+	var BookConstants = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../constants/BookConstants\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var AjaxFunctions = __webpack_require__(72);
 
 	var AuthActions = {
@@ -6497,7 +6472,7 @@
 	        return (
 	            React.createElement("div", null, 
 	        React.createElement("h1", null, "Add Video"), 
-	        React.createElement("h4", null, "Please add a url from Youtube or Vimeo"), 
+	        React.createElement("h4", null, "Please add a url from Youtube, Vimeo, or Instagram"), 
 	            React.createElement("div", {className: "form-group"}, 
 	                React.createElement("input", {type: "text", ref: "urlToAdd", className: "form-control", placeholder: "Video Url to Add"}), 
 	                this.state.message?
