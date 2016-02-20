@@ -39,7 +39,6 @@ module.exports = React.createClass({
         AuthStore.removeChangeListener(this._onChange);
     },
     handleLogoutClick: function(e) {
-        e.preventDefault();
         AuthActions.logout();
     },
     render: function() {
@@ -68,9 +67,9 @@ module.exports = React.createClass({
         }
           <ul className="dropdown-menu">
             <li><Link to={"EditProfile"} >Edit Profile</Link></li>
-            <li><a href="#" onClick={this.handleLogoutClick}>
+            <li><Link to={"/"} href="#" onClick={this.handleLogoutClick}>
             Logout
-          </a></li>
+          </Link></li>
           </ul>
         </li>
       </ul>

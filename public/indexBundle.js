@@ -202,7 +202,6 @@
 	        AuthStore.removeChangeListener(this._onChange);
 	    },
 	    handleLogoutClick: function(e) {
-	        e.preventDefault();
 	        AuthActions.logout();
 	    },
 	    render: function() {
@@ -231,7 +230,7 @@
 	        
 	          React.createElement("ul", {className: "dropdown-menu"}, 
 	            React.createElement("li", null, React.createElement(Link, {to: "EditProfile"}, "Edit Profile")), 
-	            React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.handleLogoutClick}, 
+	            React.createElement("li", null, React.createElement(Link, {to: "/", href: "#", onClick: this.handleLogoutClick}, 
 	            "Logout"
 	          ))
 	          )
