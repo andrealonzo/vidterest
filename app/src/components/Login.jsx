@@ -23,7 +23,7 @@ module.exports = React.createClass({
     AuthActions.signup(signupData, function(err) {
       if (err) {
         this.setState({
-          msg: {
+          message: {
             msg: err.responseJSON.msg,
             type: "error"
           }
@@ -33,7 +33,7 @@ module.exports = React.createClass({
       else {
         this.setState({
           showPage: "LocalLogin",
-          msg: {
+          message: {
             msg: "Registration successful! Please log in.",
             type: "success"
           }
@@ -46,7 +46,7 @@ module.exports = React.createClass({
     AuthActions.login(loginData, function(err) {
       if (err) {
         this.setState({
-          msg: {
+          message: {
             msg: err.responseJSON.msg,
             type: "error"
           }
@@ -65,25 +65,25 @@ module.exports = React.createClass({
   handleBackClickOnLocalLogin: function() {
     this.setState({
       showPage: "ExternalLoginOptions",
-      msg: {}
+      message: {}
     });
   },
   handleBackClickOnSignup: function() {
     this.setState({
       showPage: "ExternalLoginOptions",
-      msg: {}
+      message: {}
     });
   },
   handleLoginClick: function() {
     this.setState({
       showPage: "LocalLogin",
-      msg: {}
+      message: {}
     });
   },
   handleSignupClick: function() {
     this.setState({
       showPage: "Signup",
-      msg: {}
+      message: {}
     });
   },
   componentDidMount: function() {
@@ -95,7 +95,7 @@ module.exports = React.createClass({
   getInitialState: function() {
     return ({
       showPage: "ExternalLoginOptions",
-      msgs: {}
+      message: {}
     });
   },
   render: function() {
@@ -107,14 +107,14 @@ module.exports = React.createClass({
           <LocalLogin 
             onBackClick = {this.handleBackClickOnLocalLogin}
             onSubmit = {this.handleLoginSubmit}
-            msg = {this.state.msg}
+            message = {this.state.message}
             >
           </LocalLogin>:
           this.state.showPage==="Signup"?
           <Signup 
             onBackClick = {this.handleBackClickOnSignup} 
             onSubmit = {this.handleSignupSubmit}
-            msg = {this.state.msg}
+            message = {this.state.message}
             >
           </Signup>:
           <ExternalLoginOptions 

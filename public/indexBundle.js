@@ -10091,7 +10091,7 @@
 	    AuthActions.signup(signupData, function(err) {
 	      if (err) {
 	        this.setState({
-	          msg: {
+	          message: {
 	            msg: err.responseJSON.msg,
 	            type: "error"
 	          }
@@ -10101,7 +10101,7 @@
 	      else {
 	        this.setState({
 	          showPage: "LocalLogin",
-	          msg: {
+	          message: {
 	            msg: "Registration successful! Please log in.",
 	            type: "success"
 	          }
@@ -10114,7 +10114,7 @@
 	    AuthActions.login(loginData, function(err) {
 	      if (err) {
 	        this.setState({
-	          msg: {
+	          message: {
 	            msg: err.responseJSON.msg,
 	            type: "error"
 	          }
@@ -10133,25 +10133,25 @@
 	  handleBackClickOnLocalLogin: function() {
 	    this.setState({
 	      showPage: "ExternalLoginOptions",
-	      msg: {}
+	      message: {}
 	    });
 	  },
 	  handleBackClickOnSignup: function() {
 	    this.setState({
 	      showPage: "ExternalLoginOptions",
-	      msg: {}
+	      message: {}
 	    });
 	  },
 	  handleLoginClick: function() {
 	    this.setState({
 	      showPage: "LocalLogin",
-	      msg: {}
+	      message: {}
 	    });
 	  },
 	  handleSignupClick: function() {
 	    this.setState({
 	      showPage: "Signup",
-	      msg: {}
+	      message: {}
 	    });
 	  },
 	  componentDidMount: function() {
@@ -10163,7 +10163,7 @@
 	  getInitialState: function() {
 	    return ({
 	      showPage: "ExternalLoginOptions",
-	      msgs: {}
+	      message: {}
 	    });
 	  },
 	  render: function() {
@@ -10175,14 +10175,14 @@
 	          React.createElement(LocalLogin, {
 	            onBackClick: this.handleBackClickOnLocalLogin, 
 	            onSubmit: this.handleLoginSubmit, 
-	            msg: this.state.msg
+	            message: this.state.message
 	            }
 	          ):
 	          this.state.showPage==="Signup"?
 	          React.createElement(Signup, {
 	            onBackClick: this.handleBackClickOnSignup, 
 	            onSubmit: this.handleSignupSubmit, 
-	            msg: this.state.msg
+	            message: this.state.message
 	            }
 	          ):
 	          React.createElement(ExternalLoginOptions, {
