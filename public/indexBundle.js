@@ -50,12 +50,12 @@
 	var React = __webpack_require__(2);
 	var Navigation = __webpack_require__(3)
 	var MyVideos = __webpack_require__(73)
-	var UserVideos = __webpack_require__(99)
-	var AllVideos= __webpack_require__(88)
-	var EditProfile = __webpack_require__(89)
-	var Login = __webpack_require__(90)
+	var UserVideos = __webpack_require__(88)
+	var AllVideos= __webpack_require__(89)
+	var EditProfile = __webpack_require__(90)
+	var Login = __webpack_require__(91)
 	var AuthStore = __webpack_require__(62);
-	__webpack_require__(95);
+	__webpack_require__(96);
 	var Router = __webpack_require__(4).Router;
 	var Route = __webpack_require__(4).Route;
 	var IndexRoute = __webpack_require__(4).IndexRoute;
@@ -9743,6 +9743,122 @@
 	var React = __webpack_require__(2);
 	var Masonry = __webpack_require__(74);
 	var VideoStore = __webpack_require__(84);
+	var AuthStore = __webpack_require__(62);
+	var Video = __webpack_require__(87);
+
+	var masonryOptions = {
+	    itemSelector: '.grid-item',
+	    columnWidth: 300,
+	    fitWidth: true,
+	    gutter: 10
+	};
+
+	var UserVideos = React.createClass({displayName: "UserVideos",
+	    setUserState: function() {
+	        AuthStore.getUser(this.props.params.userId,function(err, user) {
+	            if (err) return;
+	            this.setState({
+	                user: user
+	            });
+	        }.bind(this));
+	    },
+	    setVideosState: function() {
+	        VideoStore.getAllFromUser(this.props.params.userId,function(err, videos) {
+	            if (err) return;
+	            this.setState({
+	                videos: videos
+	            });
+	        }.bind(this));
+	    },
+	    getInitialState: function() {
+	        return {
+	            videos: [],
+	            user:{}
+	        };
+	    },
+	    componentDidMount: function() {
+	        this.setVideosState();
+	        this.setUserState();
+	        this.setVideoResizeListeners();
+	    },
+	    setVideoResizeListeners: function() {
+	        // Find all YouTube videos
+	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
+	        // The element that is fluid width
+	        var $fluidEl = $(".grid-item");
+
+	        // Figure out and save aspect ratio for each video
+	        $allVideos.each(function() {
+	            $(this)
+	                .data('aspectRatio', this.height / this.width)
+	                // and remove the hard coded width/height
+	                .removeAttr('height')
+	                .removeAttr('width')
+	                .addClass('video-item');
+
+
+	        });
+	        // When the window is resized
+	        $(window).resize(function() {
+	            var newWidth = $fluidEl.width();
+	            // Resize all videos according to their own aspect ratio
+	            $allVideos.each(function() {
+	                var $el = $(this);
+	                $el
+	                    .width(newWidth)
+	                    .height(newWidth * $el.data('aspectRatio'));
+
+	            });
+
+	            // Kick off one resize to fix all videos on page load
+	        }).resize();
+	    },
+	    render: function() {
+	        return (
+	        React.createElement("div", null, 
+	        React.createElement("h1", null, "Videos from ", this.state.user.displayName), 
+	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
+	    React.createElement("div", {className: "grid-sizer"}), 
+	    
+	     this.state.videos.map(function(video){
+	    
+	        if(
+	            video.source== 'youtube' || 
+	            video.source== 'vimeo' ||
+	            video.source == 'vine' ||
+	            video.source == 'instagram'){
+	            return(
+	            React.createElement(Video, {key: video._id, video: video}
+	            )
+	            )
+	        } 
+	        
+	        
+	    }
+	    )
+
+
+	 
+	)
+	)
+
+	        )
+	    }
+
+
+	});
+
+	module.exports = UserVideos;
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	var Masonry = __webpack_require__(74);
+	var VideoStore = __webpack_require__(84);
 	var Link = __webpack_require__(4).Link;
 	var Video = __webpack_require__(87);
 
@@ -9847,7 +9963,7 @@
 	module.exports = AllVideos;
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -9948,15 +10064,15 @@
 	});
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var ExternalLoginOptions = __webpack_require__(91);
-	var Signup = __webpack_require__(92);
-	var LocalLogin = __webpack_require__(94);
+	var ExternalLoginOptions = __webpack_require__(92);
+	var Signup = __webpack_require__(93);
+	var LocalLogin = __webpack_require__(95);
 	var AuthActions = __webpack_require__(71);
 
 
@@ -10085,7 +10201,7 @@
 	});
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -10171,13 +10287,13 @@
 			
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(93);
+	var Message = __webpack_require__(94);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -10250,7 +10366,7 @@
 			
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -10273,13 +10389,13 @@
 			
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(2);
-	var Message = __webpack_require__(93);
+	var Message = __webpack_require__(94);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -10336,16 +10452,16 @@
 			
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(96);
+	var content = __webpack_require__(97);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(98)(content, {});
+	var update = __webpack_require__(99)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -10362,10 +10478,10 @@
 	}
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(97)();
+	exports = module.exports = __webpack_require__(98)();
 	// imports
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Lato:400,900);", ""]);
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Oleo+Script);", ""]);
@@ -10377,7 +10493,7 @@
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports) {
 
 	/*
@@ -10433,7 +10549,7 @@
 
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10685,122 +10801,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(2);
-	var Masonry = __webpack_require__(74);
-	var VideoStore = __webpack_require__(84);
-	var AuthStore = __webpack_require__(62);
-	var Video = __webpack_require__(87);
-
-	var masonryOptions = {
-	    itemSelector: '.grid-item',
-	    columnWidth: 300,
-	    fitWidth: true,
-	    gutter: 10
-	};
-
-	var UserVideos = React.createClass({displayName: "UserVideos",
-	    setUserState: function() {
-	        AuthStore.getUser(this.props.params.userId,function(err, user) {
-	            if (err) return;
-	            this.setState({
-	                user: user
-	            });
-	        }.bind(this));
-	    },
-	    setVideosState: function() {
-	        VideoStore.getAllFromUser(this.props.params.userId,function(err, videos) {
-	            if (err) return;
-	            this.setState({
-	                videos: videos
-	            });
-	        }.bind(this));
-	    },
-	    getInitialState: function() {
-	        return {
-	            videos: [],
-	            user:{}
-	        };
-	    },
-	    componentDidMount: function() {
-	        this.setVideosState();
-	        this.setUserState();
-	        this.setVideoResizeListeners();
-	    },
-	    setVideoResizeListeners: function() {
-	        // Find all YouTube videos
-	        var $allVideos = $("iframe[src^='https://vine.co'], iframe[src^='https://player.vimeo.com'], iframe[src^='https://www.youtube.com']");
-	        // The element that is fluid width
-	        var $fluidEl = $(".grid-item");
-
-	        // Figure out and save aspect ratio for each video
-	        $allVideos.each(function() {
-	            $(this)
-	                .data('aspectRatio', this.height / this.width)
-	                // and remove the hard coded width/height
-	                .removeAttr('height')
-	                .removeAttr('width')
-	                .addClass('video-item');
-
-
-	        });
-	        // When the window is resized
-	        $(window).resize(function() {
-	            var newWidth = $fluidEl.width();
-	            // Resize all videos according to their own aspect ratio
-	            $allVideos.each(function() {
-	                var $el = $(this);
-	                $el
-	                    .width(newWidth)
-	                    .height(newWidth * $el.data('aspectRatio'));
-
-	            });
-
-	            // Kick off one resize to fix all videos on page load
-	        }).resize();
-	    },
-	    render: function() {
-	        return (
-	        React.createElement("div", null, 
-	        React.createElement("h1", null, "Videos from ", this.state.user.displayName), 
-	            React.createElement(Masonry, {className: "grid ", options: masonryOptions, disableImagesLoaded: false}, 
-	    React.createElement("div", {className: "grid-sizer"}), 
-	    
-	     this.state.videos.map(function(video){
-	    
-	        if(
-	            video.source== 'youtube' || 
-	            video.source== 'vimeo' ||
-	            video.source == 'vine' ||
-	            video.source == 'instagram'){
-	            return(
-	            React.createElement(Video, {key: video._id, video: video}
-	            )
-	            )
-	        } 
-	        
-	        
-	    }
-	    )
-
-
-	 
-	)
-	)
-
-	        )
-	    }
-
-
-	});
-
-	module.exports = UserVideos;
 
 /***/ }
 /******/ ]);

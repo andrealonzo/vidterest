@@ -2,7 +2,7 @@
 
 var GitHubStrategy = require('passport-github2').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-var TwitterStrategy = require('passport-twitter').Strategy;
+var TwitterStrategy = require('passport-twitter-email').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/users');
