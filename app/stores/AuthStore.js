@@ -1,6 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
-var BookConstants = require('../constants/BookConstants');
+var AuthConstants = require('../constants/AuthConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
@@ -71,7 +71,7 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
     
     
-    case BookConstants.UPDATE_LOGIN:
+    case AuthConstants.UPDATE_LOGIN:
       var loginStatus = action.data;
       console.log(action);
       updateLogin(loginStatus);

@@ -1,5 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var BookConstants = require('../constants/BookConstants');
+var AuthConstants = require('../constants/AuthConstants');
 var AjaxFunctions = require('../common/AjaxFunctions');
 
 var AuthActions = {
@@ -12,7 +12,7 @@ var AuthActions = {
   },
   updateLogin: function(loginStatus) {
     AppDispatcher.dispatch({
-      actionType: BookConstants.UPDATE_LOGIN,
+      actionType: AuthConstants.UPDATE_LOGIN,
       data: loginStatus
     });
   },

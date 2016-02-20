@@ -5393,7 +5393,7 @@
 
 	var AppDispatcher = __webpack_require__(63);
 	var EventEmitter = __webpack_require__(67).EventEmitter;
-	var BookConstants = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../constants/BookConstants\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var AuthConstants = __webpack_require__(100);
 	var assign = __webpack_require__(70);
 
 	var CHANGE_EVENT = 'change';
@@ -5464,7 +5464,7 @@
 	  switch(action.actionType) {
 	    
 	    
-	    case BookConstants.UPDATE_LOGIN:
+	    case AuthConstants.UPDATE_LOGIN:
 	      var loginStatus = action.data;
 	      console.log(action);
 	      updateLogin(loginStatus);
@@ -6224,7 +6224,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(63);
-	var BookConstants = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../constants/BookConstants\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var AuthConstants = __webpack_require__(100);
 	var AjaxFunctions = __webpack_require__(72);
 
 	var AuthActions = {
@@ -6237,7 +6237,7 @@
 	  },
 	  updateLogin: function(loginStatus) {
 	    AppDispatcher.dispatch({
-	      actionType: BookConstants.UPDATE_LOGIN,
+	      actionType: AuthConstants.UPDATE_LOGIN,
 	      data: loginStatus
 	    });
 	  },
@@ -10774,6 +10774,28 @@
 		if(oldSrc)
 			URL.revokeObjectURL(oldSrc);
 	}
+
+
+/***/ },
+/* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * TodoConstants
+	 */
+
+	var keyMirror = __webpack_require__(69);
+
+	module.exports = keyMirror({
+	  UPDATE_LOGIN: null
+	});
 
 
 /***/ }
