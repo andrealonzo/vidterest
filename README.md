@@ -68,10 +68,8 @@ Next, open your browser and enter `http://localhost:8080/`. Congrats, you're up 
 | Node.js         
 | Passport         
 | Mongoose  
-| Redux
-| Webpack    
-| ES6        
-| Jade           
+| Flux
+| Webpack         
 
 ## License
 
